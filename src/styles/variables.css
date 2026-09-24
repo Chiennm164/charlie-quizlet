@@ -1,0 +1,105 @@
+/* =========================================================*/
+/* Design tokens — mọi màu/spacing/radius dùng trong app phải*/
+/* khai báo và tham chiếu từ đây, không hardcode giá trị rời rạc.*/
+/**/
+/* Token gốc dùng tiền tố --cq- (charlie-quizlet) để tránh trùng tên*/
+/* với biến Tailwind sinh ra ở khối @theme bên dưới (--color-primary...).*/
+/* =========================================================*/
+
+:root {
+  /* ---- Màu thương hiệu: cam terracotta (tinh thần Claude/Ubuntu) ----*/
+  --cq-primary: #d97757;
+  --cq-primary-hover: #c9603d;
+  --cq-primary-active: #b04f30;
+
+  --cq-secondary: #64748b;
+  --cq-secondary-hover: #475569;
+
+  --cq-success: #16a34a;
+  --cq-danger: #dc2626;
+  --cq-danger-hover: #b91c1c;
+  --cq-warning: #d97706;
+  --cq-info: #0891b2;
+
+  /* ---- Nền / bề mặt ----*/
+  --cq-bg: #ffffff;
+  --cq-bg-muted: #f8fafc;
+  --cq-surface: #ffffff;
+  --cq-overlay: rgba(15, 23, 42, 0.5); /* nền mờ phía sau dialog*/
+
+  /* ---- Chữ ----*/
+  --cq-text: #0f172a;
+  --cq-text-muted: #64748b;
+  --cq-text-inverse: #ffffff;
+
+  /* ---- Viền ----*/
+  --cq-border: #e2e8f0;
+  --cq-border-focus: var(--cq-primary);
+
+  /* ---- Bo góc ----*/
+  --cq-radius-sm: 4px;
+  --cq-radius-md: 8px;
+  --cq-radius-lg: 16px;
+  --cq-radius-full: 999px;
+
+  /* ---- Shadow ----*/
+  --cq-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --cq-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.12);
+  --cq-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.16);
+
+  /* ---- Z-index (Tailwind không quản z-index nghiệp vụ này) ----*/
+  --cq-z-dialog: 1000;
+  --cq-z-overlay: 999;
+  --cq-z-dropdown: 500;
+}
+
+/* Dark mode (bật bằng cách gắn [data-theme="dark"] lên <html> hoặc <body>)*/
+:root[data-theme='dark'] {
+  --cq-bg: #0f172a;
+  --cq-bg-muted: #1e293b;
+  --cq-surface: #1e293b;
+  --cq-overlay: rgba(0, 0, 0, 0.6);
+
+  --cq-text: #f1f5f9;
+  --cq-text-muted: #94a3b8;
+
+  --cq-border: #334155;
+}
+
+/* =========================================================*/
+/* Map token --cq-* vào token Tailwind v4 (@theme).*/
+/* Sau bước này dùng được thẳng utility class: bg-primary, text-danger,*/
+/* border-border, rounded-md, shadow-md... và responsive theo breakpoint*/
+/* mặc định của Tailwind: sm: md: lg: xl: 2xl:*/
+/* =========================================================*/
+@theme {
+  --color-primary: var(--cq-primary);
+  --color-primary-hover: var(--cq-primary-hover);
+  --color-primary-active: var(--cq-primary-active);
+  --color-secondary: var(--cq-secondary);
+  --color-secondary-hover: var(--cq-secondary-hover);
+  --color-success: var(--cq-success);
+  --color-danger: var(--cq-danger);
+  --color-danger-hover: var(--cq-danger-hover);
+  --color-warning: var(--cq-warning);
+  --color-info: var(--cq-info);
+
+  --color-bg: var(--cq-bg);
+  --color-bg-muted: var(--cq-bg-muted);
+  --color-surface: var(--cq-surface);
+
+  --color-text: var(--cq-text);
+  --color-text-muted: var(--cq-text-muted);
+  --color-text-inverse: var(--cq-text-inverse);
+
+  --color-border: var(--cq-border);
+
+  --radius-sm: var(--cq-radius-sm);
+  --radius-md: var(--cq-radius-md);
+  --radius-lg: var(--cq-radius-lg);
+  --radius-full: var(--cq-radius-full);
+
+  --shadow-sm: var(--cq-shadow-sm);
+  --shadow-md: var(--cq-shadow-md);
+  --shadow-lg: var(--cq-shadow-lg);
+}

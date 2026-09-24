@@ -1,0 +1,85 @@
+/* =========================================================
+   Dropdown / droplist: .dropdown, .dropdown__trigger, .dropdown__menu,
+   .dropdown__search, .dropdown__item (+ .is-active/.is-selected)
+   Tree dropdown thêm: .tree__item, .tree__toggle, thụt lề qua --level
+   ========================================================= */
+
+.dropdown {
+  @apply relative inline-block w-full;
+}
+
+.dropdown__trigger {
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-base text-text
+    outline-none transition-all duration-150 flex items-center justify-between cursor-pointer;
+
+  &:hover {
+    @apply shadow-sm border-secondary;
+  }
+
+  &:focus {
+    @apply border-primary ring-2 ring-primary/20;
+  }
+}
+
+.dropdown__menu {
+  @apply absolute mt-1 w-full rounded-md border border-border bg-surface shadow-lg
+    max-h-64 overflow-auto z-50 py-1;
+  animation: cq-dropdown-in 0.12s ease-out;
+}
+
+@keyframes cq-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown__search {
+  @apply sticky top-0 bg-surface border-b border-border px-2 py-1 flex items-center gap-2;
+
+  input {
+    @apply flex-1 rounded-md border border-border bg-surface px-3 py-1 text-base text-text outline-none;
+  }
+}
+
+.dropdown__item {
+  @apply flex items-center gap-2 px-3 py-2 text-sm cursor-pointer text-text transition-colors duration-100;
+
+  &:hover {
+    @apply bg-bg-muted;
+  }
+
+  &.is-active {
+    @apply bg-bg-muted;
+  }
+
+  &.is-selected {
+    @apply text-primary font-medium;
+  }
+}
+
+.dropdown__empty {
+  @apply px-3 py-2 text-sm text-text-muted;
+}
+
+/* ---- tree (dùng trong dropdown__menu) ---- */
+.tree__item {
+  @apply flex items-center gap-1 px-2 py-1.5 text-sm cursor-pointer text-text rounded transition-colors duration-100;
+  padding-left: calc(0.5rem + var(--level, 0) * 1rem);
+
+  &:hover {
+    @apply bg-bg-muted;
+  }
+
+  &.is-selected {
+    @apply text-primary font-medium;
+  }
+}
+
+.tree__toggle {
+  @apply inline-flex h-4 w-4 items-center justify-center text-text-muted shrink-0;
+}

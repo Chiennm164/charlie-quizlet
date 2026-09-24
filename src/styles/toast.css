@@ -1,0 +1,47 @@
+/* =========================================================
+   Toast: .toast-container (đặt cố định góc màn hình) + .toast, .toast--<variant>
+   ========================================================= */
+
+.toast-container {
+  @apply fixed top-4 right-4 z-[1100] flex flex-col gap-2 w-80 max-w-[90vw];
+}
+
+.toast {
+  @apply flex items-start gap-2 rounded-md border px-4 py-3 text-sm shadow-lg bg-surface text-text;
+  animation: cq-toast-in 0.18s ease-out;
+}
+
+@keyframes cq-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast--success {
+  @apply border-success/30 bg-success/10 text-success;
+}
+
+.toast--danger {
+  @apply border-danger/30 bg-danger/10 text-danger;
+}
+
+.toast--warning {
+  @apply border-warning/30 bg-warning/10 text-warning;
+}
+
+.toast--info {
+  @apply border-info/30 bg-info/10 text-info;
+}
+
+.toast__close {
+  @apply ml-auto text-text-muted cursor-pointer transition-colors duration-100;
+
+  &:hover {
+    @apply text-text;
+  }
+}

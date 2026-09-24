@@ -1,0 +1,84 @@
+/* =========================================================
+   Button — quy ước đặt tên theo BEM: .btn, .btn--<variant>, .btn--<size>, .is-<state>
+   Class bên trong dùng @apply với utility Tailwind (đã map màu ở variables.css).
+   Hiệu ứng: shadow tăng nhẹ khi hover, nhấn xuống (scale) khi active, cursor-pointer.
+   Dùng: <button class="btn btn--primary btn--md">Lưu</button>
+   ========================================================= */
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-transparent
+    font-medium cursor-pointer transition-all duration-150 ease-out;
+
+  &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+    @apply scale-[0.97];
+  }
+
+  &:disabled,
+  &.is-disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+
+  &.is-loading {
+    @apply opacity-70 cursor-wait pointer-events-none;
+  }
+}
+
+/* ---- size ---- */
+.btn--sm {
+  @apply px-3 py-1 text-sm;
+}
+
+.btn--md {
+  @apply px-4 py-2 text-base;
+}
+
+.btn--lg {
+  @apply px-5 py-3 text-lg;
+}
+
+/* full width trên mobile khi cần */
+@media (max-width: 640px) {
+  .btn--block-mobile {
+    @apply w-full;
+  }
+}
+
+/* ---- variant: primary ---- */
+.btn--primary {
+  @apply bg-primary text-white shadow-sm;
+
+  &:hover {
+    @apply bg-primary-hover shadow-md;
+  }
+
+  &:active {
+    @apply bg-primary-active shadow-sm;
+  }
+}
+
+/* ---- variant: secondary (outline) ---- */
+.btn--secondary {
+  @apply bg-transparent border-border text-text;
+
+  &:hover {
+    @apply border-secondary bg-bg-muted shadow-sm;
+  }
+}
+
+/* ---- variant: danger ---- */
+.btn--danger {
+  @apply bg-danger text-white shadow-sm;
+
+  &:hover {
+    @apply bg-danger-hover shadow-md;
+  }
+}
+
+/* ---- variant: ghost (không viền, không nền) ---- */
+.btn--ghost {
+  @apply bg-transparent text-primary;
+
+  &:hover {
+    @apply bg-bg-muted;
+  }
+}

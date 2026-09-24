@@ -1,0 +1,57 @@
+/* =========================================================
+   Dialog — quy ước đặt tên: .dialog__overlay, .dialog, .dialog__header,
+   .dialog__body, .dialog__footer. Trạng thái: .is-open
+   Hiệu ứng: overlay fade-in, dialog scale + fade nhẹ khi mở.
+   Dùng:
+   <div class="dialog__overlay is-open">
+     <div class="dialog dialog--md">
+       <div class="dialog__header">...</div>
+       <div class="dialog__body">...</div>
+       <div class="dialog__footer">...</div>
+     </div>
+   </div>
+   ========================================================= */
+
+.dialog__overlay {
+  @apply fixed inset-0 hidden items-center justify-center z-[999] opacity-0 transition-opacity duration-150;
+  background: var(--cq-overlay);
+
+  &.is-open {
+    @apply flex opacity-100;
+  }
+
+  &.is-open .dialog {
+    @apply scale-100 opacity-100;
+  }
+}
+
+.dialog {
+  @apply bg-surface rounded-lg shadow-lg overflow-auto z-[1000] w-full mx-4 md:mx-0
+    scale-95 opacity-0 transition-all duration-150;
+  max-height: 90vh;
+}
+
+/* ---- size: full màn hình trên mobile, cố định width từ md trở lên ---- */
+.dialog--sm {
+  @apply md:w-[360px];
+}
+
+.dialog--md {
+  @apply md:w-[520px];
+}
+
+.dialog--lg {
+  @apply md:w-[720px];
+}
+
+.dialog__header {
+  @apply flex items-center justify-between px-5 py-4 border-b border-border font-bold;
+}
+
+.dialog__body {
+  @apply p-5 text-text;
+}
+
+.dialog__footer {
+  @apply flex justify-end gap-2 px-5 py-4 border-t border-border;
+}

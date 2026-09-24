@@ -1,0 +1,141 @@
+/* =========================================================
+   Form field: .field, .field__label, .field__control, .field__error
+   Input dùng chung: .input (text/number/textarea), state .is-invalid
+   ========================================================= */
+
+.field {
+  @apply flex flex-col gap-1 w-full;
+}
+
+.field__label {
+  @apply text-sm font-medium text-text;
+}
+
+.field__label-required::after {
+  content: ' *';
+  @apply text-danger;
+}
+
+.field__error {
+  @apply text-sm text-danger;
+}
+
+.field__hint {
+  @apply text-sm text-text-muted;
+}
+
+.input {
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-base text-text
+    outline-none transition-all duration-150;
+
+  &::placeholder {
+    @apply text-text-muted;
+  }
+
+  &:hover:not(:disabled):not(:focus) {
+    @apply border-secondary;
+  }
+
+  &:focus {
+    @apply border-primary ring-2 ring-primary/20 shadow-sm;
+  }
+
+  &:disabled {
+    @apply bg-bg-muted text-text-muted cursor-not-allowed;
+  }
+
+  &.is-invalid {
+    @apply border-danger;
+
+    &:focus {
+      @apply ring-danger/20;
+    }
+  }
+}
+
+textarea.input {
+  @apply resize-y;
+}
+
+/* ---- checkbox ---- */
+.checkbox {
+  @apply inline-flex items-center gap-2 cursor-pointer select-none;
+
+  &.is-disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+.checkbox__box {
+  @apply h-4 w-4 rounded border border-border accent-primary cursor-pointer transition-shadow duration-100;
+
+  &:hover:not(:disabled) {
+    @apply shadow-sm;
+  }
+
+  &:focus-visible {
+    @apply ring-2 ring-primary/30 outline-none;
+  }
+}
+
+.checkbox__label {
+  @apply text-base text-text;
+}
+
+/* ---- radio group ---- */
+.radio-group {
+  @apply flex flex-col gap-2;
+}
+
+.radio-group--horizontal {
+  @apply flex-row flex-wrap gap-4;
+}
+
+.radio {
+  @apply inline-flex items-center gap-2 cursor-pointer select-none;
+
+  &.is-disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+.radio__input {
+  @apply h-4 w-4 border border-border accent-primary cursor-pointer transition-shadow duration-100;
+
+  &:hover:not(:disabled) {
+    @apply shadow-sm;
+  }
+
+  &:focus-visible {
+    @apply ring-2 ring-primary/30 outline-none;
+  }
+}
+
+.radio__label {
+  @apply text-base text-text;
+}
+
+/* ---- select (native) ---- */
+.select {
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 pr-8 text-base text-text
+    outline-none transition-all duration-150 appearance-none bg-no-repeat cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748b'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-size: 1.25rem;
+
+  &:hover:not(:disabled):not(:focus) {
+    @apply border-secondary;
+  }
+
+  &:focus {
+    @apply border-primary ring-2 ring-primary/20 shadow-sm;
+  }
+
+  &:disabled {
+    @apply bg-bg-muted text-text-muted cursor-not-allowed;
+  }
+
+  &.is-invalid {
+    @apply border-danger;
+  }
+}
