@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MascotComponent } from '../../../shared/ui/mascot/mascot';
 
 /**
- * Hình minh hoạ trên panel trái của trang auth: chồng thẻ ghi nhớ + linh vật chibi ló ra ở góc
+ * Hình minh hoạ trên panel trái của trang auth: chồng thẻ ghi nhớ + linh vật hổ chibi ló ra ở góc
  * (SVG inline, màu theo token).
  */
 @Component({

@@ -39,9 +39,11 @@
   --cq-text-muted: #74628a;
   --cq-text-inverse: #ffffff;
 
-  /* ---- Linh vật chibi (shared/ui/mascot) ----*/
-  --cq-mascot-body: #ffd9e7;
-  --cq-mascot-ear: #ffb3cd;
+  /* ---- Linh vật hổ chibi (shared/ui/mascot) ----*/
+  --cq-mascot-body: #ffbf80; /* lông cam pastel */
+  --cq-mascot-ear: #fff1e0; /* lòng tai */
+  --cq-mascot-muzzle: #fffaf3; /* mõm trắng kem */
+  --cq-mascot-stripe: #7a3f1d; /* vằn */
   --cq-mascot-blush: #ff8fb1;
   --cq-mascot-line: #3d2c52;
 

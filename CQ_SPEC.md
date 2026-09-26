@@ -184,7 +184,7 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 - **Học phần**: tạo / sửa / xoá, trang xem học phần; trình soạn thẻ (thêm / xoá / kéo thả sắp xếp, Tab ở dòng cuối thêm thẻ, cảnh báo rời trang khi chưa lưu), nhập nhanh bằng cách dán 2 cột từ Excel / Sheets.
 - **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
-- **Giao diện** (phong cách chibi: pastel hồng tím, font Nunito, nút nổi kiểu nhãn dán, linh vật mèo `app-mascot`): layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập (header có dialog tài khoản) + trang home (lời chào, thẻ chức năng), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
+- **Giao diện** (phong cách chibi: pastel hồng tím, font Nunito, nút nổi kiểu nhãn dán, linh vật hổ `app-mascot`): layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập (header có dialog tài khoản) + trang home (lời chào, thẻ chức năng), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
 - **Nền tảng**: cấu hình tập trung (`core/config`), token style (màu, chữ, animation), animation hiện/ẩn + chuyển trang, unit test cho auth, guard, interceptor, util.
 
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
