@@ -12,6 +12,7 @@ import { StudySet } from '../../../core/models';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { LoadingComponent } from '../../../shared/ui/loading/loading';
+import { MascotComponent } from '../../../shared/ui/mascot/mascot';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { StudySetsService } from '../study-sets.service';
 
@@ -19,7 +20,14 @@ import { StudySetsService } from '../study-sets.service';
 @Component({
   selector: 'app-study-set-detail',
   standalone: true,
-  imports: [RouterLink, ButtonComponent, IconComponent, LoadingComponent, TranslatePipe],
+  imports: [
+    RouterLink,
+    ButtonComponent,
+    IconComponent,
+    LoadingComponent,
+    MascotComponent,
+    TranslatePipe,
+  ],
   templateUrl: './study-set-detail.html',
 })
 export class StudySetDetailComponent {

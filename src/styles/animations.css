@@ -67,7 +67,22 @@
   }
 }
 
+/* Linh vật lơ lửng nhẹ (lặp vô hạn, chậm). */
+@keyframes cq-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
 /* ---- class dùng chung ---- */
+.anim-float {
+  animation: cq-float 3.2s ease-in-out infinite;
+}
+
 .anim-fade-in {
   animation: cq-fade-in var(--cq-duration-base) var(--cq-ease-out) both;
 }
@@ -129,6 +144,10 @@
 
 /* ---- Người dùng bật "giảm chuyển động" trong hệ điều hành: tắt gần hết animation ---- */
 @media (prefers-reduced-motion: reduce) {
+  .anim-float {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after,

@@ -57,3 +57,8 @@
 .dialog__footer {
   @apply flex justify-end gap-2 px-5 py-4 border-t border-border;
 }
+
+/* Dialog không truyền nội dung footer (vd. form tự có nút) -> ẩn luôn đường kẻ + khoảng trống. */
+.dialog__footer:empty {
+  @apply hidden;
+}

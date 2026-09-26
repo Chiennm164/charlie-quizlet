@@ -70,7 +70,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 
 - Thang cỡ chữ duy nhất: **12 · 14 · 16 · 18 · 24 · 28px**.
 - Quan hệ bắt buộc: label = chữ thường − 2px (14); **lỗi = label − 2px (12)**; placeholder = chữ trong ô (16, ô nhập không nhỏ hơn 16px); tiêu đề đậm ≥ 600 **và** màu `text-strong`.
-- Độ đậm theo vai trò: 400 chữ đọc · 500 label / nút / lỗi · 600 tiêu đề mục & thẻ · 700 tiêu đề trang.
+- Độ đậm theo vai trò (font Nunito): 400 chữ đọc · 600 label / lỗi · 700 tiêu đề mục & thẻ, nút · 800 tiêu đề trang.
 - Trong template dùng class `typo-*` (`typo-page-title`, `typo-section-title`, `typo-card-title`, `typo-body`, `typo-body-sm`, `typo-muted`, `typo-label`, `typo-caption`, `typo-error`, `typo-error-code`, `typo-hero-*`). Không tự ghép `text-2xl font-semibold text-text`.
 
 ### 6b. Animation

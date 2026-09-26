@@ -2,6 +2,7 @@
   <app-loading />
 } @else if (notFound()) {
   <section class="max-w-md mx-auto py-12 flex flex-col items-center text-center gap-3">
+    <app-mascot mood="sad" class="w-28 h-28" />
     <h1 class="typo-page-title">{{ 'studySet.notFoundTitle' | translate }}</h1>
     <p class="typo-muted">{{ 'studySet.notFoundDescription' | translate }}</p>
     <a class="btn btn--primary btn--md mt-3" [routerLink]="homeUrl">
@@ -41,9 +42,7 @@
 
   <ol class="flex flex-col gap-2">
     @for (card of set.cards; track card.id) {
-      <li
-        class="bg-surface border border-border rounded-lg p-4 grid gap-2 md:grid-cols-[1fr_2fr] md:gap-6"
-      >
+      <li class="card-surface p-4 grid gap-2 md:grid-cols-[1fr_2fr] md:gap-6">
         <p class="typo-body font-medium whitespace-pre-line break-words">{{ card.term }}</p>
         <p class="typo-body whitespace-pre-line break-words">{{ card.definition }}</p>
       </li>

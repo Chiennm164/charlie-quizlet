@@ -14,7 +14,6 @@
   border-color: color-mix(in srgb, var(--toast-color) 30%, var(--cq-surface));
 }
 
-
 .toast--success {
   --toast-color: var(--cq-success);
 }

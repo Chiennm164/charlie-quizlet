@@ -11,8 +11,6 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 export const APP_SETTINGS = {
   /** Tên app — hiển thị ở logo, footer, tiêu đề tab trình duyệt. */
   appName: 'Charlie Quizlet',
-  /** Chữ viết tắt trên logo. */
-  appShortName: 'CQ',
 
   i18n: {
     defaultLocale: 'vn' as Locale,

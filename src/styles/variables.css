@@ -7,42 +7,56 @@
 /* =========================================================*/
 
 :root {
-  /* ---- Màu thương hiệu: cam terracotta (tinh thần Claude/Ubuntu) ----*/
-  --cq-primary: #d97757;
-  --cq-primary-hover: #c9603d;
-  --cq-primary-active: #b04f30;
+  /* ---- Phong cách "chibi": pastel hồng tím, bo tròn, nút nổi như nhãn dán, chuyển động nảy nhẹ. ----
+     Mọi màu chữ / nền đã kiểm tra độ tương phản AA (chữ trắng trên primary 5.1:1, chữ nhạt >= 4.6:1). */
 
-  --cq-secondary: #64748b;
-  --cq-secondary-hover: #475569;
+  /* ---- Màu thương hiệu: hồng dâu ----*/
+  --cq-primary: #c9306b;
+  --cq-primary-hover: #b02459;
+  --cq-primary-active: #951c4b; /* cũng là màu "đế" nổi bên dưới nút primary */
+  --cq-primary-soft: #ffe3ee; /* nền hồng nhạt: icon tròn, badge, avatar */
 
-  --cq-success: #16a34a;
-  --cq-danger: #dc2626;
-  --cq-danger-hover: #b91c1c;
-  --cq-warning: #d97706;
-  --cq-info: #0891b2;
+  --cq-secondary: #9a86b4; /* tím lavender — viền hover */
+  --cq-secondary-hover: #7d69a0;
+
+  --cq-success: #13804f;
+  --cq-danger: #d63a3a;
+  --cq-danger-hover: #b92c2c;
+  --cq-danger-active: #9b2323; /* "đế" nổi bên dưới nút danger */
+  --cq-warning: #b45f06;
+  --cq-info: #17729f;
 
   /* ---- Nền / bề mặt ----*/
-  --cq-bg: #ffffff;
-  --cq-bg-muted: #f8fafc;
+  --cq-bg: #fff9f4; /* kem */
+  --cq-bg-muted: #fdf0f6; /* hồng phấn: nền trang, hover, header bảng */
   --cq-surface: #ffffff;
-  --cq-overlay: rgba(15, 23, 42, 0.5); /* nền mờ phía sau dialog*/
+  --cq-overlay: rgba(61, 44, 82, 0.45); /* nền mờ phía sau dialog (tím than) */
+  --cq-dot: rgba(201, 48, 107, 0.09); /* chấm bi trên nền trang (.app-backdrop) */
 
-  /* ---- Chữ ----*/
-  --cq-text-strong: #020617; /* tiêu đề — đậm hơn chữ thường 1 nấc */
-  --cq-text: #0f172a;
-  --cq-text-muted: #64748b; /* 4.76:1 trên nền trắng — vẫn đạt AA ở 12px */
+  /* ---- Chữ (tím than thay cho đen) ----*/
+  --cq-text-strong: #2a1d3a;
+  --cq-text: #3d2c52;
+  --cq-text-muted: #74628a;
   --cq-text-inverse: #ffffff;
+
+  /* ---- Linh vật chibi (shared/ui/mascot) ----*/
+  --cq-mascot-body: #ffd9e7;
+  --cq-mascot-ear: #ffb3cd;
+  --cq-mascot-blush: #ff8fb1;
+  --cq-mascot-line: #3d2c52;
 
   /* ---- Kiểu chữ (typography) ----
      Cỡ chữ / độ cao dòng theo VAI TRÒ, không theo con số. Đổi ở đây là cả app đổi theo.
-     Class dùng trong template: src/styles/typography.css (typo-page-title, typo-body, typo-error...). */
-  --cq-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+     Class dùng trong template: src/styles/typography.css (typo-page-title, typo-body, typo-error...).
+     Nunito (Google Fonts, có tiếng Việt, nạp ở index.html): nét tròn hợp phong cách chibi. */
+  --cq-font-sans: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --cq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* mã lỗi, mã code */
 
+  /* Nunito mảnh hơn font hệ thống ở cùng độ đậm -> mỗi vai trò đậm hơn 1 nấc. */
   --cq-font-weight-regular: 400;
-  --cq-font-weight-medium: 500;
-  --cq-font-weight-semibold: 600;
-  --cq-font-weight-bold: 700;
+  --cq-font-weight-medium: 600;
+  --cq-font-weight-semibold: 700;
+  --cq-font-weight-bold: 800;
 
   /* Thang cỡ chữ: chỉ dùng 12 · 14 · 16 · 18 · 24 · 28px (bước 2px ở vùng chữ nhỏ).
      Quy tắc quan hệ:
@@ -71,27 +85,27 @@
   --cq-text-error-code-lh: 1rem;
 
   /* ---- Viền ----*/
-  --cq-border: #e2e8f0;
+  --cq-border: #ecdcf0; /* tím nhạt */
   --cq-border-focus: var(--cq-primary);
 
-  /* ---- Bo góc ----*/
-  --cq-radius-sm: 4px;
-  --cq-radius-md: 8px;
-  --cq-radius-lg: 16px;
+  /* ---- Bo góc: tròn hơn ----*/
+  --cq-radius-sm: 10px;
+  --cq-radius-md: 16px;
+  --cq-radius-lg: 24px;
   --cq-radius-full: 999px;
 
-  /* ---- Shadow ----*/
-  --cq-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
-  --cq-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.12);
-  --cq-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.16);
+  /* ---- Shadow: lớp "đế" cứng phía dưới (kiểu nhãn dán) + bóng mềm ----*/
+  --cq-shadow-sm: 0 3px 0 rgba(125, 90, 160, 0.16);
+  --cq-shadow-md: 0 4px 0 rgba(125, 90, 160, 0.16), 0 10px 24px rgba(125, 90, 160, 0.12);
+  --cq-shadow-lg: 0 6px 0 rgba(125, 90, 160, 0.16), 0 18px 40px rgba(125, 90, 160, 0.18);
 
   /* ---- Chuyển động (dùng trong src/styles/animations.css) ---- */
   --cq-duration-fast: 150ms;
-  --cq-duration-base: 200ms;
-  --cq-duration-slow: 300ms;
+  --cq-duration-base: 220ms;
+  --cq-duration-slow: 320ms;
   --cq-loading-delay: 200ms; /* loading toàn màn hình chỉ hiện nếu request lâu hơn mốc này */
   --cq-stagger-step: 50ms; /* độ trễ giữa các phần tử trong danh sách so le */
-  --cq-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --cq-ease-out: cubic-bezier(0.34, 1.4, 0.64, 1); /* vượt đích 1 chút rồi về: cảm giác "nảy" */
   --cq-ease-in: cubic-bezier(0.4, 0, 1, 1);
 
   /* ---- Z-index (Tailwind không quản z-index nghiệp vụ này) ----*/
@@ -100,18 +114,20 @@
   --cq-z-dropdown: 500;
 }
 
-/* Dark mode (bật bằng cách gắn [data-theme="dark"] lên <html> hoặc <body>)*/
+/* Dark mode (bật bằng cách gắn [data-theme="dark"] lên <html> hoặc <body>) — "đêm pastel". */
 :root[data-theme='dark'] {
-  --cq-bg: #0f172a;
-  --cq-bg-muted: #1e293b;
-  --cq-surface: #1e293b;
+  --cq-bg: #1f1830;
+  --cq-bg-muted: #2a2140;
+  --cq-surface: #2f2547;
   --cq-overlay: rgba(0, 0, 0, 0.6);
+  --cq-dot: rgba(255, 179, 205, 0.06);
+  --cq-primary-soft: #4a2a45;
 
   --cq-text-strong: #ffffff;
-  --cq-text: #f1f5f9;
-  --cq-text-muted: #94a3b8;
+  --cq-text: #f3ecfa;
+  --cq-text-muted: #b8a9cc;
 
-  --cq-border: #334155;
+  --cq-border: #463a60;
 }
 
 /* =========================================================*/
@@ -124,6 +140,7 @@
   --color-primary: var(--cq-primary);
   --color-primary-hover: var(--cq-primary-hover);
   --color-primary-active: var(--cq-primary-active);
+  --color-primary-soft: var(--cq-primary-soft);
   --color-secondary: var(--cq-secondary);
   --color-secondary-hover: var(--cq-secondary-hover);
   --color-success: var(--cq-success);

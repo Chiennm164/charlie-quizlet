@@ -42,6 +42,19 @@
   }
 }
 
+/* Nền trang có chấm bi (layout gắn class này ở khung ngoài cùng). */
+@utility app-backdrop {
+  background-color: var(--cq-bg-muted);
+  background-image: radial-gradient(var(--cq-dot) 2px, transparent 2px);
+  background-size: 24px 24px;
+}
+
+/* Khối nội dung dạng "nhãn dán": nền trắng, viền dày, bo tròn, đế bóng cứng phía dưới.
+   Dùng cho thẻ / khung form / item danh sách thay vì tự ghép bg-surface border rounded-lg. */
+@utility card-surface {
+  @apply bg-surface border-2 border-border rounded-lg shadow-sm;
+}
+
 body {
   margin: 0;
   background: var(--cq-bg);

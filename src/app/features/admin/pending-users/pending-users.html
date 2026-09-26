@@ -3,7 +3,7 @@
   [description]="'admin.pendingUsers.description' | translate"
 />
 
-<section class="bg-surface border border-border rounded-lg" [attr.aria-busy]="loading()">
+<section class="card-surface" [attr.aria-busy]="loading()">
   <app-table
     [columns]="columns()"
     [rows]="users()"

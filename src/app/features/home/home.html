@@ -15,14 +15,14 @@
         @if (action.route) {
           <a
             [routerLink]="action.route"
-            class="bg-surface border border-border rounded-lg p-4 flex gap-3 transition-colors hover:border-primary anim-slide-up-in"
+            class="card-surface p-4 flex gap-3 transition-all hover:border-primary hover:-translate-y-0.5 anim-slide-up-in"
             [style.--i]="$index"
           >
             <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
           </a>
         } @else {
           <div
-            class="bg-surface border border-border rounded-lg p-4 flex gap-3 opacity-80 anim-slide-up-in"
+            class="card-surface p-4 flex gap-3 opacity-80 anim-slide-up-in"
             [style.--i]="$index"
             [attr.aria-disabled]="true"
           >
@@ -32,7 +32,7 @@
       }
       <ng-template #actionContent let-action>
         <span
-          class="shrink-0 w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center"
+          class="shrink-0 w-10 h-10 rounded-full bg-primary-soft text-primary flex items-center justify-center"
         >
           <app-icon [name]="action.icon" [size]="20" />
         </span>

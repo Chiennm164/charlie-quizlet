@@ -1,17 +1,15 @@
 import { Component, input } from '@angular/core';
 import { APP_SETTINGS } from '../../../core/config';
+import { MascotComponent } from '../mascot/mascot';
 
-/** Logo + tên app, dùng ở header các layout. */
+/** Logo (linh vật chibi) + tên app, dùng ở header các layout. */
 @Component({
   selector: 'app-brand',
   standalone: true,
+  imports: [MascotComponent],
   template: `
-    <span class="inline-flex items-center gap-2 font-semibold text-text">
-      <span
-        class="w-8 h-8 rounded-md bg-primary text-text-inverse flex items-center justify-center text-body-sm"
-      >
-        {{ shortName }}
-      </span>
+    <span class="inline-flex items-center gap-2 font-extrabold text-text-strong">
+      <app-mascot class="w-9 h-9 transition-transform hover:-rotate-6" />
       @if (showName()) {
         <span [class.hidden]="hideNameOnMobile()" [class.sm:inline]="hideNameOnMobile()">{{
           name
@@ -26,5 +24,4 @@ export class BrandComponent {
   hideNameOnMobile = input(false);
 
   readonly name = APP_SETTINGS.appName;
-  readonly shortName = APP_SETTINGS.appShortName;
 }

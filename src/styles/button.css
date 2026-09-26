@@ -1,17 +1,26 @@
 /* =========================================================
    Button — quy ước đặt tên theo BEM: .btn, .btn--<variant>, .btn--<size>, .is-<state>
    Class bên trong dùng @apply với utility Tailwind (đã map màu ở variables.css).
-   Hiệu ứng: shadow tăng nhẹ khi hover, nhấn xuống (scale) khi active, cursor-pointer.
+   Phong cách chibi: nút bo tròn hẳn, có "đế" màu đậm bên dưới (box-shadow cứng) nên trông nổi như nhãn dán;
+   hover nhấc lên 1px, nhấn thì lún xuống (translate + đế mỏng lại).
    Hover/active của variant chỉ áp dụng khi nút bấm được (không disabled / loading).
    Dùng: <button class="btn btn--primary btn--md">Lưu</button>
    ========================================================= */
 
 .btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-md border border-transparent
-    font-medium cursor-pointer transition-all;
+  @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-transparent
+    font-bold cursor-pointer transition-all;
+  --btn-base: transparent;
+  box-shadow: 0 4px 0 var(--btn-base);
+
+  &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 0 var(--btn-base);
+  }
 
   &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
-    @apply scale-[0.97];
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--btn-base);
   }
 
   /* Không dùng pointer-events-none: để trình duyệt hiện được con trỏ 🚫 / ⏳.
@@ -37,11 +46,11 @@ a.btn.is-disabled {
 }
 
 .btn--md {
-  @apply px-4 py-2 text-body;
+  @apply px-5 py-2 text-body;
 }
 
 .btn--lg {
-  @apply px-5 py-3 text-section-title;
+  @apply px-6 py-3 text-section-title;
 }
 
 /* full width trên mobile khi cần */
@@ -51,46 +60,54 @@ a.btn.is-disabled {
   }
 }
 
-/* ---- variant: primary ---- */
 .btn--block {
   @apply w-full;
 }
 
+/* ---- variant: primary ---- */
 .btn--primary {
-  @apply bg-primary text-text-inverse shadow-sm;
+  @apply bg-primary text-text-inverse;
+  --btn-base: var(--cq-primary-active);
 
   &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
-    @apply bg-primary-hover shadow-md;
-  }
-
-  &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
-    @apply bg-primary-active shadow-sm;
+    @apply bg-primary-hover;
   }
 }
 
-/* ---- variant: secondary (outline) ---- */
+/* ---- variant: secondary (nền trắng, viền) ---- */
 .btn--secondary {
-  @apply bg-transparent border-border text-text;
+  @apply bg-surface border-border text-text;
+  --btn-base: var(--cq-border);
 
   &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
-    @apply border-secondary bg-bg-muted shadow-sm;
+    @apply border-secondary bg-bg-muted;
+    --btn-base: var(--cq-secondary);
   }
 }
 
 /* ---- variant: danger ---- */
 .btn--danger {
-  @apply bg-danger text-text-inverse shadow-sm;
+  @apply bg-danger text-text-inverse;
+  --btn-base: var(--cq-danger-active);
 
   &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
-    @apply bg-danger-hover shadow-md;
+    @apply bg-danger-hover;
   }
 }
 
-/* ---- variant: ghost (không viền, không nền) ---- */
+/* ---- variant: ghost (không viền, không nền, không đế) ---- */
 .btn--ghost {
   @apply bg-transparent text-primary;
+  box-shadow: none;
 
   &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply bg-bg-muted;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+    transform: scale(0.94);
+    box-shadow: none;
   }
 }
