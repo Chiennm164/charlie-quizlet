@@ -181,7 +181,7 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 
 - **Auth**: đăng ký (chọn Học sinh / Giáo viên; Giáo viên chờ Admin duyệt), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
 - **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403, trang Admin duyệt / từ chối tài khoản Giáo viên.
-- **Học phần**: tạo / sửa / xoá, trang xem học phần; trình soạn thẻ (thêm / xoá / kéo thả sắp xếp, Tab ở dòng cuối thêm thẻ, cảnh báo rời trang khi chưa lưu).
+- **Học phần**: tạo / sửa / xoá, trang xem học phần; trình soạn thẻ (thêm / xoá / kéo thả sắp xếp, Tab ở dòng cuối thêm thẻ, cảnh báo rời trang khi chưa lưu), nhập nhanh bằng cách dán 2 cột từ Excel / Sheets.
 - **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
 - **Giao diện**: layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập (header có dialog tài khoản) + trang home (lời chào, thẻ chức năng), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
@@ -190,6 +190,6 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
 
 - Dashboard riêng theo vai trò (mục 3).
-- Học phần: import nhanh, trang "Học phần của tôi" (tìm kiếm, phân trang).
+- Học phần: trang "Học phần của tôi" (tìm kiếm, phân trang).
 - Nghiệp vụ chính: flashcard, câu hỏi, đề thi, làm bài, kết quả (mục 3b).
 - Gửi email thật (SMTP) cho quên mật khẩu.

@@ -62,7 +62,8 @@ describe('StudySetEditorComponent', () => {
 
   it('Tab ở ô định nghĩa của dòng cuối -> thêm dòng; dòng khác / Shift+Tab thì không', () => {
     const editor = create(null);
-    const tab = (shiftKey = false) => new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true });
+    const tab = (shiftKey = false) =>
+      new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true });
 
     editor.onDefinitionKeydown(tab(), 0);
     editor.onDefinitionKeydown(tab(true), 1);
@@ -107,6 +108,21 @@ describe('StudySetEditorComponent', () => {
     editor.save();
     expect(editor.cards.at(1).controls.term.hasError('duplicate')).toBe(true);
     http.expectNone(`${API}/study-sets`);
+  });
+
+  it('nhập nhanh thay các dòng trống, giữ dòng đã nhập', () => {
+    const editor = create(null);
+    editor.cards.at(1).patchValue({ term: 'cat', definition: 'con mèo' });
+    expect(editor.importCapacity()).toBe(499);
+
+    editor.importCards([
+      { term: 'dog', definition: 'con chó' },
+      { term: 'bird', definition: 'chim' },
+    ]);
+
+    expect(editor.cards.getRawValue().map((c) => c.term)).toEqual(['cat', 'dog', 'bird']);
+    expect(editor.cards.getRawValue().every((c) => c.id === null)).toBe(true);
+    expect(editor.hasUnsavedChanges()).toBe(true);
   });
 
   it('học phần của người khác -> trang 403', () => {

@@ -263,6 +263,35 @@
     "deleteConfirm": "\"{title}\" and all of its cards will be permanently deleted.",
     "deleted": "Deleted \"{title}\"",
     "notFoundTitle": "Study set not found",
-    "notFoundDescription": "The study set may have been deleted or is private."
+    "notFoundDescription": "The study set may have been deleted or is private.",
+    "import": {
+      "open": "Import",
+      "title": "Import cards",
+      "textLabel": "Paste your data",
+      "placeholder": "cat\tcon mèo\ndog\tcon chó\n\nCopy 2 columns (term, definition) from Excel / Google Sheets and paste them here",
+      "termSeparatorLabel": "Between term and definition",
+      "termSeparator": {
+        "tab": "Tab",
+        "comma": "Comma"
+      },
+      "cardSeparatorLabel": "Between cards",
+      "cardSeparator": {
+        "newline": "New line",
+        "semicolon": "Semicolon"
+      },
+      "line": "Line",
+      "status": "Status",
+      "errors": {
+        "missingTerm": "Missing term",
+        "missingDefinition": "Missing definition",
+        "termTooLong": "Term is too long",
+        "definitionTooLong": "Definition is too long"
+      },
+      "summary": "{n} valid cards",
+      "errorSummary": "{n} invalid lines will be skipped",
+      "overCapacity": "You can add at most {n} more cards",
+      "submit": "Add {n} cards",
+      "done": "Added {n} cards"
+    }
   }
 }

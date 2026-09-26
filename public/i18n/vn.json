@@ -263,6 +263,35 @@
     "deleteConfirm": "Học phần \"{title}\" và toàn bộ thẻ sẽ bị xoá vĩnh viễn.",
     "deleted": "Đã xoá học phần \"{title}\"",
     "notFoundTitle": "Không tìm thấy học phần",
-    "notFoundDescription": "Học phần có thể đã bị xoá hoặc đang ở chế độ riêng tư."
+    "notFoundDescription": "Học phần có thể đã bị xoá hoặc đang ở chế độ riêng tư.",
+    "import": {
+      "open": "Nhập nhanh",
+      "title": "Nhập nhanh thẻ",
+      "textLabel": "Dán dữ liệu",
+      "placeholder": "cat\tcon mèo\ndog\tcon chó\n\nCopy 2 cột (thuật ngữ, định nghĩa) từ Excel / Google Sheets rồi dán vào đây",
+      "termSeparatorLabel": "Giữa thuật ngữ và định nghĩa",
+      "termSeparator": {
+        "tab": "Tab",
+        "comma": "Dấu phẩy"
+      },
+      "cardSeparatorLabel": "Giữa các thẻ",
+      "cardSeparator": {
+        "newline": "Xuống dòng",
+        "semicolon": "Dấu chấm phẩy"
+      },
+      "line": "Dòng",
+      "status": "Trạng thái",
+      "errors": {
+        "missingTerm": "Thiếu thuật ngữ",
+        "missingDefinition": "Thiếu định nghĩa",
+        "termTooLong": "Thuật ngữ quá dài",
+        "definitionTooLong": "Định nghĩa quá dài"
+      },
+      "summary": "{n} thẻ hợp lệ",
+      "errorSummary": "{n} dòng lỗi sẽ bị bỏ qua",
+      "overCapacity": "Chỉ thêm được tối đa {n} thẻ nữa",
+      "submit": "Thêm {n} thẻ",
+      "done": "Đã thêm {n} thẻ"
+    }
   }
 }

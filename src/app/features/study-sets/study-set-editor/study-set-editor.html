@@ -42,10 +42,13 @@
         <h2 class="typo-section-title">
           {{ 'studySet.cardsTitle' | translate: { n: cardCount() } }}
         </h2>
-        <span class="typo-caption text-text-muted hidden sm:inline">
-          {{ 'studySet.tabHint' | translate }}
-        </span>
+        <app-button variant="secondary" size="sm" (clicked)="importOpen.set(true)">
+          {{ 'studySet.import.open' | translate }}
+        </app-button>
       </div>
+      <p class="typo-caption text-text-muted -mt-1 hidden sm:block">
+        {{ 'studySet.tabHint' | translate }}
+      </p>
 
       <div
         formArrayName="cards"
@@ -123,3 +126,10 @@
     </div>
   </form>
 }
+
+<app-card-import-dialog
+  [open]="importOpen()"
+  [capacity]="importCapacity()"
+  (closed)="importOpen.set(false)"
+  (imported)="importCards($event)"
+/>

@@ -31,6 +31,7 @@ import { TextareaComponent } from '../../../shared/ui/textarea/textarea';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { AppValidators, controlErrorMessage } from '../../../shared/utils/validation.utils';
 import { StudySetsService } from '../study-sets.service';
+import { CardImportDialogComponent, ImportedCard } from '../card-import-dialog/card-import-dialog';
 
 type CardForm = FormGroup<{
   /** null = thẻ mới chưa lưu. */
@@ -53,6 +54,7 @@ const VISIBILITIES: StudySetVisibility[] = ['PRIVATE', 'PUBLIC'];
     CdkDrag,
     CdkDragHandle,
     ButtonComponent,
+    CardImportDialogComponent,
     IconComponent,
     InputTextComponent,
     LoadingComponent,
@@ -82,6 +84,7 @@ export class StudySetEditorComponent implements HasUnsavedChanges {
 
   loading = signal(this.editingId !== null);
   saving = signal(false);
+  importOpen = signal(false);
   /** Link "Huỷ": sửa thì về trang học phần, tạo mới thì về Home. */
   readonly cancelUrl = this.editingId ? studySetUrl(this.editingId) : ROUTES.home;
 
@@ -157,6 +160,24 @@ export class StudySetEditorComponent implements HasUnsavedChanges {
     }
   }
 
+  /** Số thẻ còn nhập thêm được — dòng trống sẽ bị thay bằng thẻ nhập vào nên không tính. */
+  importCapacity(): number {
+    return studySetMaxCards - this.cards.controls.filter((card) => !this.isBlank(card)).length;
+  }
+
+  /** Thẻ nhập nhanh thay cho các dòng trống (vd. 2 dòng trống sẵn của học phần mới), rồi thêm vào cuối. */
+  importCards(imported: ImportedCard[]): void {
+    for (let i = this.cards.length - 1; i >= 0; i--) {
+      if (this.isBlank(this.cards.at(i))) this.cards.removeAt(i);
+    }
+    for (const card of imported) {
+      this.cards.push(this.createCard({ id: null, ...card }));
+    }
+    this.cards.markAsDirty();
+    this.importOpen.set(false);
+    this.toast.success(this.translate.t('studySet.import.done', { n: imported.length }));
+  }
+
   removeCard(index: number): void {
     this.cards.removeAt(index);
     this.cards.markAsDirty();
@@ -228,7 +249,12 @@ export class StudySetEditorComponent implements HasUnsavedChanges {
     this.form.markAsPristine();
   }
 
-  private createCard(card?: Card): CardForm {
+  private isBlank(card: CardForm): boolean {
+    const { term, definition } = card.getRawValue();
+    return !term.trim() && !definition.trim();
+  }
+
+  private createCard(card?: Omit<Card, 'id'> & { id: number | null }): CardForm {
     return this.fb.group({
       id: new FormControl<number | null>(card?.id ?? null),
       term: [card?.term ?? '', AppValidators.cardTerm],
