@@ -70,6 +70,32 @@ export function createQuestion(question?: QuizQuestion): QuestionForm {
   });
 }
 
+/** Câu hỏi mới từ dữ liệu nhập nhanh (đã kiểm tra hợp lệ ở question-import). */
+export function createQuestionFrom(draft: {
+  content: string;
+  explanation: string;
+  options: string[];
+  correctIndex: number | null;
+}): QuestionForm {
+  const question = createQuestion();
+  question.controls.options.clear();
+  for (const option of draft.options) question.controls.options.push(createOption(null, option));
+  question.patchValue({
+    content: draft.content,
+    explanation: draft.explanation,
+    correctIndex: draft.correctIndex,
+  });
+  return question;
+}
+
+/** Câu chưa nhập gì (vd. câu trống có sẵn của đề mới) — nhập nhanh sẽ thay chỗ câu này. */
+export function isBlankQuestion(question: QuestionForm): boolean {
+  const { content, explanation, options } = question.getRawValue();
+  return (
+    !content.trim() && !explanation.trim() && options.every((option) => !option.content.trim())
+  );
+}
+
 /** Xoá đáp án và giữ đúng đáp án đúng đang chọn (vị trí dồn lên khi xoá đáp án đứng trước nó). */
 export function removeOption(question: QuestionForm, index: number): void {
   const { correctIndex, options } = question.controls;

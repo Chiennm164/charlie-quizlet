@@ -60,9 +60,14 @@
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="typo-section-title">
-        {{ 'adminQuiz.questionsTitle' | translate: { n: questionCount() } }}
-      </h2>
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="typo-section-title">
+          {{ 'adminQuiz.questionsTitle' | translate: { n: questionCount() } }}
+        </h2>
+        <app-button variant="secondary" size="sm" (clicked)="importOpen.set(true)">
+          {{ 'adminQuiz.import.open' | translate }}
+        </app-button>
+      </div>
 
       <div cdkDropList (cdkDropListDropped)="drop($event)" class="flex flex-col gap-3">
         @for (question of questions.controls; track question; let i = $index) {
@@ -125,3 +130,10 @@
     </div>
   </form>
 }
+
+<app-question-import-dialog
+  [open]="importOpen()"
+  [capacity]="importCapacity()"
+  (closed)="importOpen.set(false)"
+  (imported)="importQuestions($event)"
+/>

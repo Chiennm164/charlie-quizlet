@@ -117,6 +117,34 @@ describe('QuizEditorComponent', () => {
     expect(editor.hasUnsavedChanges()).toBe(false);
   });
 
+  it('nhập từ Excel thay câu trống có sẵn, giữ câu đã nhập', () => {
+    const editor = create(null);
+    expect(editor.importCapacity()).toBe(200);
+    editor.addQuestion();
+    editor.questions.at(1).controls.content.setValue('Câu đã gõ');
+    expect(editor.importCapacity()).toBe(199);
+
+    editor.importQuestions([
+      { line: 1, content: 'Q', explanation: 'vì', options: ['a', 'b'], correctIndex: 1, error: null },
+    ]);
+
+    expect(editor.questions.length).toBe(2);
+    expect(editor.questions.at(0).controls.content.value).toBe('Câu đã gõ');
+    const imported = editor.questions.at(1);
+    expect(imported.valid).toBe(true);
+    expect(imported.getRawValue()).toMatchObject({
+      id: null,
+      content: 'Q',
+      explanation: 'vì',
+      correctIndex: 1,
+      options: [
+        { id: null, content: 'a' },
+        { id: null, content: 'b' },
+      ],
+    });
+    expect(editor.hasUnsavedChanges()).toBe(true);
+  });
+
   it('tạo mới thành công -> chuyển sang trang sửa đề vừa tạo', () => {
     const editor = create(null);
     editor.form.patchValue({ topicId: '5', title: 'Đề mới' });

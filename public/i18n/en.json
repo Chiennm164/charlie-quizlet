@@ -315,6 +315,36 @@
     },
     "deleteTitle": "Delete quiz",
     "deleteConfirm": "\"{title}\" and all of its questions will be permanently deleted.",
-    "deleted": "Quiz deleted"
+    "deleted": "Quiz deleted",
+    "import": {
+      "open": "Import from Excel",
+      "title": "Import questions from Excel",
+      "howTo": "Copy question rows in Excel / Google Sheets and paste them below. Each row is one question.",
+      "columns": "Column order: Question | Correct answer (A–F) | Explanation (may be empty) | Answer A | Answer B | … (2–6 answers)",
+      "copySample": "Copy sample rows",
+      "sampleCopied": "Sample copied — paste it into cell A1 in Excel to get the columns",
+      "textLabel": "Paste your data",
+      "placeholder": "Paste rows copied from Excel here",
+      "line": "Line",
+      "question": "Question",
+      "options": "Answers",
+      "correct": "Correct",
+      "status": "Status",
+      "errors": {
+        "missingQuestion": "Missing question",
+        "questionTooLong": "Question is too long",
+        "explanationTooLong": "Explanation is too long",
+        "tooFewOptions": "Needs at least 2 answers with no gaps",
+        "tooManyOptions": "At most 6 answers",
+        "optionTooLong": "An answer is too long",
+        "duplicateOption": "Duplicated answers",
+        "invalidCorrect": "Correct answer must be a letter A–F among the answers"
+      },
+      "summary": "{n} valid questions",
+      "errorSummary": "{n} invalid rows will be skipped",
+      "overCapacity": "You can add at most {n} more questions",
+      "submit": "Add {n} questions",
+      "done": "Added {n} questions"
+    }
   }
 }

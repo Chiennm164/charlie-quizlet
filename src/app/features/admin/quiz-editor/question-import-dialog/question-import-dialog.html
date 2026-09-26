@@ -1,0 +1,56 @@
+<app-dialog
+  size="lg"
+  [open]="open()"
+  [title]="'adminQuiz.import.title' | translate"
+  (closed)="closed.emit()"
+>
+  <div class="flex flex-col gap-3">
+    <div class="rounded-md bg-bg-muted p-3 flex flex-col gap-2 typo-body-sm">
+      <p>{{ 'adminQuiz.import.howTo' | translate }}</p>
+      <p class="font-semibold">{{ 'adminQuiz.import.columns' | translate }}</p>
+      <div>
+        <app-button variant="secondary" size="sm" (clicked)="copySample()">
+          {{ 'adminQuiz.import.copySample' | translate }}
+        </app-button>
+      </div>
+    </div>
+
+    <app-textarea
+      [label]="'adminQuiz.import.textLabel' | translate"
+      [placeholder]="'adminQuiz.import.placeholder' | translate"
+      [rows]="6"
+      [formControl]="text"
+    />
+
+    @if (rows().length) {
+      <div class="flex flex-col gap-2" animate.enter="anim-fade-in">
+        <p class="typo-body-sm" aria-live="polite">
+          {{ 'adminQuiz.import.summary' | translate: { n: validRows().length } }}
+          @if (errorCount()) {
+            <span class="text-danger">
+              · {{ 'adminQuiz.import.errorSummary' | translate: { n: errorCount() } }}
+            </span>
+          }
+        </p>
+        @if (overCapacity()) {
+          <p class="typo-error" role="alert">
+            {{ 'adminQuiz.import.overCapacity' | translate: { n: capacity() } }}
+          </p>
+        }
+        <div class="max-h-72 overflow-auto">
+          <app-table [columns]="columns()" [rows]="rows()" [trackBy]="trackByLine" />
+        </div>
+      </div>
+    }
+  </div>
+
+  <div dialog-footer class="flex justify-end gap-2">
+    <app-button variant="secondary" (clicked)="closed.emit()">
+      {{ 'common.cancel' | translate }}
+    </app-button>
+    <app-button [disabled]="!validRows().length || overCapacity()" (clicked)="submit()">
+      <app-icon name="plus" />
+      {{ 'adminQuiz.import.submit' | translate: { n: validRows().length } }}
+    </app-button>
+  </div>
+</app-dialog>

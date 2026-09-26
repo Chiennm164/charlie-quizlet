@@ -315,6 +315,36 @@
     },
     "deleteTitle": "Xoá bộ đề",
     "deleteConfirm": "Bộ đề \"{title}\" và toàn bộ câu hỏi sẽ bị xoá vĩnh viễn.",
-    "deleted": "Đã xoá bộ đề"
+    "deleted": "Đã xoá bộ đề",
+    "import": {
+      "open": "Nhập từ Excel",
+      "title": "Nhập câu hỏi từ Excel",
+      "howTo": "Copy các dòng câu hỏi trong Excel / Google Sheets rồi dán vào ô bên dưới. Mỗi dòng là 1 câu hỏi.",
+      "columns": "Thứ tự cột: Câu hỏi | Đáp án đúng (A–F) | Giải thích (có thể trống) | Đáp án A | Đáp án B | … (2–6 đáp án)",
+      "copySample": "Chép dòng mẫu",
+      "sampleCopied": "Đã chép dòng mẫu — dán vào ô A1 của Excel để có sẵn các cột",
+      "textLabel": "Dán dữ liệu",
+      "placeholder": "Dán các dòng copy từ Excel vào đây",
+      "line": "Dòng",
+      "question": "Câu hỏi",
+      "options": "Số đáp án",
+      "correct": "Đáp án đúng",
+      "status": "Trạng thái",
+      "errors": {
+        "missingQuestion": "Thiếu câu hỏi",
+        "questionTooLong": "Câu hỏi quá dài",
+        "explanationTooLong": "Giải thích quá dài",
+        "tooFewOptions": "Cần ít nhất 2 đáp án, không để trống ở giữa",
+        "tooManyOptions": "Tối đa 6 đáp án",
+        "optionTooLong": "Đáp án quá dài",
+        "duplicateOption": "Có đáp án trùng nhau",
+        "invalidCorrect": "Cột đáp án đúng phải là A–F (có trong các đáp án)"
+      },
+      "summary": "{n} câu hợp lệ",
+      "errorSummary": "{n} dòng lỗi sẽ bị bỏ qua",
+      "overCapacity": "Chỉ thêm được tối đa {n} câu nữa",
+      "submit": "Thêm {n} câu",
+      "done": "Đã thêm {n} câu hỏi"
+    }
   }
 }

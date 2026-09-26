@@ -34,7 +34,15 @@ import { controlErrorMessage, notBlankValidator } from '../../../shared/utils/va
 import { QuizzesService } from '../../quizzes/quizzes.service';
 import { AdminQuizzesService } from '../admin-quizzes.service';
 import { QuestionEditorComponent } from './question-editor/question-editor';
-import { QuestionForm, createQuestion, toQuestionRequest } from './quiz-form';
+import { QuestionImportDialogComponent } from './question-import-dialog/question-import-dialog';
+import { ImportedQuestion } from './question-import';
+import {
+  QuestionForm,
+  createQuestion,
+  createQuestionFrom,
+  isBlankQuestion,
+  toQuestionRequest,
+} from './quiz-form';
 
 const v = APP_SETTINGS.validation;
 
@@ -57,6 +65,7 @@ const v = APP_SETTINGS.validation;
     LoadingComponent,
     PageHeaderComponent,
     QuestionEditorComponent,
+    QuestionImportDialogComponent,
     SelectComponent,
     TextErrorComponent,
     TextareaComponent,
@@ -88,6 +97,7 @@ export class QuizEditorComponent implements HasUnsavedChanges {
   savedStatus = signal<QuizStatus>('DRAFT');
   /** Bấm xuất bản khi chưa có câu nào. */
   emptyError = signal(false);
+  importOpen = signal(false);
 
   private questionRows = viewChildren('questionRow', { read: ElementRef<HTMLElement> });
 
@@ -161,6 +171,23 @@ export class QuizEditorComponent implements HasUnsavedChanges {
       },
       { injector: this.injector },
     );
+  }
+
+  /** Số câu còn nhập thêm được — câu trống sẽ bị thay bằng câu nhập vào nên không tính. */
+  importCapacity(): number {
+    return v.quizMaxQuestions - this.questions.controls.filter((q) => !isBlankQuestion(q)).length;
+  }
+
+  /** Câu nhập nhanh thay cho các câu trống (vd. câu trống có sẵn của đề mới), rồi thêm vào cuối. */
+  importQuestions(imported: ImportedQuestion[]): void {
+    for (let i = this.questions.length - 1; i >= 0; i--) {
+      if (isBlankQuestion(this.questions.at(i))) this.questions.removeAt(i);
+    }
+    for (const question of imported) this.questions.push(createQuestionFrom(question));
+    this.questions.markAsDirty();
+    this.emptyError.set(false);
+    this.importOpen.set(false);
+    this.toast.success(this.translate.t('adminQuiz.import.done', { n: imported.length }));
   }
 
   removeQuestion(index: number): void {
