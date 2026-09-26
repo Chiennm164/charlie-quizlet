@@ -32,6 +32,11 @@
   --cq-surface: #ffffff;
   --cq-overlay: rgba(61, 44, 82, 0.45); /* nền mờ phía sau dialog (tím than) */
   --cq-dot: rgba(201, 48, 107, 0.09); /* chấm bi trên nền trang (.app-backdrop) */
+  /* Mảng màu loang trên nền trang (.app-backdrop). Đậm nhất ở tâm mảng mà chữ nhạt vẫn >= 4.5:1. */
+  --cq-backdrop-pink: #ffe4ee;
+  --cq-backdrop-lavender: #eee8ff;
+  --cq-backdrop-peach: #ffead8; /* cam đào — hợp màu lông hổ */
+  --cq-backdrop-sky: #e2f3ff;
 
   /* ---- Chữ (tím than thay cho đen) ----*/
   --cq-text-strong: #2a1d3a;
@@ -123,6 +128,10 @@
   --cq-surface: #2f2547;
   --cq-overlay: rgba(0, 0, 0, 0.6);
   --cq-dot: rgba(255, 179, 205, 0.06);
+  --cq-backdrop-pink: #33223f;
+  --cq-backdrop-lavender: #2b2548;
+  --cq-backdrop-peach: #35263a;
+  --cq-backdrop-sky: #22284a;
   --cq-primary-soft: #4a2a45;
 
   --cq-text-strong: #ffffff;
