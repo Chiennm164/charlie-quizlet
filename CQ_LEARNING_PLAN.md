@@ -8,7 +8,7 @@ App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, 
 
 - **Auth**: đăng nhập/đăng xuất, session, JWT access token + refresh token
 - **Phân quyền (RBAC)**: 3 role — `STUDENT`, `TEACHER`, `ADMIN`, có phê duyệt theo 1-2 cấp
-- **Nghiệp vụ**: học flashcard, tạo/duyệt câu hỏi và đề thi, làm bài thi, dashboard theo role
+- **Nghiệp vụ** (mục tiêu chính): Teacher / Admin soạn bộ đề trắc nghiệm, mọi người làm bài để ôn tập, xem kết quả; phụ: học phần + thẻ ghi nhớ
 - **Backend**: Java Spring Boot, PostgreSQL
 
 ## Môi trường Frontend
@@ -36,7 +36,7 @@ App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, 
 
 Mỗi giai đoạn là một nhóm chức năng thật, làm lần lượt từ 1 đến 7. Dòng **Angular** ghi kiến thức luyện được khi làm giai đoạn đó.
 
-Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có sản phẩm dùng được (lấp các thẻ "Sắp ra mắt" trên Home). Trình làm bài ở giai đoạn 4 được dùng lại cho đề thi ở giai đoạn 5.
+Mục tiêu chính: **bộ đề trắc nghiệm để ôn tập** (giai đoạn 4–5). Học phần + thẻ ghi nhớ (giai đoạn 2–3) là phần phụ đã xong.
 
 ### Giai đoạn 1 — Hoàn thiện nền tảng
 - [x] Refresh token + thu hồi khi đăng xuất: access token hết hạn thì tự làm mới rồi gửi lại request
@@ -56,29 +56,27 @@ Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có s
 
 ### Giai đoạn 3 — Chế độ học trên học phần
 - [x] Thẻ ghi nhớ: lật thẻ (CSS 3D), phím tắt (Space lật, ←/→ chuyển thẻ), trộn thẻ, đánh dấu đã nhớ / chưa nhớ → vòng sau chỉ còn thẻ chưa nhớ
-- [ ] Ôn tập ngắt quãng (Leitner hoặc SM-2 kiểu Anki): lưu tiến độ từng thẻ theo user, Home hiện "Hôm nay cần ôn N thẻ"
-- [ ] Phát âm thuật ngữ bằng Web Speech API
+- ~~Ôn tập ngắt quãng (lưu tiến độ từng thẻ)~~ — bỏ: mục tiêu của app là bộ đề để ôn tập, không lưu tiến độ học thẻ.
 
 **Angular:** custom directive (phím tắt), animation, state bằng signal.
 
-### Giai đoạn 4 — Trình làm bài + kết quả
-Xây 1 lần, dùng chung cho "Kiểm tra" tự tạo từ học phần và đề thi chính thức ở giai đoạn 5.
-- [ ] Kiểm tra tự tạo: sinh câu trắc nghiệm từ học phần (đáp án nhiễu lấy từ định nghĩa của thẻ khác), đúng / sai, điền đáp án
-- [ ] Hai chế độ: Luyện tập (hiện đúng / sai + giải thích ngay) và Thi thử (đếm ngược bằng `app-countdown`, trộn câu và đáp án, đánh dấu câu để xem lại, bảng số câu để nhảy nhanh)
-- [ ] Tự lưu câu trả lời lên BE (F5 hay mất mạng vẫn làm tiếp), hết giờ tự nộp
-- [ ] Trang kết quả: điểm, thời gian, tỉ lệ đúng, xem lại từng câu, nút "Làm lại các câu sai"
+### Giai đoạn 4 — Bộ đề trắc nghiệm (Teacher / Admin soạn)
+Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` / `ADMIN` tạo và sửa đề; mọi người đăng nhập làm được đề đã xuất bản.
+- [ ] BE: bộ đề (tiêu đề, mô tả, thời gian làm bài, nháp / đã xuất bản) + câu hỏi trắc nghiệm (nội dung, 2–6 đáp án, 1 đáp án đúng, lời giải thích), phân quyền theo role
+- [ ] Trình soạn đề: form lồng nhau (danh sách câu hỏi, mỗi câu có danh sách đáp án), chọn đáp án đúng, kéo thả sắp xếp câu, cảnh báo rời trang khi chưa lưu
+- [ ] Import câu hỏi nhanh từ Excel / văn bản dán vào, xem trước và báo lỗi từng dòng
+- [ ] Danh sách bộ đề: Teacher thấy đề của mình (cả nháp), mọi người thấy đề đã xuất bản; tìm kiếm, phân trang
 
-Với đề thi thật: BE không gửi đáp án đúng xuống FE trước khi nộp, chấm điểm ở BE; giờ làm bài do server quản lý (`started_at` + `deadline`), countdown ở FE chỉ để hiển thị.
+**Angular:** `roleGuard` cho route Teacher / Admin, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), dùng lại pattern của trình soạn thẻ.
 
-**Angular:** NgRx Signal Store cho state phức tạp, `CanDeactivate` + `beforeunload` khi đang làm bài.
+### Giai đoạn 5 — Làm bài + kết quả
+- [ ] Hai chế độ: Luyện tập (hiện đúng / sai + giải thích ngay sau mỗi câu) và Thi thử (đếm ngược bằng `app-countdown`, trộn câu và đáp án, đánh dấu câu để xem lại, bảng số câu để nhảy nhanh, hết giờ tự nộp)
+- [ ] BE chấm điểm: không gửi đáp án đúng xuống FE trước khi nộp; giờ làm bài do server quản lý (`started_at` + `deadline`), countdown ở FE chỉ để hiển thị
+- [ ] Tự lưu câu trả lời lên BE (F5 hay mất mạng vẫn làm tiếp)
+- [ ] Trang kết quả: điểm, thời gian, tỉ lệ đúng, xem lại từng câu kèm giải thích, nút "Làm lại các câu sai"; lịch sử các lần làm
+- [ ] Teacher xem thống kê đề: số lượt làm, điểm trung bình, câu sai nhiều nhất
 
-### Giai đoạn 5 — Ngân hàng câu hỏi, đề thi, phê duyệt (Teacher / Admin)
-- [ ] Câu hỏi: một đáp án / nhiều đáp án / đúng-sai, độ khó, chủ đề dạng cây (`app-dropdown-tree`), lời giải thích
-- [ ] Phê duyệt: DRAFT → PENDING → APPROVED / REJECTED (kèm lý do) → sửa → gửi duyệt lại; hàng đợi chờ duyệt + lịch sử duyệt
-- [ ] Tạo đề: chọn tay từ câu đã duyệt hoặc random theo quy tắc (vd. 10 câu dễ + 5 câu khó chủ đề X), thời gian, số lần được làm, điểm đạt, khung giờ mở đề (`app-date-range-picker`)
-- [ ] Import câu hỏi từ Excel (BE dùng Apache POI), có bước xem trước và báo lỗi từng dòng trước khi lưu
-
-**Angular:** `roleGuard` cho route Teacher / Admin, form lồng nhau (câu hỏi + danh sách đáp án), table có chọn dòng.
+**Angular:** NgRx Signal Store cho state phức tạp của bài làm, `CanDeactivate` + `beforeunload` khi đang làm bài.
 
 ### Giai đoạn 6 — Lớp học & giao bài
 - [ ] Teacher tạo lớp, học sinh vào lớp bằng mã / link mời
@@ -113,7 +111,8 @@ Với đề thi thật: BE không gửi đáp án đúng xuống FE trước khi
 | `FormArray`, `CanDeactivate` | Giai đoạn 2 — trình soạn thẻ |
 | `debounceTime` / `combineLatest`, so sánh Signals vs RxJS | Giai đoạn 2 — tìm kiếm, lọc |
 | Custom directive | Giai đoạn 3 — phím tắt thẻ ghi nhớ |
-| NgRx Signal Store | Giai đoạn 4 — trình làm bài |
+| `FormArray` lồng nhau (câu hỏi → đáp án) | Giai đoạn 4 — trình soạn đề |
+| NgRx Signal Store | Giai đoạn 5 — trình làm bài |
 | `@defer`, `ChangeDetectorRef` | Giai đoạn 7 — biểu đồ |
 | Unit test (Jest) | Mọi giai đoạn: service, guard, interceptor, logic chấm điểm |
 
