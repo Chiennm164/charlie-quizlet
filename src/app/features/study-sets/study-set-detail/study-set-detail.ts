@@ -41,7 +41,7 @@ export class StudySetDetailComponent {
 
   private readonly id = Number(inject(ActivatedRoute).snapshot.paramMap.get('id'));
   readonly editUrl = studySetEditUrl(this.id);
-  readonly homeUrl = ROUTES.home;
+  readonly listUrl = ROUTES.studySets;
 
   set = signal<StudySet | null>(null);
   loading = signal(true);
@@ -85,7 +85,7 @@ export class StudySetDetailComponent {
       )
       .subscribe(() => {
         this.toast.success(this.translate.t('studySet.deleted', { title: set.title }));
-        this.router.navigateByUrl(ROUTES.home);
+        this.router.navigateByUrl(ROUTES.studySets);
       });
   }
 }

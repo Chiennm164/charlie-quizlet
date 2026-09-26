@@ -54,6 +54,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
       },
       {
+        path: ROUTE_SEGMENTS.studySets,
+        title: 'studySet.myTitle',
+        loadComponent: () =>
+          import('./features/study-sets/my-study-sets/my-study-sets').then(
+            (m) => m.MyStudySetsComponent,
+          ),
+      },
+      {
         path: ROUTE_SEGMENTS.studySetNew,
         title: 'studySet.createTitle',
         canDeactivate: [unsavedChangesGuard],

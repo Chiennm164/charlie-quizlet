@@ -33,3 +33,26 @@ export interface StudySetRequest {
   visibility: StudySetVisibility;
   cards: CardRequest[];
 }
+
+/** 1 dòng trong danh sách học phần — không kèm thẻ, chỉ số thẻ. */
+export interface StudySetSummary {
+  id: number;
+  title: string;
+  description: string | null;
+  visibility: StudySetVisibility;
+  cardCount: number;
+  /** ISO-8601 timestamp. */
+  updatedAt: string;
+}
+
+/** RECENT: mới sửa trước (mặc định) · NEWEST: mới tạo trước · TITLE: A → Z. Khớp enum StudySetSort ở BE. */
+export type StudySetSort = 'RECENT' | 'NEWEST' | 'TITLE';
+
+export interface StudySetListParams {
+  /** Tiêu đề chứa chuỗi này (không phân biệt hoa thường); rỗng = tất cả. */
+  q: string;
+  sort: StudySetSort;
+  /** Bắt đầu từ 0. */
+  page: number;
+  size: number;
+}

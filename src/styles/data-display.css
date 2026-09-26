@@ -105,3 +105,12 @@
 .global-loading__text {
   @apply text-text-inverse text-body-sm;
 }
+
+/* ---- Pagination: .pagination, .pagination__status (shared/ui/pagination) ---- */
+.pagination {
+  @apply flex items-center justify-center gap-3;
+}
+
+.pagination__status {
+  @apply typo-body-sm text-text-muted;
+}

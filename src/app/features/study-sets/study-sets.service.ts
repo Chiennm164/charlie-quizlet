@@ -1,12 +1,25 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/config';
-import { StudySet, StudySetRequest } from '../../core/models';
+import {
+  Page,
+  StudySet,
+  StudySetListParams,
+  StudySetRequest,
+  StudySetSummary,
+} from '../../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class StudySetsService {
   private http = inject(HttpClient);
+
+  listMine(params: StudySetListParams): Observable<Page<StudySetSummary>> {
+    const query = new HttpParams({
+      fromObject: { q: params.q, sort: params.sort, page: params.page, size: params.size },
+    });
+    return this.http.get<Page<StudySetSummary>>(API_ENDPOINTS.studySets.mine, { params: query });
+  }
 
   get(id: number): Observable<StudySet> {
     return this.http.get<StudySet>(API_ENDPOINTS.studySets.detail(id));

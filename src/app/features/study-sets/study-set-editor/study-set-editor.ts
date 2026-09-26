@@ -85,8 +85,8 @@ export class StudySetEditorComponent implements HasUnsavedChanges {
   loading = signal(this.editingId !== null);
   saving = signal(false);
   importOpen = signal(false);
-  /** Link "Huỷ": sửa thì về trang học phần, tạo mới thì về Home. */
-  readonly cancelUrl = this.editingId ? studySetUrl(this.editingId) : ROUTES.home;
+  /** Link "Huỷ": sửa thì về trang học phần, tạo mới thì về danh sách học phần. */
+  readonly cancelUrl = this.editingId ? studySetUrl(this.editingId) : ROUTES.studySets;
 
   private cardRows = viewChildren<ElementRef<HTMLElement>>('cardRow');
 

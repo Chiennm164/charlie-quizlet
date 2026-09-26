@@ -33,7 +33,12 @@ const QUICK_ACTIONS: QuickAction[] = [
     descriptionKey: 'home.actionCreateSetDesc',
     route: ROUTES.studySetNew,
   },
-  { icon: 'book-open', titleKey: 'home.actionMySets', descriptionKey: 'home.actionMySetsDesc' },
+  {
+    icon: 'book-open',
+    titleKey: 'home.actionMySets',
+    descriptionKey: 'home.actionMySetsDesc',
+    route: ROUTES.studySets,
+  },
   {
     icon: 'layers',
     titleKey: 'home.actionFlashcards',

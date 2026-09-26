@@ -157,6 +157,50 @@ submit(): void {
 </form>
 ```
 
+### 3.3 Danh sách có tìm kiếm / lọc / phân trang — RxJS và Signals
+
+Mẫu thật: [my-study-sets.ts](src/app/features/study-sets/my-study-sets/my-study-sets.ts). Bộ lọc nằm trên **URL** (query param) để F5 / Back / chia sẻ link giữ đúng trang đang xem.
+
+**Cách đang dùng — RxJS:**
+
+```ts
+// Ô tìm kiếm: chờ ngừng gõ rồi mới ghi vào URL (không gọi API mỗi phím).
+this.searchControl.valueChanges
+  .pipe(debounceTime(300), map((q) => q.trim()), distinctUntilChanged(), takeUntilDestroyed())
+  .subscribe((q) => this.updateQuery({ q: q || null, page: null }));
+
+// URL đổi -> gọi API. switchMap huỷ request cũ nếu bộ lọc đổi trước khi nó trả về.
+result = toSignal(
+  this.route.queryParamMap.pipe(
+    map(paramsFrom),
+    distinctUntilChanged(sameParams),
+    switchMap((params) => this.service.listMine(params).pipe(catchError(() => of(null)))),
+  ),
+  { initialValue: null },
+);
+```
+
+**Cách tương đương — Signals (`httpResource`, Angular 19.2+):**
+
+```ts
+params = toSignal(this.route.queryParamMap.pipe(map(paramsFrom)), { initialValue: DEFAULT });
+
+list = httpResource<Page<StudySetSummary>>(() => ({
+  url: API_ENDPOINTS.studySets.mine,
+  params: { ...this.params() },   // params() đổi -> tự gọi lại, request cũ tự bị huỷ
+}));
+// template: list.value(), list.isLoading(), list.error()
+```
+
+| | RxJS (`switchMap`) | Signals (`httpResource`) |
+|---|---|---|
+| Huỷ request cũ | `switchMap` | Tự động khi signal đổi |
+| Trạng thái loading / lỗi | Tự quản lý (`tap`, `catchError`) | Có sẵn `isLoading()`, `error()` |
+| Debounce ô tìm kiếm | `debounceTime` — gọn | Không có sẵn: vẫn cần RxJS hoặc tự viết `setTimeout` |
+| Gọi qua service / interceptor | Có | Có (dùng chung `HttpClient` + interceptor) nhưng URL nằm trong component, không qua service |
+
+Dự án chọn RxJS ở đây vì cần `debounceTime` và giữ quy ước "gọi API qua service" (CQ_CODING_RULES mục 2). Trang chỉ đọc theo 1–2 signal, không cần debounce (vd. trang chi tiết theo id) thì `httpResource` gọn hơn.
+
 ---
 
 ## 4. Xử lý lỗi API

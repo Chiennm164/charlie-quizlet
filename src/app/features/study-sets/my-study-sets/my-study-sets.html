@@ -1,0 +1,86 @@
+<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+  <app-page-header
+    [title]="'studySet.myTitle' | translate"
+    [description]="'studySet.myDescription' | translate"
+  />
+  <a class="btn btn--primary btn--md shrink-0 mb-4 sm:mb-0" [routerLink]="newUrl">
+    <app-icon name="plus" />
+    {{ 'studySet.createTitle' | translate }}
+  </a>
+</div>
+
+<div class="grid gap-x-4 sm:grid-cols-[1fr_14rem] mb-2">
+  <app-input-text
+    name="search"
+    [label]="'studySet.searchLabel' | translate"
+    [placeholder]="'studySet.searchPlaceholder' | translate"
+    [formControl]="searchControl"
+  />
+  <app-select
+    [label]="'studySet.sortLabel' | translate"
+    [options]="sortOptions()"
+    [formControl]="sortControl"
+  />
+</div>
+
+@let page = result();
+<section [attr.aria-busy]="loading()">
+  @if (!page) {
+    <app-loading />
+  } @else if (page.content.length === 0) {
+    <div class="card-surface py-10 px-4 flex flex-col items-center text-center gap-3">
+      <app-mascot class="w-24 h-24" />
+      @if (params().q) {
+        <p class="typo-card-title">
+          {{ 'studySet.noMatch' | translate: { q: params().q } }}
+        </p>
+        <p class="typo-muted">{{ 'studySet.noMatchHint' | translate }}</p>
+      } @else {
+        <p class="typo-card-title">{{ 'studySet.emptyTitle' | translate }}</p>
+        <p class="typo-muted">{{ 'studySet.emptyHint' | translate }}</p>
+        <a class="btn btn--primary btn--md mt-2" [routerLink]="newUrl">
+          <app-icon name="plus" />
+          {{ 'studySet.createTitle' | translate }}
+        </a>
+      }
+    </div>
+  } @else {
+    <p class="typo-caption mb-2">
+      {{ 'studySet.resultCount' | translate: { n: page.totalElements } }}
+    </p>
+    <ul
+      class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 transition-opacity"
+      [class.opacity-60]="loading()"
+    >
+      @for (set of page.content; track set.id) {
+        <li class="anim-slide-up-in" [style.--i]="$index">
+          <a
+            [routerLink]="studySetUrl(set.id)"
+            class="card-surface p-4 h-full flex flex-col gap-2 transition-all hover:border-primary hover:-translate-y-0.5"
+          >
+            <h2 class="typo-card-title line-clamp-2 break-words">{{ set.title }}</h2>
+            @if (set.description) {
+              <p class="typo-muted line-clamp-2 break-words">{{ set.description }}</p>
+            }
+            <div class="mt-auto pt-2 flex flex-wrap items-center gap-2 typo-caption">
+              <span class="px-2 py-0.5 rounded-full bg-primary-soft text-primary font-semibold">
+                {{ 'studySet.cardCount' | translate: { n: set.cardCount } }}
+              </span>
+              <span class="px-2 py-0.5 rounded-full bg-bg-muted border border-border">
+                {{ 'studySet.visibility.' + set.visibility | translate }}
+              </span>
+              <span class="ml-auto">{{ formatDate(set.updatedAt) }}</span>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+
+    <app-pagination
+      class="block mt-6"
+      [page]="page.page"
+      [totalPages]="page.totalPages"
+      (pageChange)="goToPage($event)"
+    />
+  }
+</section>

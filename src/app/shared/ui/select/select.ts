@@ -20,15 +20,16 @@ export interface SelectOption {
         class="select"
         [class.is-invalid]="!!errorMessage()"
         [disabled]="disabled()"
-        [value]="value()"
         (change)="onSelect($any($event.target).value)"
         (blur)="onTouched()"
       >
+        <!-- Đánh dấu [selected] trên từng option thay vì [value] trên <select>: [value] được gán trước khi
+             các option render nên trình duyệt bỏ qua và luôn chọn option đầu. -->
         @if (placeholder()) {
-          <option value="" disabled selected>{{ placeholder() }}</option>
+          <option value="" disabled [selected]="!value()">{{ placeholder() }}</option>
         }
         @for (opt of options(); track opt.value) {
-          <option [value]="opt.value">{{ opt.label }}</option>
+          <option [value]="opt.value" [selected]="opt.value === value()">{{ opt.label }}</option>
         }
       </select>
       <app-text-error [message]="errorMessage()" />

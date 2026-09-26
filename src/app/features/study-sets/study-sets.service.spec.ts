@@ -42,6 +42,13 @@ describe('StudySetsService', () => {
     expect(put.request.method).toBe('PUT');
     expect(put.request.body).toEqual(REQUEST);
 
+    service.listMine({ q: 'anh văn', sort: 'TITLE', page: 2, size: 12 }).subscribe();
+    const list = http.expectOne((req) => req.url === `${API}/study-sets/mine`);
+    expect(list.request.params.get('q')).toBe('anh văn');
+    expect(list.request.params.get('sort')).toBe('TITLE');
+    expect(list.request.params.get('page')).toBe('2');
+    expect(list.request.params.get('size')).toBe('12');
+
     service.delete(10).subscribe();
     expect(http.expectOne(`${API}/study-sets/10`).request.method).toBe('DELETE');
   });

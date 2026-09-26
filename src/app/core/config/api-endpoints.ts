@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
   },
   studySets: {
     base: STUDY_SETS_BASE,
+    mine: `${STUDY_SETS_BASE}/mine`,
     detail: (id: number) => `${STUDY_SETS_BASE}/${id}`,
   },
   admin: {

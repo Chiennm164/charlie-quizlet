@@ -42,6 +42,13 @@ export const APP_SETTINGS = {
     studySetMaxCards: 500,
   },
 
+  studySets: {
+    /** Số học phần mỗi trang ở "Học phần của tôi" (BE cho tối đa 50). */
+    pageSize: 12,
+    /** Chờ người dùng ngừng gõ bao lâu (ms) mới tìm kiếm. */
+    searchDebounceMs: 300,
+  },
+
   ui: {
     /** Thời gian hiển thị mặc định của toast (ms). */
     toastDurationMs: 3000,

@@ -29,7 +29,11 @@
     "unsavedTitle": "Leave without saving?",
     "unsavedMessage": "The changes you just made will be lost.",
     "unsavedLeave": "Leave",
-    "unsavedStay": "Stay"
+    "unsavedStay": "Stay",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -292,6 +296,22 @@
       "overCapacity": "You can add at most {n} more cards",
       "submit": "Add {n} cards",
       "done": "Added {n} cards"
-    }
+    },
+    "myTitle": "My study sets",
+    "myDescription": "Study sets you have created",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Type a study set title...",
+    "sortLabel": "Sort by",
+    "sort": {
+      "RECENT": "Recently edited",
+      "NEWEST": "Recently created",
+      "TITLE": "Title A → Z"
+    },
+    "resultCount": "{n} study sets",
+    "noMatch": "No study sets match \"{q}\"",
+    "noMatchHint": "Try another keyword.",
+    "emptyTitle": "You have no study sets yet",
+    "emptyHint": "Create your first study set to start learning!",
+    "backToList": "Back to my study sets"
   }
 }

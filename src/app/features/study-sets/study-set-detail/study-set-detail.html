@@ -5,8 +5,8 @@
     <app-mascot mood="sad" class="w-28 h-28" />
     <h1 class="typo-page-title">{{ 'studySet.notFoundTitle' | translate }}</h1>
     <p class="typo-muted">{{ 'studySet.notFoundDescription' | translate }}</p>
-    <a class="btn btn--primary btn--md mt-3" [routerLink]="homeUrl">
-      {{ 'forbidden.backHome' | translate }}
+    <a class="btn btn--primary btn--md mt-3" [routerLink]="listUrl">
+      {{ 'studySet.backToList' | translate }}
     </a>
   </section>
 } @else if (set(); as set) {

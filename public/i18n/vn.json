@@ -29,7 +29,11 @@
     "unsavedTitle": "Rời trang khi chưa lưu?",
     "unsavedMessage": "Những thay đổi bạn vừa nhập sẽ bị mất.",
     "unsavedLeave": "Rời trang",
-    "unsavedStay": "Ở lại"
+    "unsavedStay": "Ở lại",
+    "pagination": "Phân trang",
+    "previous": "Trước",
+    "next": "Sau",
+    "pageOf": "Trang {page} / {total}"
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -292,6 +296,22 @@
       "overCapacity": "Chỉ thêm được tối đa {n} thẻ nữa",
       "submit": "Thêm {n} thẻ",
       "done": "Đã thêm {n} thẻ"
-    }
+    },
+    "myTitle": "Học phần của tôi",
+    "myDescription": "Các học phần bạn đã tạo",
+    "searchLabel": "Tìm kiếm",
+    "searchPlaceholder": "Nhập tiêu đề học phần...",
+    "sortLabel": "Sắp xếp",
+    "sort": {
+      "RECENT": "Mới sửa gần đây",
+      "NEWEST": "Mới tạo gần đây",
+      "TITLE": "Tên A → Z"
+    },
+    "resultCount": "{n} học phần",
+    "noMatch": "Không có học phần nào khớp \"{q}\"",
+    "noMatchHint": "Thử từ khoá khác xem sao nhé.",
+    "emptyTitle": "Bạn chưa có học phần nào",
+    "emptyHint": "Tạo học phần đầu tiên để bắt đầu học thôi!",
+    "backToList": "Về danh sách học phần"
   }
 }
