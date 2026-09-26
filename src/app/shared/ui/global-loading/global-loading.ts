@@ -7,7 +7,7 @@ import { GlobalLoadingService } from './global-loading.service';
   standalone: true,
   template: `
     @if (loadingService.loading()) {
-      <div class="global-loading" role="alert" aria-busy="true">
+      <div class="global-loading" role="alert" aria-busy="true" animate.leave="anim-fade-out">
         <span class="global-loading__spinner" aria-hidden="true"></span>
         <span class="global-loading__text">{{ text() }}</span>
       </div>

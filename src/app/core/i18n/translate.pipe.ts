@@ -9,9 +9,10 @@ import { TranslateService } from './translate.service';
 export class TranslatePipe implements PipeTransform {
   private translate = inject(TranslateService);
 
-  transform(key: string): string {
+  /** {{ 'auth.hello' | translate: { name: user.fullName } }} — params thay placeholder {name}. */
+  transform(key: string, params?: Record<string, string | number>): string {
     this.translate.locale();
     this.translate.ready();
-    return this.translate.t(key);
+    return this.translate.t(key, params);
   }
 }

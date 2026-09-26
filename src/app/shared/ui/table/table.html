@@ -1,0 +1,65 @@
+<div class="table__scroll">
+  <table class="table">
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th class="table__col--pin-left">
+            <input
+              type="checkbox"
+              class="checkbox__box"
+              [checked]="allSelected()"
+              [indeterminate]="partiallySelected()"
+              (change)="toggleAll($any($event.target).checked)"
+            />
+          </th>
+        }
+        @for (col of columns(); track col.key) {
+          <th
+            [class.table__col--pin-left]="col.pinned === 'left'"
+            [class.table__col--pin-right]="col.pinned === 'right'"
+          >
+            {{ col.header }}
+          </th>
+        }
+        @if (rowActions()) {
+          <th class="table__col--pin-right"></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track trackByFn(row)) {
+        <tr>
+          @if (selectable()) {
+            <td class="table__col--pin-left">
+              <input
+                type="checkbox"
+                class="checkbox__box"
+                [checked]="isSelected(row)"
+                (change)="toggleRow(row, $any($event.target).checked)"
+              />
+            </td>
+          }
+          @for (col of columns(); track col.key) {
+            <td
+              [class.table__col--pin-left]="col.pinned === 'left'"
+              [class.table__col--pin-right]="col.pinned === 'right'"
+            >
+              {{ col.render ? col.render(row) : cellValue(row, col.key) }}
+            </td>
+          }
+          @if (rowActions()) {
+            <td class="table__col--pin-right">
+              <ng-container *ngTemplateOutlet="rowActions() ?? null; context: { $implicit: row }" />
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td class="table__empty" [attr.colspan]="totalColspan()">
+            {{ emptyText() || defaultEmptyText() }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

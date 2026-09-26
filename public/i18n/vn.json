@@ -12,7 +12,19 @@
     "noResult": "Không có kết quả",
     "name": "Họ tên",
     "score": "Điểm",
-    "invalidDateRange": "Đến ngày phải sau hoặc bằng từ ngày"
+    "invalidDateRange": "Đến ngày phải sau hoặc bằng từ ngày",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu",
+    "close": "Đóng",
+    "emailInvalid": "Email không hợp lệ",
+    "minLength": "Tối thiểu {n} ký tự",
+    "maxLength": "Tối đa {n} ký tự",
+    "serverUnavailable": "Không kết nối được máy chủ, vui lòng thử lại sau",
+    "errorDialogTitle": "Thông báo lỗi",
+    "errorTitle": "Đã có lỗi xảy ra",
+    "errorDescription": "Vui lòng thử lại. Nếu lỗi vẫn tiếp diễn, hãy liên hệ quản trị viên.",
+    "errorCode": "Mã lỗi",
+    "serverUnavailableDescription": "Kiểm tra kết nối mạng của bạn hoặc thử lại sau ít phút."
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -76,7 +88,105 @@
   },
   "api": {
     "callButton": "Gọi API",
-    "calling": "Đang gọi API...",
-    "error": "Không gọi được API, thử lại sau."
+    "calling": "Đang gọi API..."
+  },
+  "auth": {
+    "loginTitle": "Đăng nhập",
+    "loginSubtitle": "Nhập email và mật khẩu để tiếp tục",
+    "email": "Email",
+    "emailPlaceholder": "ban@example.com",
+    "password": "Mật khẩu",
+    "loginButton": "Đăng nhập",
+    "loginSuccess": "Xin chào, {name}!",
+    "forgotPasswordLink": "Quên mật khẩu?",
+    "noAccount": "Chưa có tài khoản?",
+    "registerLink": "Đăng ký",
+    "haveAccount": "Đã có tài khoản?",
+    "loginLink": "Đăng nhập",
+    "backToLogin": "Quay lại đăng nhập",
+    "registerTitle": "Đăng ký",
+    "registerSubtitle": "Tạo tài khoản Charlie Quizlet để bắt đầu học",
+    "fullName": "Họ tên",
+    "fullNamePlaceholder": "Nguyễn Văn A",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "registerButton": "Đăng ký",
+    "registerSuccess": "Chào mừng, {name}!",
+    "emailTaken": "Email này đã được đăng ký",
+    "passwordMismatch": "Mật khẩu xác nhận không khớp",
+    "forgotPasswordTitle": "Quên mật khẩu",
+    "forgotPasswordSubtitle": "Nhập email tài khoản, chúng tôi sẽ gửi link để đặt lại mật khẩu",
+    "forgotPasswordSentSubtitle": "Kiểm tra hộp thư của bạn",
+    "forgotPasswordButton": "Gửi link đặt lại",
+    "forgotPasswordSent": "Nếu tài khoản tồn tại, link đặt lại mật khẩu đã được gửi tới",
+    "forgotPasswordResend": "Dùng email khác",
+    "resetPasswordTitle": "Đặt lại mật khẩu",
+    "resetPasswordSubtitle": "Nhập mật khẩu mới cho tài khoản của bạn",
+    "newPassword": "Mật khẩu mới",
+    "resetPasswordButton": "Cập nhật mật khẩu",
+    "resetPasswordSuccess": "Đã đổi mật khẩu, vui lòng đăng nhập lại",
+    "resetLinkInvalid": "Link đặt lại mật khẩu không hợp lệ, đã hết hạn hoặc đã được sử dụng",
+    "requestNewLink": "Gửi lại link mới",
+    "rememberMe": "Ghi nhớ đăng nhập"
+  },
+  "home": {
+    "logout": "Đăng xuất",
+    "logoutSuccess": "Bạn đã đăng xuất",
+    "goodMorning": "Chào buổi sáng, {name}!",
+    "goodAfternoon": "Chào buổi chiều, {name}!",
+    "goodEvening": "Chào buổi tối, {name}!",
+    "subtitle": "Hôm nay bạn muốn học gì?",
+    "quickActions": "Bắt đầu",
+    "comingSoon": "Sắp ra mắt",
+    "actionCreateSet": "Tạo học phần",
+    "actionCreateSetDesc": "Thêm thuật ngữ và định nghĩa để bắt đầu học",
+    "actionMySets": "Học phần của tôi",
+    "actionMySetsDesc": "Xem và chỉnh sửa các học phần bạn đã tạo",
+    "actionFlashcards": "Thẻ ghi nhớ",
+    "actionFlashcardsDesc": "Ôn tập thuật ngữ bằng cách lật thẻ",
+    "actionQuiz": "Kiểm tra",
+    "actionQuizDesc": "Tự kiểm tra kiến thức với câu hỏi tạo tự động",
+    "actionClasses": "Quản lý lớp học",
+    "actionClassesDesc": "Tạo lớp và giao học phần cho học sinh",
+    "account": "Tài khoản",
+    "role": "Vai trò",
+    "memberSince": "Tham gia từ",
+    "roles": {
+      "STUDENT": "Học sinh",
+      "TEACHER": "Giáo viên",
+      "ADMIN": "Quản trị viên"
+    },
+    "pageTitle": "Trang chủ"
+  },
+  "authLayout": {
+    "login": {
+      "title": "Chào mừng bạn quay lại!",
+      "subtitle": "Đăng nhập để tiếp tục các học phần đang dở và xem tiến độ của bạn.",
+      "feature1": "Tiếp tục ôn tập đúng chỗ bạn đã dừng",
+      "feature2": "Đồng bộ học phần trên mọi thiết bị",
+      "feature3": "Xem kết quả các bài kiểm tra gần đây"
+    },
+    "register": {
+      "title": "Bắt đầu hành trình học tập",
+      "subtitle": "Tạo tài khoản miễn phí chỉ trong một phút và bắt đầu học ngay.",
+      "feature1": "Tạo học phần không giới hạn",
+      "feature2": "Ôn tập bằng thẻ ghi nhớ và bài kiểm tra",
+      "feature3": "Hoàn toàn miễn phí cho học sinh"
+    },
+    "forgotPassword": {
+      "title": "Quên mật khẩu? Đừng lo",
+      "subtitle": "Chỉ cần email đã đăng ký, chúng tôi sẽ gửi link để bạn đặt lại mật khẩu.",
+      "feature1": "Link được gửi tới email của bạn",
+      "feature2": "Link có hiệu lực trong 30 phút",
+      "feature3": "Dữ liệu học tập của bạn được giữ nguyên"
+    },
+    "resetPassword": {
+      "title": "Tạo mật khẩu mới",
+      "subtitle": "Đặt mật khẩu mới đủ mạnh để bảo vệ tài khoản của bạn.",
+      "feature1": "Dùng ít nhất {minLength} ký tự",
+      "feature2": "Kết hợp chữ, số và ký tự đặc biệt",
+      "feature3": "Không dùng lại mật khẩu cũ"
+    },
+    "rights": "Bảo lưu mọi quyền.",
+    "footerTagline": "Nền tảng ôn tập & kiểm tra trực tuyến"
   }
 }

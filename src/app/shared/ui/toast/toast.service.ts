@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { APP_SETTINGS } from '../../../core/config';
 
 export type ToastVariant = 'success' | 'danger' | 'warning' | 'info';
 
@@ -13,7 +14,11 @@ export class ToastService {
   private nextId = 0;
   toasts = signal<ToastItem[]>([]);
 
-  show(message: string, variant: ToastVariant = 'info', durationMs = 3000): void {
+  show(
+    message: string,
+    variant: ToastVariant = 'info',
+    durationMs: number = APP_SETTINGS.ui.toastDurationMs,
+  ): void {
     const id = this.nextId++;
     this.toasts.update((list) => [...list, { id, message, variant }]);
     setTimeout(() => this.dismiss(id), durationMs);

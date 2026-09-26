@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslateService } from '../../core/i18n/translate.service';
-import { ApiExampleComponent } from '../../shared/ui/api-example/api-example';
+import { ApiExampleComponent } from './examples/api-example/api-example';
 import { ButtonComponent } from '../../shared/ui/button/button';
 import { CheckboxComponent } from '../../shared/ui/checkbox/checkbox';
 import { CountdownComponent } from '../../shared/ui/countdown/countdown';
@@ -12,7 +12,7 @@ import { DateTimePickerComponent } from '../../shared/ui/date-time-picker/date-t
 import { DialogComponent } from '../../shared/ui/dialog/dialog';
 import { DropdownComponent, DropdownOption } from '../../shared/ui/dropdown/dropdown';
 import { DropdownTreeComponent, TreeNode } from '../../shared/ui/dropdown-tree/dropdown-tree';
-import { FormExampleComponent } from '../../shared/ui/form-example/form-example';
+import { FormExampleComponent } from './examples/form-example/form-example';
 import { GlobalLoadingService } from '../../shared/ui/global-loading/global-loading.service';
 import { IconComponent } from '../../shared/ui/icon/icon';
 import { InputTextComponent } from '../../shared/ui/input-text/input-text';
@@ -60,195 +60,7 @@ interface Student {
     TimeSelectComponent,
     TranslatePipe,
   ],
-  template: `
-    <div class="flex flex-col gap-8 p-6">
-      <div class="flex items-start justify-between gap-4">
-        <app-page-header [title]="'showcase.title' | translate" [description]="'showcase.description' | translate" />
-        <app-language-switcher />
-      </div>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionButton' | translate }}</h2>
-        <div class="flex gap-2 flex-wrap">
-          <app-button variant="primary">{{ 'showcase.buttonPrimary' | translate }}</app-button>
-          <app-button variant="secondary">{{ 'showcase.buttonSecondary' | translate }}</app-button>
-          <app-button variant="danger">{{ 'showcase.buttonDanger' | translate }}</app-button>
-          <app-button variant="ghost">{{ 'showcase.buttonGhost' | translate }}</app-button>
-          <app-button [disabled]="true">{{ 'showcase.buttonDisabled' | translate }}</app-button>
-          <app-button [loading]="true">{{ 'showcase.buttonLoading' | translate }}</app-button>
-        </div>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionLoading' | translate }}</h2>
-        <app-loading />
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionGlobalLoading' | translate }}</h2>
-        <app-button (clicked)="triggerGlobalLoading()">{{ 'showcase.triggerGlobalLoading' | translate }}</app-button>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionIcon' | translate }}</h2>
-        <div class="flex items-center gap-4 text-2xl">
-          <app-icon name="check-circle" class="text-success" />
-          <app-icon name="alert-circle" class="text-danger" />
-          <app-icon name="warning" class="text-warning" />
-          <app-icon name="info-circle" class="text-info" />
-          <app-icon name="search" class="text-primary" />
-          <app-icon name="close" class="text-text-muted" />
-        </div>
-      </section>
-
-      <section class="flex flex-col gap-2 max-w-xs">
-        <h2 class="font-bold">{{ 'showcase.sectionDropdown' | translate }}</h2>
-        <app-dropdown
-          [options]="dropdownOptions()"
-          [searchable]="true"
-          [value]="dropdownValue()"
-          (valueChange)="dropdownValue.set($event)"
-        />
-      </section>
-
-      <section class="flex flex-col gap-2 max-w-xs">
-        <h2 class="font-bold">{{ 'showcase.sectionDropdownTree' | translate }}</h2>
-        <app-dropdown-tree
-          [nodes]="treeNodes()"
-          [value]="treeValue()"
-          (valueChange)="treeValue.set($event)"
-        />
-      </section>
-
-      <section class="flex flex-col gap-2 max-w-xs">
-        <h2 class="font-bold">{{ 'showcase.sectionCheckbox' | translate }}</h2>
-        <app-checkbox>{{ 'showcase.checkboxLabel' | translate }}</app-checkbox>
-      </section>
-
-      <section class="flex flex-col gap-2 max-w-xs">
-        <h2 class="font-bold">{{ 'showcase.sectionRadio' | translate }}</h2>
-        <app-radio-group
-          [label]="'showcase.difficultyRadioLabel' | translate"
-          [options]="radioOptions()"
-          [value]="radioValue()"
-          (valueChange)="radioValue.set($event)"
-        />
-      </section>
-
-      <section class="flex flex-col gap-2 max-w-xs">
-        <h2 class="font-bold">{{ 'showcase.sectionInputNumeric' | translate }}</h2>
-        <app-input-text [label]="'showcase.studentCodeLabel' | translate" [numericOnly]="true" placeholder="HS0012345" />
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionTabs' | translate }}</h2>
-        <app-tabs [tabs]="tabItems()" [activeId]="activeTabId()" (activeIdChange)="activeTabId.set($event)" />
-        <div class="tabs__panel">
-          @switch (activeTabId()) {
-            @case ('info') {
-              {{ 'showcase.tabInfoContent' | translate }}
-            }
-            @case ('history') {
-              {{ 'showcase.tabHistoryContent' | translate }}
-            }
-            @case ('settings') {
-              {{ 'showcase.tabSettingsContent' | translate }}
-            }
-          }
-        </div>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionDialog' | translate }}</h2>
-        <app-button (clicked)="dialogOpen.set(true)">{{ 'showcase.openDialog' | translate }}</app-button>
-        <app-dialog [open]="dialogOpen()" [title]="'showcase.dialogTitle' | translate" (closed)="dialogOpen.set(false)">
-          {{ 'showcase.dialogBody' | translate }}
-          <div dialog-footer>
-            <app-button variant="secondary" (clicked)="dialogOpen.set(false)">{{ 'common.cancel' | translate }}</app-button>
-            <app-button (clicked)="confirmDialog()">{{ 'common.confirm' | translate }}</app-button>
-          </div>
-        </app-dialog>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionList' | translate }}</h2>
-        <app-list [items]="students()">
-          <ng-template #itemTemplate let-student>
-            {{ student.name }} — {{ student.score }}
-          </ng-template>
-        </app-list>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionTable' | translate }}</h2>
-        <app-table
-          [columns]="columns()"
-          [rows]="students()"
-          [selectable]="true"
-          [selectedRows]="selectedStudents()"
-          (selectedRowsChange)="selectedStudents.set($any($event))"
-        >
-          <ng-template #rowActions let-student>
-            <div class="flex items-center gap-2">
-              <button type="button" class="btn btn--ghost btn--sm" [title]="'showcase.editAction' | translate" (click)="editStudent(student)">
-                <app-icon name="check" class="text-primary" />
-              </button>
-              <button type="button" class="btn btn--ghost btn--sm" [title]="'showcase.deleteAction' | translate" (click)="deleteStudent(student)">
-                <app-icon name="close" class="text-danger" />
-              </button>
-            </div>
-          </ng-template>
-        </app-table>
-      </section>
-
-      <section class="flex flex-col gap-4">
-        <h2 class="font-bold">{{ 'showcase.sectionDate' | translate }}</h2>
-        <div class="flex flex-wrap gap-4">
-          <app-date-picker
-            class="max-w-xs"
-            [label]="'showcase.dateLabel' | translate"
-            [max]="today"
-            [ngModel]="dateValue()"
-            (ngModelChange)="dateValue.set($event)"
-          />
-          <app-date-time-picker
-            class="max-w-xs"
-            [label]="'showcase.dateTimeLabel' | translate"
-            [ngModel]="dateTimeValue()"
-            (ngModelChange)="dateTimeValue.set($event)"
-          />
-          <app-time-select
-            class="max-w-xs"
-            [label]="'showcase.timeLabel' | translate"
-            [step]="900"
-            [ngModel]="timeValue()"
-            (ngModelChange)="timeValue.set($event)"
-          />
-        </div>
-        <app-date-range-picker
-          class="max-w-md"
-          [label]="'showcase.dateRangeLabel' | translate"
-          [ngModel]="dateRangeValue()"
-          (ngModelChange)="dateRangeValue.set($event)"
-        />
-
-        <div class="flex items-center gap-3">
-          <span class="text-sm text-text-muted">{{ 'showcase.examCountdownLabel' | translate }}:</span>
-          <app-countdown [seconds]="90" [urgentThreshold]="30" (finished)="onExamTimeUp()" class="text-lg font-bold" />
-        </div>
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionForm' | translate }}</h2>
-        <app-form-example />
-      </section>
-
-      <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{{ 'showcase.sectionApi' | translate }}</h2>
-        <app-api-example />
-      </section>
-    </div>
-  `,
+  templateUrl: './ui-showcase.html',
 })
 export class UiShowcaseComponent {
   private toast = inject(ToastService);

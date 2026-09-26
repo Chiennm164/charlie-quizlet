@@ -1,0 +1,63 @@
+<app-auth-layout
+  page="register"
+  [title]="'auth.registerTitle' | translate"
+  [subtitle]="'auth.registerSubtitle' | translate"
+>
+  <form
+    [formGroup]="form"
+    [attr.aria-busy]="submitting()"
+    (ngSubmit)="submit()"
+    class="flex flex-col gap-2"
+    novalidate
+  >
+    <app-input-text
+      name="name"
+      autocomplete="name"
+      [label]="'auth.fullName' | translate"
+      [placeholder]="'auth.fullNamePlaceholder' | translate"
+      [required]="true"
+      formControlName="fullName"
+      [errorMessage]="errorFor('fullName')"
+    />
+
+    <app-input-text
+      type="email"
+      name="email"
+      autocomplete="username"
+      [label]="'auth.email' | translate"
+      [placeholder]="'auth.emailPlaceholder' | translate"
+      [required]="true"
+      formControlName="email"
+      [errorMessage]="errorFor('email')"
+    />
+
+    <app-input-text
+      type="password"
+      name="new-password"
+      autocomplete="new-password"
+      [label]="'auth.password' | translate"
+      [required]="true"
+      formControlName="password"
+      [errorMessage]="errorFor('password')"
+    />
+
+    <app-input-text
+      type="password"
+      name="confirm-password"
+      autocomplete="new-password"
+      [label]="'auth.confirmPassword' | translate"
+      [required]="true"
+      formControlName="confirmPassword"
+      [errorMessage]="errorFor('confirmPassword')"
+    />
+
+    <app-button type="submit" [block]="true" [loading]="submitting()">{{
+      'auth.registerButton' | translate
+    }}</app-button>
+  </form>
+
+  <ng-container authFooter>
+    {{ 'auth.haveAccount' | translate }}
+    <a [routerLink]="routes.login" class="link">{{ 'auth.loginLink' | translate }}</a>
+  </ng-container>
+</app-auth-layout>

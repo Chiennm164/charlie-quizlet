@@ -1,30 +1,14 @@
-import { Component, forwardRef, input, signal } from '@angular/core';
+import { Component, computed, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { IconComponent } from '../icon/icon';
 import { TextErrorComponent } from '../text-error/text-error';
 
 @Component({
   selector: 'app-input-text',
   standalone: true,
-  imports: [TextErrorComponent],
-  template: `
-    <div class="field">
-      @if (label()) {
-        <label class="field__label" [class.field__label-required]="required()">{{ label() }}</label>
-      }
-      <input
-        class="input"
-        type="text"
-        [attr.inputmode]="numericOnly() ? 'numeric' : null"
-        [class.is-invalid]="!!errorMessage()"
-        [placeholder]="placeholder()"
-        [disabled]="disabled()"
-        [value]="value()"
-        (input)="onInput($event)"
-        (blur)="onTouched()"
-      />
-      <app-text-error [message]="errorMessage()" />
-    </div>
-  `,
+  imports: [IconComponent, TextErrorComponent, TranslatePipe],
+  templateUrl: './input-text.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -35,14 +19,23 @@ import { TextErrorComponent } from '../text-error/text-error';
 })
 export class InputTextComponent implements ControlValueAccessor {
   label = input<string | null>(null);
+  type = input<'text' | 'email' | 'password'>('text');
   placeholder = input('');
   required = input(false);
   /** Chỉ cho phép nhập chữ số (dùng cho mã học sinh, số điện thoại... khi cần giữ định dạng text, ví dụ số 0 đứng đầu). */
   numericOnly = input(false);
   errorMessage = input<string | null>(null);
+  autocomplete = input<string | null>(null);
+  /** Thuộc tính name của thẻ input — giúp trình duyệt nhận diện ô email/mật khẩu để đề nghị lưu & tự điền. */
+  name = input<string | null>(null);
 
   value = signal('');
   disabled = signal(false);
+  /** Với type="password": bấm icon con mắt để ẩn/hiện mật khẩu. */
+  passwordVisible = signal(false);
+
+  isPassword = computed(() => this.type() === 'password');
+  inputType = computed(() => (this.isPassword() && this.passwordVisible() ? 'text' : this.type()));
 
   private onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};

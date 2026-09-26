@@ -1,4 +1,13 @@
-import { Component, computed, ElementRef, HostListener, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { IconComponent } from '../icon/icon';
 
@@ -19,50 +28,7 @@ interface FlatNode {
   selector: 'app-dropdown-tree',
   standalone: true,
   imports: [IconComponent],
-  template: `
-    <div class="dropdown">
-      <button type="button" class="dropdown__trigger" (click)="toggle()">
-        <span>{{ selectedLabel() || placeholder() || defaultPlaceholder() }}</span>
-        <app-icon name="chevron-down" class="text-text-muted" />
-      </button>
-
-      @if (open()) {
-        <div class="dropdown__menu">
-          <div class="dropdown__search">
-            <app-icon name="search" class="text-text-muted" />
-            <input
-              type="text"
-              [placeholder]="searchPlaceholder()"
-              [value]="query()"
-              (input)="query.set($any($event.target).value)"
-            />
-          </div>
-
-          @if (visibleNodes().length === 0) {
-            <div class="dropdown__empty">{{ noResultText() }}</div>
-          }
-
-          @for (flat of visibleNodes(); track flat.value) {
-            <div
-              class="tree__item"
-              [style.--level]="flat.level"
-              [class.is-selected]="flat.value === value()"
-              (click)="select(flat)"
-            >
-              @if (flat.node.children?.length) {
-                <span class="tree__toggle" (click)="toggleExpand($event, flat.value)">
-                  <app-icon [name]="expanded().has(flat.value) ? 'chevron-down' : 'chevron-right'" />
-                </span>
-              } @else {
-                <span class="tree__toggle"></span>
-              }
-              {{ flat.label }}
-            </div>
-          }
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: './dropdown-tree.html',
 })
 export class DropdownTreeComponent {
   private host = inject(ElementRef<HTMLElement>);
@@ -96,9 +62,7 @@ export class DropdownTreeComponent {
 
   private allFlat = computed(() => this.flatten(this.nodes(), 0));
 
-  selectedLabel = computed(
-    () => this.allFlat().find((n) => n.value === this.value())?.label ?? '',
-  );
+  selectedLabel = computed(() => this.allFlat().find((n) => n.value === this.value())?.label ?? '');
 
   visibleNodes = computed<FlatNode[]>(() => {
     const q = this.query().trim().toLowerCase();

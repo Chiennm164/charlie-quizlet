@@ -3,45 +3,49 @@
    ========================================================= */
 
 .toast-container {
-  @apply fixed top-4 right-4 z-[1100] flex flex-col gap-2 w-80 max-w-[90vw];
+  /* Mobile: full ngang (chừa lề 16px); từ sm trở lên: rộng 20rem ở góc phải. */
+  @apply fixed top-4 inset-x-4 z-[1100] flex flex-col gap-2 sm:left-auto sm:w-80;
 }
 
 .toast {
-  @apply flex items-start gap-2 rounded-md border px-4 py-3 text-sm shadow-lg bg-surface text-text;
-  animation: cq-toast-in 0.18s ease-out;
+  @apply flex items-start gap-2 rounded-md border px-4 py-3 shadow-lg typo-body-sm;
+  /* Nền đặc (pha màu trạng thái vào màu surface) để không lộ nội dung phía sau toast. */
+  background: color-mix(in srgb, var(--toast-color) 8%, var(--cq-surface));
+  border-color: color-mix(in srgb, var(--toast-color) 30%, var(--cq-surface));
 }
 
-@keyframes cq-toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
 .toast--success {
-  @apply border-success/30 bg-success/10 text-success;
+  --toast-color: var(--cq-success);
 }
 
 .toast--danger {
-  @apply border-danger/30 bg-danger/10 text-danger;
+  --toast-color: var(--cq-danger);
 }
 
 .toast--warning {
-  @apply border-warning/30 bg-warning/10 text-warning;
+  --toast-color: var(--cq-warning);
 }
 
 .toast--info {
-  @apply border-info/30 bg-info/10 text-info;
+  --toast-color: var(--cq-info);
+}
+
+/* Icon cao bằng 1 dòng chữ (h-5 = line-height của typo-body-sm) để luôn thẳng hàng với dòng đầu tiên. */
+.toast__icon {
+  @apply flex h-5 shrink-0 items-center text-body;
+  color: var(--toast-color);
+}
+
+.toast__message {
+  @apply min-w-0 flex-1 break-words;
 }
 
 .toast__close {
-  @apply ml-auto text-text-muted cursor-pointer transition-colors duration-100;
+  @apply -mr-1 flex h-5 w-5 shrink-0 items-center justify-center rounded text-text-muted cursor-pointer
+    transition-colors;
 
   &:hover {
-    @apply text-text;
+    @apply bg-black/5 text-text;
   }
 }

@@ -1,0 +1,42 @@
+<div class="dropdown">
+  <button type="button" class="dropdown__trigger" (click)="toggle()">
+    <span>{{ selectedLabel() || placeholder() || defaultPlaceholder() }}</span>
+    <app-icon name="chevron-down" class="text-text-muted" />
+  </button>
+
+  @if (open()) {
+    <div class="dropdown__menu" animate.enter="anim-slide-down-in" animate.leave="anim-fade-out">
+      <div class="dropdown__search">
+        <app-icon name="search" class="text-text-muted" />
+        <input
+          type="text"
+          [placeholder]="searchPlaceholder()"
+          [value]="query()"
+          (input)="query.set($any($event.target).value)"
+        />
+      </div>
+
+      @if (visibleNodes().length === 0) {
+        <div class="dropdown__empty">{{ noResultText() }}</div>
+      }
+
+      @for (flat of visibleNodes(); track flat.value) {
+        <div
+          class="tree__item"
+          [style.--level]="flat.level"
+          [class.is-selected]="flat.value === value()"
+          (click)="select(flat)"
+        >
+          @if (flat.node.children?.length) {
+            <span class="tree__toggle" (click)="toggleExpand($event, flat.value)">
+              <app-icon [name]="expanded().has(flat.value) ? 'chevron-down' : 'chevron-right'" />
+            </span>
+          } @else {
+            <span class="tree__toggle"></span>
+          }
+          {{ flat.label }}
+        </div>
+      }
+    </div>
+  }
+</div>

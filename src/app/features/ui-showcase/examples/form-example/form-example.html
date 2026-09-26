@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4 max-w-md">
+  <app-input-text
+    [label]="'form.nameLabel' | translate"
+    [required]="true"
+    formControlName="name"
+    [errorMessage]="errorFor('name')"
+  />
+
+  <app-input-number
+    [label]="'form.scoreLabel' | translate"
+    [required]="true"
+    [min]="0"
+    formControlName="score"
+    [errorMessage]="errorFor('score')"
+  />
+
+  <app-select
+    [label]="'form.difficultyLabel' | translate"
+    [placeholder]="'form.difficultyPlaceholder' | translate"
+    [options]="difficultyOptions()"
+    formControlName="difficulty"
+    [errorMessage]="errorFor('difficulty')"
+  />
+
+  <app-textarea
+    [label]="'form.descriptionLabel' | translate"
+    formControlName="description"
+    [errorMessage]="errorFor('description')"
+  />
+
+  <app-checkbox formControlName="published">{{ 'form.publishNow' | translate }}</app-checkbox>
+
+  <app-button type="submit">{{ 'common.save' | translate }}</app-button>
+</form>

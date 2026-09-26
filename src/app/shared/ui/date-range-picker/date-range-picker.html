@@ -1,0 +1,31 @@
+<div class="field">
+  @if (label()) {
+    <label class="field__label" [class.field__label-required]="required()">{{ label() }}</label>
+  }
+  <div class="flex items-center gap-2">
+    <input
+      type="date"
+      class="input"
+      [class.is-invalid]="!!errorMessage() || rangeInvalid()"
+      [min]="min()"
+      [max]="max()"
+      [disabled]="disabled()"
+      [value]="value().from"
+      (input)="onFromInput($event)"
+      (blur)="onTouched()"
+    />
+    <span class="text-text-muted">–</span>
+    <input
+      type="date"
+      class="input"
+      [class.is-invalid]="!!errorMessage() || rangeInvalid()"
+      [min]="value().from || min()"
+      [max]="max()"
+      [disabled]="disabled()"
+      [value]="value().to"
+      (input)="onToInput($event)"
+      (blur)="onTouched()"
+    />
+  </div>
+  <app-text-error [message]="errorMessage() || (rangeInvalid() ? rangeErrorText() : null)" />
+</div>

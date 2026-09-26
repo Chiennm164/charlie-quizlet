@@ -12,7 +12,19 @@
     "noResult": "No results",
     "name": "Name",
     "score": "Score",
-    "invalidDateRange": "End date must be after or equal to start date"
+    "invalidDateRange": "End date must be after or equal to start date",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "close": "Close",
+    "emailInvalid": "Invalid email address",
+    "minLength": "Must be at least {n} characters",
+    "maxLength": "Must be at most {n} characters",
+    "serverUnavailable": "Cannot reach the server, please try again later",
+    "errorDialogTitle": "Error",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "Please try again. If the problem persists, contact an administrator.",
+    "errorCode": "Error code",
+    "serverUnavailableDescription": "Check your network connection or try again in a few minutes."
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -76,7 +88,105 @@
   },
   "api": {
     "callButton": "Call API",
-    "calling": "Calling API...",
-    "error": "Could not call the API, please try again."
+    "calling": "Calling API..."
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Enter your email and password to continue",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "loginButton": "Log in",
+    "loginSuccess": "Hello, {name}!",
+    "forgotPasswordLink": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Sign up",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "backToLogin": "Back to log in",
+    "registerTitle": "Sign up",
+    "registerSubtitle": "Create a Charlie Quizlet account to start studying",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "John Doe",
+    "confirmPassword": "Confirm password",
+    "registerButton": "Sign up",
+    "registerSuccess": "Welcome, {name}!",
+    "emailTaken": "This email is already registered",
+    "passwordMismatch": "Passwords do not match",
+    "forgotPasswordTitle": "Forgot password",
+    "forgotPasswordSubtitle": "Enter your account email and we'll send you a link to reset your password",
+    "forgotPasswordSentSubtitle": "Check your inbox",
+    "forgotPasswordButton": "Send reset link",
+    "forgotPasswordSent": "If an account exists, a password reset link has been sent to",
+    "forgotPasswordResend": "Use a different email",
+    "resetPasswordTitle": "Reset password",
+    "resetPasswordSubtitle": "Choose a new password for your account",
+    "newPassword": "New password",
+    "resetPasswordButton": "Update password",
+    "resetPasswordSuccess": "Password updated, please log in again",
+    "resetLinkInvalid": "This reset link is invalid, has expired or has already been used",
+    "requestNewLink": "Request a new link",
+    "rememberMe": "Remember me"
+  },
+  "home": {
+    "logout": "Log out",
+    "logoutSuccess": "You have been logged out",
+    "goodMorning": "Good morning, {name}!",
+    "goodAfternoon": "Good afternoon, {name}!",
+    "goodEvening": "Good evening, {name}!",
+    "subtitle": "What would you like to study today?",
+    "quickActions": "Get started",
+    "comingSoon": "Coming soon",
+    "actionCreateSet": "Create study set",
+    "actionCreateSetDesc": "Add terms and definitions to start learning",
+    "actionMySets": "My study sets",
+    "actionMySetsDesc": "View and edit the sets you have created",
+    "actionFlashcards": "Flashcards",
+    "actionFlashcardsDesc": "Review terms by flipping cards",
+    "actionQuiz": "Practice test",
+    "actionQuizDesc": "Test your knowledge with auto-generated questions",
+    "actionClasses": "Manage classes",
+    "actionClassesDesc": "Create classes and assign study sets to students",
+    "account": "Account",
+    "role": "Role",
+    "memberSince": "Member since",
+    "roles": {
+      "STUDENT": "Student",
+      "TEACHER": "Teacher",
+      "ADMIN": "Admin"
+    },
+    "pageTitle": "Home"
+  },
+  "authLayout": {
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Log in to continue your study sets and check your progress.",
+      "feature1": "Pick up right where you left off",
+      "feature2": "Your study sets synced on every device",
+      "feature3": "See results of your recent tests"
+    },
+    "register": {
+      "title": "Start your learning journey",
+      "subtitle": "Create a free account in a minute and start studying right away.",
+      "feature1": "Create unlimited study sets",
+      "feature2": "Review with flashcards and practice tests",
+      "feature3": "Completely free for students"
+    },
+    "forgotPassword": {
+      "title": "Forgot your password? No worries",
+      "subtitle": "Just enter your registered email and we'll send you a link to reset it.",
+      "feature1": "The link is sent to your email",
+      "feature2": "The link is valid for 30 minutes",
+      "feature3": "Your study data stays intact"
+    },
+    "resetPassword": {
+      "title": "Create a new password",
+      "subtitle": "Choose a strong new password to keep your account safe.",
+      "feature1": "Use at least {minLength} characters",
+      "feature2": "Mix letters, numbers and symbols",
+      "feature3": "Don't reuse an old password"
+    },
+    "rights": "All rights reserved.",
+    "footerTagline": "Online study & testing platform"
   }
 }

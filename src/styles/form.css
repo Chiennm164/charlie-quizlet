@@ -8,7 +8,7 @@
 }
 
 .field__label {
-  @apply text-sm font-medium text-text;
+  @apply typo-label;
 }
 
 .field__label-required::after {
@@ -17,16 +17,22 @@
 }
 
 .field__error {
-  @apply text-sm text-danger;
+  @apply typo-error;
+}
+
+/* Giữ sẵn chỗ 1 dòng cho thông báo lỗi -> lỗi hiện/ẩn không làm giật layout.
+   Lỗi dài hơn 1 dòng vẫn xuống dòng bình thường. */
+.field__error--reserve {
+  min-height: var(--cq-text-error-lh);
 }
 
 .field__hint {
-  @apply text-sm text-text-muted;
+  @apply typo-caption;
 }
 
 .input {
-  @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-base text-text
-    outline-none transition-all duration-150;
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-body text-text
+    outline-none transition-all;
 
   &::placeholder {
     @apply text-text-muted;
@@ -67,7 +73,7 @@ textarea.input {
 }
 
 .checkbox__box {
-  @apply h-4 w-4 rounded border border-border accent-primary cursor-pointer transition-shadow duration-100;
+  @apply h-4 w-4 rounded border border-border accent-primary cursor-pointer transition-shadow;
 
   &:hover:not(:disabled) {
     @apply shadow-sm;
@@ -79,7 +85,7 @@ textarea.input {
 }
 
 .checkbox__label {
-  @apply text-base text-text;
+  @apply text-body text-text;
 }
 
 /* ---- radio group ---- */
@@ -100,7 +106,7 @@ textarea.input {
 }
 
 .radio__input {
-  @apply h-4 w-4 border border-border accent-primary cursor-pointer transition-shadow duration-100;
+  @apply h-4 w-4 border border-border accent-primary cursor-pointer transition-shadow;
 
   &:hover:not(:disabled) {
     @apply shadow-sm;
@@ -112,13 +118,13 @@ textarea.input {
 }
 
 .radio__label {
-  @apply text-base text-text;
+  @apply text-body text-text;
 }
 
 /* ---- select (native) ---- */
 .select {
-  @apply w-full rounded-md border border-border bg-surface px-3 py-2 pr-8 text-base text-text
-    outline-none transition-all duration-150 appearance-none bg-no-repeat cursor-pointer;
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 pr-8 text-body text-text
+    outline-none transition-all appearance-none bg-no-repeat cursor-pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748b'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
   background-position: right 0.5rem center;
   background-size: 1.25rem;
@@ -137,5 +143,14 @@ textarea.input {
 
   &.is-invalid {
     @apply border-danger;
+  }
+}
+
+/* ---- link chữ (vd. "Quên mật khẩu?", "Đăng ký") ---- */
+.link {
+  @apply text-primary font-medium cursor-pointer;
+
+  &:hover {
+    @apply underline;
   }
 }

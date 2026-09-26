@@ -1,0 +1,70 @@
+/* =========================================================
+   Typography — class chữ theo vai trò (cỡ + độ đậm + màu), token ở variables.css.
+   Dùng trong template thay vì tự ghép text-2xl font-semibold text-text...
+   Khai báo bằng @utility (Tailwind v4) nên dùng được cả trong template lẫn @apply ở file BEM.
+
+   | Class                 | Dùng cho                                   |
+   |-----------------------|--------------------------------------------|
+   | Class              | Cỡ / đậm        | Màu      | Dùng cho                                  |
+   |--------------------|-----------------|----------|-------------------------------------------|
+   | typo-hero-title    | 28px / 700      | trắng    | Tiêu đề lớn trên nền màu (panel giới thiệu)|
+   | typo-hero-subtitle | 14px / 400      | trắng 80%| Mô tả dưới typo-hero-title                 |
+   | typo-page-title    | 24px / 700      | đậm      | Tiêu đề trang (h1)                         |
+   | typo-section-title | 18px / 600      | đậm      | Tiêu đề mục (h2), tiêu đề dialog           |
+   | typo-card-title    | 16px / 600      | đậm      | Tiêu đề thẻ / item (h3)                    |
+   | typo-body          | 16px / 400      | thường   | Chữ thường                                 |
+   | typo-body-sm       | 14px / 400      | thường   | Chữ nhỏ (nội dung phụ, toast, bảng)         |
+   | typo-muted         | 14px / 400      | nhạt     | Mô tả, phụ đề                              |
+   | typo-label         | 14px / 500      | thường   | Nhãn ô nhập (= body − 2px)                 |
+   | typo-caption       | 12px / 400      | nhạt     | Chú thích, gợi ý dưới ô, footer, badge      |
+   | typo-error         | 12px / 500      | đỏ       | Thông báo lỗi (= label − 2px)              |
+   | typo-error-code    | 12px / 400 mono | nhạt     | Mã lỗi (vd. AUTH_INVALID_CREDENTIALS)       |
+   ========================================================= */
+
+@utility typo-hero-title {
+  @apply text-hero text-text-inverse;
+}
+
+@utility typo-hero-subtitle {
+  @apply text-body-sm text-text-inverse/80;
+}
+
+@utility typo-page-title {
+  @apply text-page-title text-text-strong;
+}
+
+@utility typo-section-title {
+  @apply text-section-title text-text-strong;
+}
+
+@utility typo-card-title {
+  @apply text-card-title text-text-strong;
+}
+
+@utility typo-body {
+  @apply text-body text-text;
+}
+
+@utility typo-body-sm {
+  @apply text-body-sm text-text;
+}
+
+@utility typo-muted {
+  @apply text-body-sm text-text-muted;
+}
+
+@utility typo-label {
+  @apply text-label text-text;
+}
+
+@utility typo-caption {
+  @apply text-caption text-text-muted;
+}
+
+@utility typo-error {
+  @apply text-error text-danger;
+}
+
+@utility typo-error-code {
+  @apply text-error-code font-mono text-text-muted;
+}

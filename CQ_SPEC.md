@@ -137,15 +137,50 @@ BE REST API (Spring Boot) --> PostgreSQL
 - State cần render ra UI: dùng `signal()`/`computed()`.
 - Gọi API: Service trả `Observable`, convert sang signal ở nơi cần (hoặc dùng NgRx/NgRx Signal Store nếu state phức tạp, dùng chung nhiều nơi).
 
-## 5. Cấu trúc thư mục (dự kiến — Giai đoạn 0)
+## 5. Cấu trúc thư mục
 
 ```
 src/app/
-├── core/        # interceptor, guard, service dùng chung (auth, http)
-├── features/    # module theo nghiệp vụ: auth, dashboard, flashcard, question, exam
-└── shared/      # component/pipe/directive dùng chung nhiều nơi
+├── core/                    # dùng toàn app, khởi tạo 1 lần
+│   ├── auth/                # AuthService (token, phiên), authGuard / guestGuard
+│   ├── config/              # CẤU HÌNH CHUNG, mỗi nhóm 1 file:
+│   │   ├── app-settings.ts  #   hành vi app: tên app, ngôn ngữ, validate, ghi nhớ đăng nhập, toast...
+│   │   ├── api-endpoints.ts #   URL gọi BE
+│   │   ├── routes.ts        #   đường dẫn trang
+│   │   ├── error-codes.ts   #   mã lỗi BE mà FE cần rẽ nhánh
+│   │   ├── http-status.ts   #   mã HTTP status
+│   │   └── storage-keys.ts  #   key localStorage/sessionStorage
+│   ├── error/               # dialog lỗi chung, handleErrorCode / markErrorHandled
+│   ├── i18n/                # TranslateService, pipe translate, tiêu đề tab theo ngôn ngữ
+│   ├── interceptors/        # locale → auth → error → loading
+│   ├── layout/              # main-layout (sau đăng nhập), auth-layout (login/register/...)
+│   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
+├── features/                # màn hình theo nghiệp vụ: auth, home
+│   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
+└── shared/                  # tái sử dụng, không logic nghiệp vụ
+    ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
+    └── utils/
+        ├── validation.utils.ts  # AppValidators, passwordMatch, notBlank, controlErrorMessage
+        └── common.utils.ts      # toApiError, hasErrorCode, isHttpStatus, formatDate, getInitials
+src/styles/                  # variables.css (token), typography.css, animations.css, BEM của UI kit
+public/i18n/                 # vn.json, en.json
+src/environments/            # apiUrl theo môi trường
 ```
+
+Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, form, i18n, style): [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Quy định: [CQ_CODING_RULES.md](CQ_CODING_RULES.md).
 
 ## 6. Trạng thái hiện tại
 
-Dự án mới scaffold Angular (routing, SCSS, zoneless) + cấu hình Jest — **chưa triển khai** các luồng ở trên. Xem checklist chi tiết theo từng giai đoạn trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md).
+**Đã có**
+
+- **Auth**: đăng ký, đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
+- **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
+- **Giao diện**: layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập + trang home (lời chào, thẻ chức năng "Sắp ra mắt", thông tin tài khoản), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
+- **Nền tảng**: cấu hình tập trung (`core/config`), token style (màu, chữ, animation), animation hiện/ẩn + chuyển trang, unit test cho auth, guard, interceptor, util.
+
+**Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
+
+- Refresh token + thu hồi token khi đăng xuất (mục 2).
+- Chọn vai trò khi đăng ký, phê duyệt tài khoản Teacher, dashboard riêng theo vai trò (mục 3).
+- Nghiệp vụ chính: flashcard, câu hỏi, đề thi, làm bài, kết quả (mục 3b).
+- Gửi email thật (SMTP) cho quên mật khẩu.

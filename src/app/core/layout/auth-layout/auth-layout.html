@@ -1,0 +1,70 @@
+<div class="min-h-screen flex flex-col bg-bg-muted">
+  <header class="app-header bg-surface border-b border-border">
+    <div class="max-w-6xl mx-auto h-14 px-4 flex items-center justify-between gap-3">
+      <a
+        [routerLink]="routes.login"
+        [attr.aria-label]="appName"
+        class="rounded-md transition-opacity hover:opacity-80"
+        ><app-brand
+      /></a>
+      <app-language-switcher />
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center px-4 py-8 lg:py-12">
+    <div
+      class="w-full max-w-md lg:max-w-5xl grid lg:grid-cols-2 bg-surface border border-border rounded-lg shadow-md overflow-hidden"
+    >
+      <!-- Panel giới thiệu: chỉ hiện từ màn lg -->
+      <aside
+        class="hidden lg:flex flex-col justify-between gap-8 p-10 bg-primary text-text-inverse"
+      >
+        <div>
+          <h2 class="typo-hero-title">
+            {{ heroKey() + '.title' | translate }}
+          </h2>
+          <p class="mt-2 typo-hero-subtitle">
+            {{ heroKey() + '.subtitle' | translate }}
+          </p>
+        </div>
+
+        <app-auth-illustration class="block w-full max-w-xs mx-auto" />
+
+        <ul class="flex flex-col gap-3 text-body-sm">
+          @for (feature of features(); track feature) {
+            <li class="flex items-center gap-2">
+              <app-icon name="check-circle" [size]="18" class="shrink-0" />
+              <span>{{ feature | translate: heroParams }}</span>
+            </li>
+          }
+        </ul>
+      </aside>
+
+      <section class="px-6 py-8 sm:px-10 sm:py-10 flex flex-col justify-center">
+        <div class="w-full max-w-sm mx-auto">
+          <h1 class="typo-page-title">{{ title() }}</h1>
+          @if (subtitle()) {
+            <p class="typo-muted mt-1">{{ subtitle() }}</p>
+          }
+
+          <div class="mt-6">
+            <ng-content />
+          </div>
+
+          <div class="mt-6 text-center typo-muted">
+            <ng-content select="[authFooter]" />
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bg-surface border-t border-border">
+    <div
+      class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-1 typo-caption"
+    >
+      <span>© {{ year }} {{ appName }}. {{ 'authLayout.rights' | translate }}</span>
+      <span>{{ 'authLayout.footerTagline' | translate }}</span>
+    </div>
+  </footer>
+</div>

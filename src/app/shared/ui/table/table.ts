@@ -1,4 +1,12 @@
-import { Component, TemplateRef, computed, contentChild, inject, input, output } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  computed,
+  contentChild,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslateService } from '../../../core/i18n/translate.service';
 
@@ -14,67 +22,7 @@ export interface TableColumn {
   selector: 'app-table',
   standalone: true,
   imports: [NgTemplateOutlet],
-  template: `
-    <div class="table__scroll">
-      <table class="table">
-        <thead>
-          <tr>
-            @if (selectable()) {
-              <th class="table__col--pin-left">
-                <input
-                  type="checkbox"
-                  class="checkbox__box"
-                  [checked]="allSelected()"
-                  [indeterminate]="partiallySelected()"
-                  (change)="toggleAll($any($event.target).checked)"
-                />
-              </th>
-            }
-            @for (col of columns(); track col.key) {
-              <th [class.table__col--pin-left]="col.pinned === 'left'" [class.table__col--pin-right]="col.pinned === 'right'">
-                {{ col.header }}
-              </th>
-            }
-            @if (rowActions()) {
-              <th class="table__col--pin-right"></th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of rows(); track trackByFn(row)) {
-            <tr>
-              @if (selectable()) {
-                <td class="table__col--pin-left">
-                  <input
-                    type="checkbox"
-                    class="checkbox__box"
-                    [checked]="isSelected(row)"
-                    (change)="toggleRow(row, $any($event.target).checked)"
-                  />
-                </td>
-              }
-              @for (col of columns(); track col.key) {
-                <td [class.table__col--pin-left]="col.pinned === 'left'" [class.table__col--pin-right]="col.pinned === 'right'">
-                  {{ col.render ? col.render(row) : cellValue(row, col.key) }}
-                </td>
-              }
-              @if (rowActions()) {
-                <td class="table__col--pin-right">
-                  <ng-container *ngTemplateOutlet="rowActions() ?? null; context: { $implicit: row }" />
-                </td>
-              }
-            </tr>
-          } @empty {
-            <tr>
-              <td class="table__empty" [attr.colspan]="totalColspan()">
-                {{ emptyText() || defaultEmptyText() }}
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  `,
+  templateUrl: './table.html',
 })
 export class TableComponent {
   private translate = inject(TranslateService);
@@ -103,9 +51,13 @@ export class TableComponent {
     () => this.columns().length + (this.rowActions() ? 1 : 0) + (this.selectable() ? 1 : 0),
   );
 
-  private selectedKeys = computed(() => new Set(this.selectedRows().map((row) => this.trackBy()(row))));
+  private selectedKeys = computed(
+    () => new Set(this.selectedRows().map((row) => this.trackBy()(row))),
+  );
 
-  allSelected = computed(() => this.rows().length > 0 && this.rows().every((row) => this.isSelected(row)));
+  allSelected = computed(
+    () => this.rows().length > 0 && this.rows().every((row) => this.isSelected(row)),
+  );
 
   partiallySelected = computed(
     () => !this.allSelected() && this.rows().some((row) => this.isSelected(row)),

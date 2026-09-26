@@ -1,0 +1,50 @@
+<app-auth-layout
+  page="login"
+  [title]="'auth.loginTitle' | translate"
+  [subtitle]="'auth.loginSubtitle' | translate"
+>
+  <form
+    [formGroup]="form"
+    [attr.aria-busy]="submitting()"
+    (ngSubmit)="submit()"
+    class="flex flex-col gap-2"
+    novalidate
+  >
+    <app-input-text
+      type="email"
+      name="email"
+      autocomplete="username"
+      [label]="'auth.email' | translate"
+      [placeholder]="'auth.emailPlaceholder' | translate"
+      [required]="true"
+      formControlName="email"
+      [errorMessage]="errorFor('email')"
+    />
+
+    <app-input-text
+      type="password"
+      name="password"
+      autocomplete="current-password"
+      [label]="'auth.password' | translate"
+      [required]="true"
+      formControlName="password"
+      [errorMessage]="errorFor('password')"
+    />
+
+    <div class="flex items-center justify-between gap-2 text-body-sm">
+      <app-checkbox formControlName="rememberMe">{{ 'auth.rememberMe' | translate }}</app-checkbox>
+      <a [routerLink]="routes.forgotPassword" class="link">{{
+        'auth.forgotPasswordLink' | translate
+      }}</a>
+    </div>
+
+    <app-button type="submit" [block]="true" [loading]="submitting()">{{
+      'auth.loginButton' | translate
+    }}</app-button>
+  </form>
+
+  <ng-container authFooter>
+    {{ 'auth.noAccount' | translate }}
+    <a [routerLink]="routes.register" class="link">{{ 'auth.registerLink' | translate }}</a>
+  </ng-container>
+</app-auth-layout>

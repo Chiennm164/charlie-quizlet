@@ -1,14 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ErrorDialogComponent } from './core/error/error-dialog/error-dialog';
 import { GlobalLoadingComponent } from './shared/ui/global-loading/global-loading';
 import { ToastContainerComponent } from './shared/ui/toast/toast';
 
 @Component({
-  imports: [RouterOutlet, ToastContainerComponent, GlobalLoadingComponent],
+  imports: [RouterOutlet, ToastContainerComponent, GlobalLoadingComponent, ErrorDialogComponent],
   selector: 'app-root',
-  styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('charlie-quizlet');
-}
+export class App {}

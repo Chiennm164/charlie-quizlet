@@ -1,59 +1,32 @@
-# CharlieQuizlet
+# Charlie Quizlet — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Ứng dụng học tập / thi trắc nghiệm kiểu Quizlet (Angular 22 zoneless, Tailwind CSS v4, Jest).
+Backend là repo riêng: [`charlie-quizlet-be`](../charlie-quizlet-be) (Spring Boot + PostgreSQL).
 
-## Development server
+## Tài liệu
 
-To start a local development server, run:
+| Tài liệu | Nội dung |
+|---|---|
+| [CQ_SPEC.md](CQ_SPEC.md) | Luồng nghiệp vụ, cấu trúc thư mục, trạng thái hiện tại |
+| [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md) | Hướng dẫn kèm code mẫu: cấu hình, gọi API, xử lý lỗi, dialog, toast, loading, form, i18n, style, thêm trang mới |
+| [CQ_CODING_RULES.md](CQ_CODING_RULES.md) | Quy định bắt buộc khi viết code |
+| [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md) | Lộ trình theo giai đoạn |
 
-```bash
-ng serve
-```
+## Yêu cầu
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 22 hoặc 24 (qua `nvm`), dùng Angular CLI cài local (`npx ng ...`).
+- Backend chạy ở `http://localhost:8080` (xem README của `charlie-quizlet-be`).
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Chạy
 
 ```bash
-ng generate --help
+npm install
+npm start                                  # http://localhost:4200
+npx ng build --configuration development   # build dev
+npm run build                              # build production
+npm test                                   # unit test (Jest)
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- URL API theo môi trường: `src/environments/` (dev `http://localhost:8080/api`, production `/api` qua reverse proxy).
+- Trang xem UI kit (dev only): bỏ comment route `ui-showcase` trong `src/app/app.routes.ts`, mở `/ui-showcase`.
+- Thêm file CSS mới vào `src/styles/` mà trình duyệt chưa nhận: khởi động lại `npm start`.

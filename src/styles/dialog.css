@@ -1,9 +1,10 @@
 /* =========================================================
    Dialog — quy ước đặt tên: .dialog__overlay, .dialog, .dialog__header,
-   .dialog__body, .dialog__footer. Trạng thái: .is-open
-   Hiệu ứng: overlay fade-in, dialog scale + fade nhẹ khi mở.
+   .dialog__body, .dialog__footer.
+   Hiệu ứng: overlay fade + dialog phóng to nhẹ khi mở, ngược lại khi đóng
+   (DialogComponent render bằng @if + animate.enter / animate.leave).
    Dùng:
-   <div class="dialog__overlay is-open">
+   <div class="dialog__overlay">
      <div class="dialog dialog--md">
        <div class="dialog__header">...</div>
        <div class="dialog__body">...</div>
@@ -13,22 +14,23 @@
    ========================================================= */
 
 .dialog__overlay {
-  @apply fixed inset-0 hidden items-center justify-center z-[999] opacity-0 transition-opacity duration-150;
+  @apply fixed inset-0 flex items-center justify-center z-[999];
   background: var(--cq-overlay);
-
-  &.is-open {
-    @apply flex opacity-100;
-  }
-
-  &.is-open .dialog {
-    @apply scale-100 opacity-100;
-  }
 }
 
 .dialog {
-  @apply bg-surface rounded-lg shadow-lg overflow-auto z-[1000] w-full mx-4 md:mx-0
-    scale-95 opacity-0 transition-all duration-150;
+  @apply bg-surface rounded-lg shadow-lg overflow-auto z-[1000] w-full mx-4 md:mx-0;
   max-height: 90vh;
+  animation: cq-scale-in var(--cq-duration-base) var(--cq-ease-out) both;
+}
+
+/* Đóng dialog: overlay mờ dần, hộp thoại thu nhỏ nhẹ. */
+.dialog__overlay--leave {
+  animation: cq-fade-out var(--cq-duration-fast) var(--cq-ease-in) both;
+
+  & .dialog {
+    animation: cq-scale-out var(--cq-duration-fast) var(--cq-ease-in) both;
+  }
 }
 
 /* ---- size: full màn hình trên mobile, cố định width từ md trở lên ---- */
@@ -45,7 +47,7 @@
 }
 
 .dialog__header {
-  @apply flex items-center justify-between px-5 py-4 border-b border-border font-bold;
+  @apply flex items-center justify-between px-5 py-4 border-b border-border typo-section-title;
 }
 
 .dialog__body {

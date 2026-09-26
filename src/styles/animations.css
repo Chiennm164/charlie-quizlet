@@ -1,0 +1,141 @@
+/* =========================================================
+   Animation dùng chung — thời lượng/easing lấy từ token --cq-duration-* / --cq-ease-* (variables.css).
+   Dùng với API animation của Angular (không cần @angular/animations):
+     <div animate.enter="anim-fade-in" animate.leave="anim-fade-out">
+   Angular gắn class khi phần tử xuất hiện / chờ animation "leave" chạy xong rồi mới xoá khỏi DOM.
+   Danh sách so le: class="anim-slide-up-in" [style.--i]="$index"
+   ========================================================= */
+
+@keyframes cq-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes cq-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes cq-slide-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes cq-slide-down-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes cq-slide-up-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes cq-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes cq-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes cq-slide-left-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@keyframes cq-slide-right-out {
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+/* ---- class dùng chung ---- */
+.anim-fade-in {
+  animation: cq-fade-in var(--cq-duration-base) var(--cq-ease-out) both;
+}
+
+.anim-fade-out {
+  animation: cq-fade-out var(--cq-duration-fast) var(--cq-ease-in) both;
+}
+
+/* Nội dung / thẻ xuất hiện; so le theo --i (index) nếu có. */
+.anim-slide-up-in {
+  animation: cq-slide-up-in var(--cq-duration-slow) var(--cq-ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--cq-stagger-step));
+}
+
+/* Thông báo lỗi dưới ô nhập, menu dropdown. */
+.anim-slide-down-in {
+  animation: cq-slide-down-in var(--cq-duration-fast) var(--cq-ease-out) both;
+}
+
+.anim-slide-up-out {
+  animation: cq-slide-up-out var(--cq-duration-fast) var(--cq-ease-in) both;
+}
+
+.anim-scale-in {
+  animation: cq-scale-in var(--cq-duration-base) var(--cq-ease-out) both;
+}
+
+.anim-scale-out {
+  animation: cq-scale-out var(--cq-duration-fast) var(--cq-ease-in) both;
+}
+
+/* Toast trượt vào / ra từ bên phải. */
+.anim-toast-in {
+  animation: cq-slide-left-in var(--cq-duration-base) var(--cq-ease-out) both;
+}
+
+.anim-toast-out {
+  animation: cq-slide-right-out var(--cq-duration-fast) var(--cq-ease-in) both;
+}
+
+/* ---- Chuyển trang (router withViewTransitions) ---- */
+::view-transition-old(root) {
+  animation: cq-fade-out var(--cq-duration-fast) var(--cq-ease-in) both;
+}
+
+::view-transition-new(root) {
+  animation: cq-slide-up-in var(--cq-duration-base) var(--cq-ease-out) both;
+}
+
+/* Header đứng yên khi chuyển trang, chỉ phần nội dung chạy hiệu ứng. */
+.app-header {
+  view-transition-name: app-header;
+}
+
+::view-transition-old(app-header),
+::view-transition-new(app-header) {
+  animation: none;
+}
+
+/* ---- Người dùng bật "giảm chuyển động" trong hệ điều hành: tắt gần hết animation ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

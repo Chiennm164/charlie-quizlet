@@ -2,38 +2,46 @@
    Button — quy ước đặt tên theo BEM: .btn, .btn--<variant>, .btn--<size>, .is-<state>
    Class bên trong dùng @apply với utility Tailwind (đã map màu ở variables.css).
    Hiệu ứng: shadow tăng nhẹ khi hover, nhấn xuống (scale) khi active, cursor-pointer.
+   Hover/active của variant chỉ áp dụng khi nút bấm được (không disabled / loading).
    Dùng: <button class="btn btn--primary btn--md">Lưu</button>
    ========================================================= */
 
 .btn {
   @apply inline-flex items-center justify-center gap-2 rounded-md border border-transparent
-    font-medium cursor-pointer transition-all duration-150 ease-out;
+    font-medium cursor-pointer transition-all;
 
   &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply scale-[0.97];
   }
 
+  /* Không dùng pointer-events-none: để trình duyệt hiện được con trỏ 🚫 / ⏳.
+     <button disabled> tự chặn click; ButtonComponent set disabled khi loading. */
   &:disabled,
   &.is-disabled {
-    @apply opacity-50 cursor-not-allowed pointer-events-none;
+    @apply opacity-50 cursor-not-allowed;
   }
 
   &.is-loading {
-    @apply opacity-70 cursor-wait pointer-events-none;
+    @apply opacity-70 cursor-wait;
   }
+}
+
+/* <a class="btn is-disabled"> không có thuộc tính disabled -> phải tự chặn click. */
+a.btn.is-disabled {
+  @apply pointer-events-none;
 }
 
 /* ---- size ---- */
 .btn--sm {
-  @apply px-3 py-1 text-sm;
+  @apply px-3 py-1 text-body-sm;
 }
 
 .btn--md {
-  @apply px-4 py-2 text-base;
+  @apply px-4 py-2 text-body;
 }
 
 .btn--lg {
-  @apply px-5 py-3 text-lg;
+  @apply px-5 py-3 text-section-title;
 }
 
 /* full width trên mobile khi cần */
@@ -44,14 +52,18 @@
 }
 
 /* ---- variant: primary ---- */
-.btn--primary {
-  @apply bg-primary text-white shadow-sm;
+.btn--block {
+  @apply w-full;
+}
 
-  &:hover {
+.btn--primary {
+  @apply bg-primary text-text-inverse shadow-sm;
+
+  &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply bg-primary-hover shadow-md;
   }
 
-  &:active {
+  &:active:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply bg-primary-active shadow-sm;
   }
 }
@@ -60,16 +72,16 @@
 .btn--secondary {
   @apply bg-transparent border-border text-text;
 
-  &:hover {
+  &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply border-secondary bg-bg-muted shadow-sm;
   }
 }
 
 /* ---- variant: danger ---- */
 .btn--danger {
-  @apply bg-danger text-white shadow-sm;
+  @apply bg-danger text-text-inverse shadow-sm;
 
-  &:hover {
+  &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply bg-danger-hover shadow-md;
   }
 }
@@ -78,7 +90,7 @@
 .btn--ghost {
   @apply bg-transparent text-primary;
 
-  &:hover {
+  &:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
     @apply bg-bg-muted;
   }
 }

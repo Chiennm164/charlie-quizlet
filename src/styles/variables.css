@@ -28,9 +28,47 @@
   --cq-overlay: rgba(15, 23, 42, 0.5); /* nền mờ phía sau dialog*/
 
   /* ---- Chữ ----*/
+  --cq-text-strong: #020617; /* tiêu đề — đậm hơn chữ thường 1 nấc */
   --cq-text: #0f172a;
-  --cq-text-muted: #64748b;
+  --cq-text-muted: #64748b; /* 4.76:1 trên nền trắng — vẫn đạt AA ở 12px */
   --cq-text-inverse: #ffffff;
+
+  /* ---- Kiểu chữ (typography) ----
+     Cỡ chữ / độ cao dòng theo VAI TRÒ, không theo con số. Đổi ở đây là cả app đổi theo.
+     Class dùng trong template: src/styles/typography.css (typo-page-title, typo-body, typo-error...). */
+  --cq-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --cq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* mã lỗi, mã code */
+
+  --cq-font-weight-regular: 400;
+  --cq-font-weight-medium: 500;
+  --cq-font-weight-semibold: 600;
+  --cq-font-weight-bold: 700;
+
+  /* Thang cỡ chữ: chỉ dùng 12 · 14 · 16 · 18 · 24 · 28px (bước 2px ở vùng chữ nhỏ).
+     Quy tắc quan hệ:
+     - chữ phụ nhỏ hơn chữ chính 1 bậc: label = body − 2px, lỗi = label − 2px
+     - placeholder = chữ trong ô nhập (>= 16px để iPhone không tự phóng to khi focus), chỉ khác màu
+     - tiêu đề: đậm >= 600 + màu --cq-text-strong; chữ đọc 400; label/nút/lỗi 500 */
+  --cq-text-hero: 1.75rem; /* 28px / 700 — tiêu đề trên panel giới thiệu */
+  --cq-text-hero-lh: 1.25;
+  --cq-text-page-title: 1.5rem; /* 24px / 700 — tiêu đề trang (h1) */
+  --cq-text-page-title-lh: 2rem;
+  --cq-text-section-title: 1.125rem; /* 18px / 600 — tiêu đề mục (h2), tiêu đề dialog */
+  --cq-text-section-title-lh: 1.75rem;
+  --cq-text-card-title: 1rem; /* 16px / 600 — tiêu đề thẻ (h3): = body, phân biệt bằng độ đậm */
+  --cq-text-card-title-lh: 1.5rem;
+  --cq-text-body: 1rem; /* 16px / 400 — chữ thường, chữ trong ô nhập, placeholder */
+  --cq-text-body-lh: 1.5rem;
+  --cq-text-body-sm: 0.875rem; /* 14px / 400 — mô tả, phụ đề, toast, bảng */
+  --cq-text-body-sm-lh: 1.25rem;
+  --cq-text-label: 0.875rem; /* 14px / 500 — nhãn ô nhập (= body − 2px) */
+  --cq-text-label-lh: 1.25rem;
+  --cq-text-caption: 0.75rem; /* 12px / 400 — chú thích, gợi ý dưới ô, footer, badge */
+  --cq-text-caption-lh: 1rem;
+  --cq-text-error: 0.75rem; /* 12px / 500 — thông báo lỗi (= label − 2px) */
+  --cq-text-error-lh: 1rem;
+  --cq-text-error-code: 0.75rem; /* 12px / 400 mono — mã lỗi (= cỡ lỗi, khác font) */
+  --cq-text-error-code-lh: 1rem;
 
   /* ---- Viền ----*/
   --cq-border: #e2e8f0;
@@ -47,6 +85,15 @@
   --cq-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.12);
   --cq-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.16);
 
+  /* ---- Chuyển động (dùng trong src/styles/animations.css) ---- */
+  --cq-duration-fast: 150ms;
+  --cq-duration-base: 200ms;
+  --cq-duration-slow: 300ms;
+  --cq-loading-delay: 200ms; /* loading toàn màn hình chỉ hiện nếu request lâu hơn mốc này */
+  --cq-stagger-step: 50ms; /* độ trễ giữa các phần tử trong danh sách so le */
+  --cq-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --cq-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
   /* ---- Z-index (Tailwind không quản z-index nghiệp vụ này) ----*/
   --cq-z-dialog: 1000;
   --cq-z-overlay: 999;
@@ -60,6 +107,7 @@
   --cq-surface: #1e293b;
   --cq-overlay: rgba(0, 0, 0, 0.6);
 
+  --cq-text-strong: #ffffff;
   --cq-text: #f1f5f9;
   --cq-text-muted: #94a3b8;
 
@@ -88,11 +136,47 @@
   --color-bg-muted: var(--cq-bg-muted);
   --color-surface: var(--cq-surface);
 
+  --color-text-strong: var(--cq-text-strong);
   --color-text: var(--cq-text);
   --color-text-muted: var(--cq-text-muted);
   --color-text-inverse: var(--cq-text-inverse);
 
   --color-border: var(--cq-border);
+
+  --font-sans: var(--cq-font-sans);
+  --font-mono: var(--cq-font-mono);
+
+  /* Cỡ chữ theo vai trò -> utility text-<vai-trò> (gồm cả line-height và font-weight) */
+  --text-hero: var(--cq-text-hero);
+  --text-hero--line-height: var(--cq-text-hero-lh);
+  --text-hero--font-weight: var(--cq-font-weight-bold);
+  --text-page-title: var(--cq-text-page-title);
+  --text-page-title--line-height: var(--cq-text-page-title-lh);
+  --text-page-title--font-weight: var(--cq-font-weight-bold);
+  --text-section-title: var(--cq-text-section-title);
+  --text-section-title--line-height: var(--cq-text-section-title-lh);
+  --text-section-title--font-weight: var(--cq-font-weight-semibold);
+  --text-card-title: var(--cq-text-card-title);
+  --text-card-title--line-height: var(--cq-text-card-title-lh);
+  --text-card-title--font-weight: var(--cq-font-weight-semibold);
+  --text-body: var(--cq-text-body);
+  --text-body--line-height: var(--cq-text-body-lh);
+  --text-body-sm: var(--cq-text-body-sm);
+  --text-body-sm--line-height: var(--cq-text-body-sm-lh);
+  --text-label: var(--cq-text-label);
+  --text-label--line-height: var(--cq-text-label-lh);
+  --text-label--font-weight: var(--cq-font-weight-medium);
+  --text-caption: var(--cq-text-caption);
+  --text-caption--line-height: var(--cq-text-caption-lh);
+  --text-error: var(--cq-text-error);
+  --text-error--line-height: var(--cq-text-error-lh);
+  --text-error--font-weight: var(--cq-font-weight-medium);
+  --text-error-code: var(--cq-text-error-code);
+  --text-error-code--line-height: var(--cq-text-error-code-lh);
+
+  /* transition-* không ghi duration/ease sẽ dùng token này */
+  --default-transition-duration: var(--cq-duration-fast);
+  --default-transition-timing-function: var(--cq-ease-out);
 
   --radius-sm: var(--cq-radius-sm);
   --radius-md: var(--cq-radius-md);
