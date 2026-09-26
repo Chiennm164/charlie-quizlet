@@ -1,0 +1,109 @@
+<app-dialog [open]="open()" [title]="'account.title' | translate" (closed)="closed.emit()">
+  @if (auth.currentUser(); as user) {
+    <app-tabs [tabs]="tabs()" [activeId]="activeTab()" (activeIdChange)="selectTab($event)" />
+
+    <div class="pt-4">
+      @switch (activeTab()) {
+        @case ('info') {
+          <div class="flex flex-col gap-4" animate.enter="anim-fade-in">
+            <dl class="grid gap-3 sm:grid-cols-2 text-body-sm">
+              <div class="sm:col-span-2">
+                <dt class="text-text-muted">{{ 'auth.email' | translate }}</dt>
+                <dd class="font-medium text-text break-all">{{ user.email }}</dd>
+              </div>
+              <div>
+                <dt class="text-text-muted">{{ 'account.role' | translate }}</dt>
+                <dd>
+                  <span
+                    class="inline-block text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary"
+                  >
+                    {{ 'home.roles.' + user.role | translate }}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-text-muted">{{ 'account.memberSince' | translate }}</dt>
+                <dd class="font-medium text-text">{{ memberSince() }}</dd>
+              </div>
+            </dl>
+
+            <form
+              [formGroup]="profileForm"
+              [attr.aria-busy]="savingProfile()"
+              (ngSubmit)="saveProfile()"
+              class="flex flex-col gap-2"
+              novalidate
+            >
+              <app-input-text
+                name="name"
+                autocomplete="name"
+                [label]="'auth.fullName' | translate"
+                [required]="true"
+                formControlName="fullName"
+                [errorMessage]="fullNameError()"
+              />
+              <div class="flex justify-end">
+                <app-button type="submit" [loading]="savingProfile()">
+                  {{ 'common.save' | translate }}
+                </app-button>
+              </div>
+            </form>
+          </div>
+        }
+        @case ('password') {
+          <form
+            [formGroup]="passwordForm"
+            [attr.aria-busy]="changingPassword()"
+            (ngSubmit)="changePassword()"
+            class="flex flex-col gap-2"
+            animate.enter="anim-fade-in"
+            novalidate
+          >
+            <p class="typo-muted mb-2">{{ 'account.passwordHint' | translate }}</p>
+            <!-- Ô ẩn giúp trình quản lý mật khẩu biết mật khẩu này thuộc tài khoản nào. -->
+            <input
+              type="email"
+              name="username"
+              autocomplete="username"
+              [value]="user.email"
+              hidden
+            />
+
+            <app-input-text
+              type="password"
+              name="current-password"
+              autocomplete="current-password"
+              [label]="'account.currentPassword' | translate"
+              [required]="true"
+              formControlName="currentPassword"
+              [errorMessage]="passwordError('currentPassword')"
+            />
+            <app-input-text
+              type="password"
+              name="new-password"
+              autocomplete="new-password"
+              [label]="'auth.newPassword' | translate"
+              [required]="true"
+              formControlName="newPassword"
+              [errorMessage]="passwordError('newPassword')"
+            />
+            <app-input-text
+              type="password"
+              name="confirm-password"
+              autocomplete="new-password"
+              [label]="'auth.confirmPassword' | translate"
+              [required]="true"
+              formControlName="confirmPassword"
+              [errorMessage]="passwordError('confirmPassword')"
+            />
+            <div class="flex justify-end">
+              <app-button type="submit" [loading]="changingPassword()">
+                {{ 'account.changePasswordButton' | translate }}
+              </app-button>
+            </div>
+          </form>
+        }
+      }
+    </div>
+  }
+</app-dialog>

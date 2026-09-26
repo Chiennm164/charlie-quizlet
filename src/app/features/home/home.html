@@ -1,4 +1,4 @@
-@if (auth.currentUser(); as user) {
+@if (auth.currentUser()) {
   <section class="mb-6">
     <h1 class="typo-page-title">
       {{ greeting() }}
@@ -6,84 +6,50 @@
     <p class="typo-muted mt-1">{{ 'home.subtitle' | translate }}</p>
   </section>
 
-  <div class="grid gap-6 lg:grid-cols-3">
-    <section class="lg:col-span-2">
-      <h2 class="typo-section-title mb-3">
-        {{ 'home.quickActions' | translate }}
-      </h2>
-      <div class="grid gap-3 sm:grid-cols-2">
-        @for (action of actions(); track action.titleKey) {
-          @if (action.route) {
-            <a
-              [routerLink]="action.route"
-              class="bg-surface border border-border rounded-lg p-4 flex gap-3 transition-colors hover:border-primary anim-slide-up-in"
-              [style.--i]="$index"
-            >
-              <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
-            </a>
-          } @else {
-            <div
-              class="bg-surface border border-border rounded-lg p-4 flex gap-3 opacity-80 anim-slide-up-in"
-              [style.--i]="$index"
-              [attr.aria-disabled]="true"
-            >
-              <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
-            </div>
-          }
-        }
-        <ng-template #actionContent let-action>
-          <span
-            class="shrink-0 w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center"
+  <section>
+    <h2 class="typo-section-title mb-3">
+      {{ 'home.quickActions' | translate }}
+    </h2>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      @for (action of actions(); track action.titleKey) {
+        @if (action.route) {
+          <a
+            [routerLink]="action.route"
+            class="bg-surface border border-border rounded-lg p-4 flex gap-3 transition-colors hover:border-primary anim-slide-up-in"
+            [style.--i]="$index"
           >
-            <app-icon [name]="action.icon" [size]="20" />
-          </span>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="typo-card-title">{{ action.titleKey | translate }}</h3>
-              @if (!action.route) {
-                <span
-                  class="typo-caption px-2 py-0.5 rounded-full bg-bg-muted border border-border"
-                >
-                  {{ 'home.comingSoon' | translate }}
-                </span>
-              }
-            </div>
-            <p class="typo-muted mt-1">
-              {{ action.descriptionKey | translate }}
-            </p>
+            <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
+          </a>
+        } @else {
+          <div
+            class="bg-surface border border-border rounded-lg p-4 flex gap-3 opacity-80 anim-slide-up-in"
+            [style.--i]="$index"
+            [attr.aria-disabled]="true"
+          >
+            <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
           </div>
-        </ng-template>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="typo-section-title mb-3">{{ 'home.account' | translate }}</h2>
-      <div class="bg-surface border border-border rounded-lg p-4">
-        <dl class="flex flex-col gap-3 text-body-sm">
-          <div>
-            <dt class="text-text-muted">{{ 'auth.fullName' | translate }}</dt>
-            <dd class="font-medium text-text">{{ user.fullName }}</dd>
-          </div>
-          <div>
-            <dt class="text-text-muted">{{ 'auth.email' | translate }}</dt>
-            <dd class="font-medium text-text break-all">{{ user.email }}</dd>
-          </div>
-          <div>
-            <dt class="text-text-muted">{{ 'home.role' | translate }}</dt>
-            <dd>
-              <span
-                class="inline-block text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary"
-              >
-                {{ 'home.roles.' + user.role | translate }}
+        }
+      }
+      <ng-template #actionContent let-action>
+        <span
+          class="shrink-0 w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center"
+        >
+          <app-icon [name]="action.icon" [size]="20" />
+        </span>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="typo-card-title">{{ action.titleKey | translate }}</h3>
+            @if (!action.route) {
+              <span class="typo-caption px-2 py-0.5 rounded-full bg-bg-muted border border-border">
+                {{ 'home.comingSoon' | translate }}
               </span>
-            </dd>
+            }
           </div>
-          <div>
-            <dt class="text-text-muted">{{ 'home.memberSince' | translate }}</dt>
-            <dd class="font-medium text-text">{{ memberSince() }}</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
-  </div>
+          <p class="typo-muted mt-1">
+            {{ action.descriptionKey | translate }}
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </section>
 }

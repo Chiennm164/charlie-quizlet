@@ -8,7 +8,6 @@ import { TranslateService } from '../../core/i18n/translate.service';
 import { Role } from '../../core/models';
 import { IconComponent } from '../../shared/ui/icon/icon';
 import { IconName } from '../../shared/ui/icon/icon-registry';
-import { formatDate } from '../../shared/utils/common.utils';
 
 interface QuickAction {
   icon: IconName;
@@ -68,11 +67,4 @@ export class HomeComponent {
           : 'home.goodEvening';
     return this.translate.t(key, { name: this.auth.currentUser()?.fullName ?? '' });
   });
-
-  memberSince = computed(() =>
-    formatDate(
-      this.auth.currentUser()?.createdAt,
-      APP_SETTINGS.i18n.formatLocale[this.translate.locale()],
-    ),
-  );
 }

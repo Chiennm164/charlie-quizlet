@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
@@ -7,10 +7,11 @@ import { BrandComponent } from '../../../shared/ui/brand/brand';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { LanguageSwitcherComponent } from '../../../shared/ui/language-switcher/language-switcher';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { AccountDialogComponent } from './account-dialog/account-dialog';
 import { getInitials } from '../../../shared/utils/common.utils';
 import { APP_SETTINGS, DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from '../../config';
 
-/** Khung chung cho các trang sau khi đăng nhập: header (logo, ngôn ngữ, user, đăng xuất) + nội dung. */
+/** Khung chung cho các trang sau khi đăng nhập: header (logo, ngôn ngữ, user → dialog tài khoản, đăng xuất) + nội dung. */
 @Component({
   selector: 'app-main-layout',
   standalone: true,
@@ -20,6 +21,7 @@ import { APP_SETTINGS, DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from '../../config'
     RouterOutlet,
     IconComponent,
     LanguageSwitcherComponent,
+    AccountDialogComponent,
     TranslatePipe,
   ],
   templateUrl: './main-layout.html',
@@ -31,7 +33,7 @@ export class MainLayoutComponent {
   private translate = inject(TranslateService);
 
   readonly homeRoute = DEFAULT_AUTHENTICATED_ROUTE;
-  readonly profileRoute = ROUTES.profile;
+  accountOpen = signal(false);
   readonly appName = APP_SETTINGS.appName;
 
   initials = computed(() => getInitials(this.auth.currentUser()?.fullName));

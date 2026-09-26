@@ -1,47 +1,77 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../core/auth/auth.service';
-import { ERROR_CODES } from '../../core/config';
-import { handleErrorCode } from '../../core/error/error-handling';
-import { TranslatePipe } from '../../core/i18n/translate.pipe';
-import { TranslateService } from '../../core/i18n/translate.service';
-import { ButtonComponent } from '../../shared/ui/button/button';
-import { InputTextComponent } from '../../shared/ui/input-text/input-text';
-import { PageHeaderComponent } from '../../shared/ui/page-header/page-header';
-import { ToastService } from '../../shared/ui/toast/toast.service';
-import { AppValidators, controlErrorMessage } from '../../shared/utils/validation.utils';
+import { AuthService } from '../../../auth/auth.service';
+import { APP_SETTINGS, ERROR_CODES } from '../../../config';
+import { handleErrorCode } from '../../../error/error-handling';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { TranslateService } from '../../../i18n/translate.service';
+import { ButtonComponent } from '../../../../shared/ui/button/button';
+import { DialogComponent } from '../../../../shared/ui/dialog/dialog';
+import { InputTextComponent } from '../../../../shared/ui/input-text/input-text';
+import { TabItem, TabsComponent } from '../../../../shared/ui/tabs/tabs';
+import { ToastService } from '../../../../shared/ui/toast/toast.service';
+import { formatDate } from '../../../../shared/utils/common.utils';
+import { AppValidators, controlErrorMessage } from '../../../../shared/utils/validation.utils';
 
+type AccountTab = 'info' | 'password';
 type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
 
-/** Hồ sơ của user đang đăng nhập: sửa họ tên, đổi mật khẩu. */
+/** Dialog tài khoản mở từ header: xem thông tin, sửa họ tên, đổi mật khẩu. */
 @Component({
-  selector: 'app-profile',
+  selector: 'app-account-dialog',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     ButtonComponent,
+    DialogComponent,
     InputTextComponent,
-    PageHeaderComponent,
+    TabsComponent,
     TranslatePipe,
   ],
-  templateUrl: './profile.html',
+  templateUrl: './account-dialog.html',
 })
-export class ProfileComponent {
+export class AccountDialogComponent {
   private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
+  auth = inject(AuthService);
 
-  readonly email = this.auth.currentUser()?.email ?? '';
+  open = input(false);
+  closed = output<void>();
 
+  activeTab = signal<AccountTab>('info');
   savingProfile = signal(false);
   changingPassword = signal(false);
 
+  tabs = computed<TabItem[]>(() => {
+    this.translate.locale();
+    return [
+      { id: 'info', label: this.translate.t('account.infoTab') },
+      { id: 'password', label: this.translate.t('account.passwordTab') },
+    ];
+  });
+
+  memberSince = computed(() =>
+    formatDate(
+      this.auth.currentUser()?.createdAt,
+      APP_SETTINGS.i18n.formatLocale[this.translate.locale()],
+    ),
+  );
+
   profileForm = this.fb.nonNullable.group({
-    fullName: [this.auth.currentUser()?.fullName ?? '', AppValidators.fullName],
+    fullName: ['', AppValidators.fullName],
   });
 
   passwordForm = this.fb.nonNullable.group(
@@ -52,6 +82,20 @@ export class ProfileComponent {
     },
     { validators: AppValidators.passwordMatch('newPassword', 'confirmPassword') },
   );
+
+  constructor() {
+    // Mỗi lần mở: về tab đầu, form lấy lại dữ liệu mới nhất, xoá mật khẩu nhập dở lần trước.
+    effect(() => {
+      if (!this.open()) return;
+      this.activeTab.set('info');
+      this.profileForm.reset({ fullName: this.auth.currentUser()?.fullName ?? '' });
+      this.passwordForm.reset();
+    });
+  }
+
+  selectTab(id: string): void {
+    this.activeTab.set(id as AccountTab);
+  }
 
   fullNameError(): string | null {
     return controlErrorMessage(this.profileForm.controls.fullName, this.translate);
@@ -74,7 +118,7 @@ export class ProfileComponent {
       )
       .subscribe((user) => {
         this.profileForm.reset({ fullName: user.fullName });
-        this.toast.success(this.translate.t('profile.profileSaved'));
+        this.toast.success(this.translate.t('account.profileSaved'));
       });
   }
 
@@ -92,8 +136,8 @@ export class ProfileComponent {
       )
       .subscribe({
         next: () => {
-          this.passwordForm.reset();
-          this.toast.success(this.translate.t('profile.passwordChanged'));
+          this.toast.success(this.translate.t('account.passwordChanged'));
+          this.closed.emit();
         },
         error: (err: unknown) => {
           // Sai mật khẩu hiện tại -> báo dưới ô; mã lỗi khác vẫn hiện dialog lỗi chung.

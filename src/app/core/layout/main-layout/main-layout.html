@@ -12,10 +12,12 @@
         <app-language-switcher />
 
         @if (auth.currentUser(); as user) {
-          <a
-            [routerLink]="profileRoute"
+          <button
+            type="button"
             class="flex items-center gap-2 rounded-md px-1 py-0.5 transition-colors hover:bg-bg-muted"
-            [attr.aria-label]="'profile.pageTitle' | translate"
+            aria-haspopup="dialog"
+            [attr.aria-label]="'account.title' | translate"
+            (click)="accountOpen.set(true)"
           >
             <span
               class="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-body-sm font-semibold"
@@ -24,7 +26,7 @@
               {{ initials() }}
             </span>
             <span class="hidden md:inline typo-body-sm font-medium">{{ user.fullName }}</span>
-          </a>
+          </button>
         }
 
         <button
@@ -44,3 +46,5 @@
     <router-outlet />
   </main>
 </div>
+
+<app-account-dialog [open]="accountOpen()" (closed)="accountOpen.set(false)" />

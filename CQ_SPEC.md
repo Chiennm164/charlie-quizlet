@@ -157,9 +157,9 @@ src/app/
 │   ├── error/               # dialog lỗi chung, handleErrorCode / markErrorHandled
 │   ├── i18n/                # TranslateService, pipe translate, tiêu đề tab theo ngôn ngữ
 │   ├── interceptors/        # locale → auth → error → loading
-│   ├── layout/              # main-layout (sau đăng nhập), auth-layout (login/register/...)
+│   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register/...)
 │   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
-├── features/                # màn hình theo nghiệp vụ: auth, home, profile, forbidden (trang 403), admin (duyệt tài khoản)
+├── features/                # màn hình theo nghiệp vụ: auth, home, forbidden (trang 403), admin (duyệt tài khoản)
 │   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
 └── shared/                  # tái sử dụng, không logic nghiệp vụ
     ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
@@ -179,9 +179,9 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 
 - **Auth**: đăng ký (chọn Học sinh / Giáo viên; Giáo viên chờ Admin duyệt), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
 - **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403, trang Admin duyệt / từ chối tài khoản Giáo viên.
-- **Hồ sơ** (`/profile`, bấm tên ở header): sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
+- **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
-- **Giao diện**: layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập + trang home (lời chào, thẻ chức năng "Sắp ra mắt", thông tin tài khoản), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
+- **Giao diện**: layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập (header có dialog tài khoản) + trang home (lời chào, thẻ chức năng), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
 - **Nền tảng**: cấu hình tập trung (`core/config`), token style (màu, chữ, animation), animation hiện/ẩn + chuyển trang, unit test cho auth, guard, interceptor, util.
 
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))

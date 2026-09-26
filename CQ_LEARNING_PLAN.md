@@ -42,7 +42,7 @@ Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có s
 - [x] Refresh token + thu hồi khi đăng xuất: access token hết hạn thì tự làm mới rồi gửi lại request
 - [x] `roleGuard` + trang 403
 - [x] Đăng ký có chọn vai trò; tài khoản Teacher chờ Admin duyệt (trang `/admin/users/pending`, Admin tạo sẵn lúc BE khởi động)
-- [x] Trang hồ sơ: sửa họ tên, đổi mật khẩu (đổi xong đăng xuất các thiết bị khác, thiết bị hiện tại nhận phiên mới)
+- [x] Dialog tài khoản ở header: sửa họ tên, đổi mật khẩu (đổi xong đăng xuất các thiết bị khác, thiết bị hiện tại nhận phiên mới)
 
 **Angular:** RxJS trong interceptor (`switchMap`, `catchError`, `share`), functional guard.
 

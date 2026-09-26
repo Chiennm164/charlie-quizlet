@@ -52,11 +52,6 @@ export const routes: Routes = [
         title: 'home.pageTitle',
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
       },
-      {
-        path: ROUTE_SEGMENTS.profile,
-        title: 'profile.pageTitle',
-        loadComponent: () => import('./features/profile/profile').then((m) => m.ProfileComponent),
-      },
       // Trang cho 1 số role: thêm canActivate: [roleGuard('TEACHER', 'ADMIN')] — không đủ quyền về trang 403.
       {
         path: ROUTE_SEGMENTS.adminPendingUsers,

@@ -40,7 +40,7 @@ export class PendingUsersComponent {
       { key: 'email', header: this.translate.t('auth.email') },
       {
         key: 'role',
-        header: this.translate.t('home.role'),
+        header: this.translate.t('account.role'),
         render: (row) => this.translate.t(`home.roles.${(row as User).role}`),
       },
       {

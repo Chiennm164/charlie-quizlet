@@ -151,9 +151,6 @@
     "actionQuizDesc": "Tự kiểm tra kiến thức với câu hỏi tạo tự động",
     "actionClasses": "Quản lý lớp học",
     "actionClassesDesc": "Tạo lớp và giao học phần cho học sinh",
-    "account": "Tài khoản",
-    "role": "Vai trò",
-    "memberSince": "Tham gia từ",
     "roles": {
       "STUDENT": "Học sinh",
       "TEACHER": "Giáo viên",
@@ -216,13 +213,13 @@
       "rejectConfirm": "Tài khoản của {name} sẽ bị xoá. Người này có thể đăng ký lại bằng email đó."
     }
   },
-  "profile": {
-    "pageTitle": "Hồ sơ",
-    "title": "Hồ sơ của tôi",
-    "description": "Cập nhật thông tin cá nhân và mật khẩu đăng nhập",
-    "infoTitle": "Thông tin cá nhân",
+  "account": {
+    "title": "Tài khoản",
+    "infoTab": "Thông tin",
+    "passwordTab": "Đổi mật khẩu",
+    "role": "Vai trò",
+    "memberSince": "Tham gia từ",
     "profileSaved": "Đã lưu thông tin",
-    "passwordTitle": "Đổi mật khẩu",
     "passwordHint": "Sau khi đổi, các thiết bị khác sẽ bị đăng xuất.",
     "currentPassword": "Mật khẩu hiện tại",
     "changePasswordButton": "Đổi mật khẩu",

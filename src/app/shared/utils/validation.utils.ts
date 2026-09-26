@@ -66,7 +66,7 @@ export const FORM_ERROR_MESSAGE_KEYS: Record<string, string> = {
   maxlength: 'common.maxLength',
   passwordMismatch: 'auth.passwordMismatch',
   emailTaken: 'auth.emailTaken',
-  currentPasswordIncorrect: 'profile.currentPasswordIncorrect',
+  currentPasswordIncorrect: 'account.currentPasswordIncorrect',
 };
 
 /** Thông báo lỗi (đã dịch) cần hiển thị cho control, hoặc null nếu chưa touched / không có lỗi. */

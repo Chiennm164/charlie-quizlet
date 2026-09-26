@@ -30,7 +30,7 @@ src/app/
 │   ├── error/               # dialog lỗi chung + handleErrorCode / markErrorHandled
 │   ├── i18n/                # TranslateService, pipe translate, tiêu đề tab theo ngôn ngữ
 │   ├── interceptors/        # locale → auth → error → loading (thứ tự trong app.config.ts)
-│   ├── layout/              # main-layout (sau đăng nhập), auth-layout (login/register...)
+│   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register...)
 │   └── models/              # interface request/response với BE
 ├── features/                # màn hình theo nghiệp vụ: auth/, home/
 │   └── ui-showcase/         # xem UI kit (dev only); examples/ có mẫu form & mẫu gọi API chuẩn

@@ -9,7 +9,6 @@ export const ROUTE_SEGMENTS = {
   resetPassword: 'reset-password',
   home: 'home',
   forbidden: 'forbidden',
-  profile: 'profile',
   adminPendingUsers: 'admin/users/pending',
 } as const;
 
