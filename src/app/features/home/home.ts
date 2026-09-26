@@ -1,6 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
-import { APP_SETTINGS } from '../../core/config';
+import { NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { APP_SETTINGS, ROUTES } from '../../core/config';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslateService } from '../../core/i18n/translate.service';
 import { Role } from '../../core/models';
@@ -14,10 +16,18 @@ interface QuickAction {
   descriptionKey: string;
   /** Không khai báo = mọi role đều thấy. */
   roles?: Role[];
+  /** Chưa có trang thì bỏ trống — thẻ hiện nhãn "Sắp ra mắt". */
+  route?: string;
 }
 
-/** Các chức năng chính; hiện chưa có trang nên hiển thị nhãn "Sắp ra mắt". Có trang rồi thì thêm routerLink. */
 const QUICK_ACTIONS: QuickAction[] = [
+  {
+    icon: 'check-circle',
+    titleKey: 'home.actionApproveUsers',
+    descriptionKey: 'home.actionApproveUsersDesc',
+    roles: ['ADMIN'],
+    route: ROUTES.adminPendingUsers,
+  },
   { icon: 'plus', titleKey: 'home.actionCreateSet', descriptionKey: 'home.actionCreateSetDesc' },
   { icon: 'book-open', titleKey: 'home.actionMySets', descriptionKey: 'home.actionMySetsDesc' },
   {
@@ -37,7 +47,7 @@ const QUICK_ACTIONS: QuickAction[] = [
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IconComponent, TranslatePipe],
+  imports: [NgTemplateOutlet, RouterLink, IconComponent, TranslatePipe],
   templateUrl: './home.html',
 })
 export class HomeComponent {

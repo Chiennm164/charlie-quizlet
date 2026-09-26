@@ -22,6 +22,7 @@ import {
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
+  RegisterResponse,
   ResetPasswordRequest,
   Role,
   User,
@@ -61,10 +62,13 @@ export class AuthService {
       .pipe(tap((res) => this.setSession(res, remember ? localStorage : sessionStorage)));
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(API_ENDPOINTS.auth.register, request)
-      .pipe(tap((res) => this.setSession(res, localStorage)));
+  /** Student đăng nhập luôn; Teacher chờ Admin duyệt nên không có phiên (`session: null`). */
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(API_ENDPOINTS.auth.register, request).pipe(
+      tap((res) => {
+        if (res.session) this.setSession(res.session, localStorage);
+      }),
+    );
   }
 
   /** Luôn trả 204 dù email có tồn tại hay không (tránh dò email). */

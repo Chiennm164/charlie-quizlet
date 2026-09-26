@@ -126,7 +126,11 @@
     "resetPasswordSuccess": "Password updated, please log in again",
     "resetLinkInvalid": "This reset link is invalid, has expired or has already been used",
     "requestNewLink": "Request a new link",
-    "rememberMe": "Remember me"
+    "rememberMe": "Remember me",
+    "registerAs": "I am a",
+    "teacherNeedsApproval": "Teacher accounts must be approved by an administrator before you can log in.",
+    "registerPendingSubtitle": "Your account is waiting for approval",
+    "registerPendingMessage": "Your teacher account has been created. You can log in once an administrator approves it"
   },
   "home": {
     "logout": "Log out",
@@ -155,7 +159,9 @@
       "TEACHER": "Teacher",
       "ADMIN": "Admin"
     },
-    "pageTitle": "Home"
+    "pageTitle": "Home",
+    "actionApproveUsers": "Approve accounts",
+    "actionApproveUsersDesc": "Approve or reject newly registered teacher accounts"
   },
   "forbidden": {
     "pageTitle": "Access denied",
@@ -194,5 +200,20 @@
     },
     "rights": "All rights reserved.",
     "footerTagline": "Online study & testing platform"
+  },
+  "admin": {
+    "pendingUsers": {
+      "pageTitle": "Approve accounts",
+      "title": "Accounts waiting for approval",
+      "description": "Self-registered teachers can log in only after approval. Rejecting deletes the account.",
+      "registeredAt": "Registered on",
+      "empty": "No accounts are waiting for approval",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "Approved {name}",
+      "rejected": "Rejected {name}",
+      "rejectTitle": "Reject account",
+      "rejectConfirm": "{name}'s account will be deleted. They can register again with the same e-mail."
+    }
   }
 }

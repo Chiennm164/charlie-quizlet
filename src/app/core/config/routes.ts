@@ -9,6 +9,7 @@ export const ROUTE_SEGMENTS = {
   resetPassword: 'reset-password',
   home: 'home',
   forbidden: 'forbidden',
+  adminPendingUsers: 'admin/users/pending',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;

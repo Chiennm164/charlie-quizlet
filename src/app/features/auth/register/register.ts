@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -9,12 +9,16 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { InputTextComponent } from '../../../shared/ui/input-text/input-text';
+import { RadioGroupComponent, RadioOption } from '../../../shared/ui/radio-group/radio-group';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { AuthLayoutComponent } from '../../../core/layout/auth-layout/auth-layout';
 import { handleErrorCode } from '../../../core/error/error-handling';
 import { AppValidators, controlErrorMessage } from '../../../shared/utils/validation.utils';
+import { RegistrationRole } from '../../../core/models';
 
-type RegisterField = 'fullName' | 'email' | 'password' | 'confirmPassword';
+type RegisterField = 'fullName' | 'email' | 'password' | 'confirmPassword' | 'role';
+
+const REGISTRATION_ROLES: RegistrationRole[] = ['STUDENT', 'TEACHER'];
 
 @Component({
   selector: 'app-register',
@@ -25,6 +29,7 @@ type RegisterField = 'fullName' | 'email' | 'password' | 'confirmPassword';
     AuthLayoutComponent,
     ButtonComponent,
     InputTextComponent,
+    RadioGroupComponent,
     TranslatePipe,
   ],
   templateUrl: './register.html',
@@ -39,6 +44,16 @@ export class RegisterComponent {
 
   readonly routes = ROUTES;
   submitting = signal(false);
+  /** Email tài khoản Teacher vừa tạo, đang chờ Admin duyệt — có giá trị thì hiện thông báo thay cho form. */
+  pendingEmail = signal<string | null>(null);
+
+  roleOptions = computed<RadioOption[]>(() => {
+    this.translate.locale();
+    return REGISTRATION_ROLES.map((role) => ({
+      value: role,
+      label: this.translate.t(`home.roles.${role}`),
+    }));
+  });
 
   form = this.fb.nonNullable.group(
     {
@@ -46,6 +61,7 @@ export class RegisterComponent {
       email: ['', AppValidators.email],
       password: ['', AppValidators.newPassword],
       confirmPassword: ['', AppValidators.required],
+      role: ['STUDENT' as RegistrationRole, AppValidators.required],
     },
     { validators: AppValidators.passwordMatch('password', 'confirmPassword') },
   );
@@ -60,15 +76,19 @@ export class RegisterComponent {
 
     this.submitting.set(true);
 
-    const { fullName, email, password } = this.form.getRawValue();
+    const { fullName, email, password, role } = this.form.getRawValue();
     this.auth
-      .register({ fullName: fullName.trim(), email, password })
+      .register({ fullName: fullName.trim(), email, password, role })
       .pipe(
         finalize(() => this.submitting.set(false)),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (res) => {
+          if (!res.session) {
+            this.pendingEmail.set(res.user.email);
+            return;
+          }
           this.toast.success(this.translate.t('auth.registerSuccess', { name: res.user.fullName }));
           this.router.navigateByUrl(DEFAULT_AUTHENTICATED_ROUTE);
         },

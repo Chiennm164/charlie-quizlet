@@ -13,31 +13,46 @@
       </h2>
       <div class="grid gap-3 sm:grid-cols-2">
         @for (action of actions(); track action.titleKey) {
-          <div
-            class="bg-surface border border-border rounded-lg p-4 flex gap-3 opacity-80 anim-slide-up-in"
-            [style.--i]="$index"
-            [attr.aria-disabled]="true"
-          >
-            <span
-              class="shrink-0 w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center"
+          @if (action.route) {
+            <a
+              [routerLink]="action.route"
+              class="bg-surface border border-border rounded-lg p-4 flex gap-3 transition-colors hover:border-primary anim-slide-up-in"
+              [style.--i]="$index"
             >
-              <app-icon [name]="action.icon" [size]="20" />
-            </span>
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="typo-card-title">{{ action.titleKey | translate }}</h3>
+              <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
+            </a>
+          } @else {
+            <div
+              class="bg-surface border border-border rounded-lg p-4 flex gap-3 opacity-80 anim-slide-up-in"
+              [style.--i]="$index"
+              [attr.aria-disabled]="true"
+            >
+              <ng-container *ngTemplateOutlet="actionContent; context: { $implicit: action }" />
+            </div>
+          }
+        }
+        <ng-template #actionContent let-action>
+          <span
+            class="shrink-0 w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center"
+          >
+            <app-icon [name]="action.icon" [size]="20" />
+          </span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="typo-card-title">{{ action.titleKey | translate }}</h3>
+              @if (!action.route) {
                 <span
                   class="typo-caption px-2 py-0.5 rounded-full bg-bg-muted border border-border"
                 >
                   {{ 'home.comingSoon' | translate }}
                 </span>
-              </div>
-              <p class="typo-muted mt-1">
-                {{ action.descriptionKey | translate }}
-              </p>
+              }
             </div>
+            <p class="typo-muted mt-1">
+              {{ action.descriptionKey | translate }}
+            </p>
           </div>
-        }
+        </ng-template>
       </div>
     </section>
 

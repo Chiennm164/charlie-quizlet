@@ -41,7 +41,7 @@ Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có s
 ### Giai đoạn 1 — Hoàn thiện nền tảng
 - [x] Refresh token + thu hồi khi đăng xuất: access token hết hạn thì tự làm mới rồi gửi lại request
 - [x] `roleGuard` + trang 403
-- [ ] Đăng ký có chọn vai trò; tài khoản Teacher chờ Admin duyệt (BE đã có trạng thái `PENDING` và mã lỗi `AUTH_ACCOUNT_PENDING`)
+- [x] Đăng ký có chọn vai trò; tài khoản Teacher chờ Admin duyệt (trang `/admin/users/pending`, Admin tạo sẵn lúc BE khởi động)
 - [ ] Trang hồ sơ: sửa họ tên, đổi mật khẩu
 
 **Angular:** RxJS trong interceptor (`switchMap`, `catchError`, `share`), functional guard.

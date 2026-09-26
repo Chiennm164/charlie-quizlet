@@ -51,6 +51,41 @@ describe('AuthService', () => {
     http.expectOne(`${API}/auth/login`).flush(RESPONSE);
   }
 
+  it('đăng ký Student: có phiên đăng nhập ngay', () => {
+    service
+      .register({
+        email: 'alice@example.com',
+        password: 'secret123',
+        fullName: 'Alice',
+        role: 'STUDENT',
+      })
+      .subscribe();
+    http.expectOne(`${API}/auth/register`).flush({ user: RESPONSE.user, session: RESPONSE });
+
+    expect(localStorage.getItem(STORAGE_KEYS.accessToken)).toBe('token-123');
+    expect(service.currentUser()?.email).toBe('alice@example.com');
+  });
+
+  it('đăng ký Teacher chờ duyệt: không tạo phiên', () => {
+    let pending: string | undefined;
+    service
+      .register({
+        email: 'bob@example.com',
+        password: 'secret123',
+        fullName: 'Bob',
+        role: 'TEACHER',
+      })
+      .subscribe((res) => (pending = res.user.status));
+    http
+      .expectOne(`${API}/auth/register`)
+      .flush({ user: { ...RESPONSE.user, role: 'TEACHER', status: 'PENDING' }, session: null });
+
+    expect(pending).toBe('PENDING');
+    expect(service.isAuthenticated()).toBe(false);
+    expect(localStorage.getItem(STORAGE_KEYS.accessToken)).toBeNull();
+    expect(service.hasRefreshToken()).toBe(false);
+  });
+
   it('lưu token vào localStorage khi "ghi nhớ đăng nhập"', () => {
     login(true);
 

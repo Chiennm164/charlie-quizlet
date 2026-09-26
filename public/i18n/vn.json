@@ -126,7 +126,11 @@
     "resetPasswordSuccess": "Đã đổi mật khẩu, vui lòng đăng nhập lại",
     "resetLinkInvalid": "Link đặt lại mật khẩu không hợp lệ, đã hết hạn hoặc đã được sử dụng",
     "requestNewLink": "Gửi lại link mới",
-    "rememberMe": "Ghi nhớ đăng nhập"
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "registerAs": "Bạn là",
+    "teacherNeedsApproval": "Tài khoản giáo viên cần quản trị viên duyệt trước khi đăng nhập.",
+    "registerPendingSubtitle": "Tài khoản đang chờ duyệt",
+    "registerPendingMessage": "Đã tạo tài khoản giáo viên. Bạn sẽ đăng nhập được sau khi quản trị viên duyệt tài khoản"
   },
   "home": {
     "logout": "Đăng xuất",
@@ -155,7 +159,9 @@
       "TEACHER": "Giáo viên",
       "ADMIN": "Quản trị viên"
     },
-    "pageTitle": "Trang chủ"
+    "pageTitle": "Trang chủ",
+    "actionApproveUsers": "Duyệt tài khoản",
+    "actionApproveUsersDesc": "Duyệt hoặc từ chối tài khoản giáo viên mới đăng ký"
   },
   "forbidden": {
     "pageTitle": "Không có quyền truy cập",
@@ -194,5 +200,20 @@
     },
     "rights": "Bảo lưu mọi quyền.",
     "footerTagline": "Nền tảng ôn tập & kiểm tra trực tuyến"
+  },
+  "admin": {
+    "pendingUsers": {
+      "pageTitle": "Duyệt tài khoản",
+      "title": "Tài khoản chờ duyệt",
+      "description": "Giáo viên tự đăng ký cần được duyệt mới đăng nhập được. Từ chối sẽ xoá tài khoản.",
+      "registeredAt": "Ngày đăng ký",
+      "empty": "Không có tài khoản nào chờ duyệt",
+      "approve": "Duyệt",
+      "reject": "Từ chối",
+      "approved": "Đã duyệt tài khoản {name}",
+      "rejected": "Đã từ chối tài khoản {name}",
+      "rejectTitle": "Từ chối tài khoản",
+      "rejectConfirm": "Tài khoản của {name} sẽ bị xoá. Người này có thể đăng ký lại bằng email đó."
+    }
   }
 }

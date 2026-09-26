@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth.guards';
+import { authGuard, guestGuard, roleGuard } from './core/auth/auth.guards';
 import { ROUTE_SEGMENTS } from './core/config';
 
 export const routes: Routes = [
@@ -53,6 +53,15 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
       },
       // Trang cho 1 số role: thêm canActivate: [roleGuard('TEACHER', 'ADMIN')] — không đủ quyền về trang 403.
+      {
+        path: ROUTE_SEGMENTS.adminPendingUsers,
+        title: 'admin.pendingUsers.pageTitle',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/admin/pending-users/pending-users').then(
+            (m) => m.PendingUsersComponent,
+          ),
+      },
       {
         path: ROUTE_SEGMENTS.forbidden,
         title: 'forbidden.pageTitle',
