@@ -3,7 +3,11 @@
     [title]="'adminQuiz.listTitle' | translate"
     [description]="'adminQuiz.listDescription' | translate"
   />
-  <a class="btn btn--primary btn--md shrink-0 mb-4 sm:mb-0" [routerLink]="newUrl">
+  <a
+    class="btn btn--primary btn--md shrink-0 mb-4 sm:mb-0"
+    [routerLink]="newUrl"
+    [queryParams]="{ topicId: params().topicId }"
+  >
     <app-icon name="plus" />
     {{ 'adminQuiz.create' | translate }}
   </a>
@@ -33,7 +37,17 @@
   @if (!page) {
     <app-loading />
   } @else if (page.content.length === 0) {
-    <p class="card-surface p-6 text-center typo-muted">{{ 'adminQuiz.empty' | translate }}</p>
+    <div class="card-surface p-6 flex flex-col items-center gap-3 text-center">
+      <p class="typo-muted">{{ 'adminQuiz.empty' | translate }}</p>
+      <a
+        class="btn btn--primary btn--md"
+        [routerLink]="newUrl"
+        [queryParams]="{ topicId: params().topicId }"
+      >
+        <app-icon name="plus" />
+        {{ 'adminQuiz.create' | translate }}
+      </a>
+    </div>
   } @else {
     <p class="typo-caption mb-2">
       {{ 'quiz.resultCount' | translate: { n: page.totalElements } }}

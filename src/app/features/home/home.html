@@ -3,10 +3,18 @@
     <h1 class="typo-page-title">{{ greeting() }}</h1>
     <p class="typo-muted mt-1">{{ 'home.subtitle' | translate }}</p>
   </div>
-  <a class="btn btn--secondary btn--md self-start sm:self-auto" [routerLink]="browseUrl">
-    <app-icon name="search" />
-    {{ 'home.browseAll' | translate }}
-  </a>
+  <div class="flex flex-wrap gap-2 self-start sm:self-auto">
+    <a class="btn btn--secondary btn--md" [routerLink]="browseUrl">
+      <app-icon name="search" />
+      {{ 'home.browseAll' | translate }}
+    </a>
+    @if (auth.hasRole('ADMIN')) {
+      <a class="btn btn--primary btn--md" [routerLink]="newQuizUrl">
+        <app-icon name="plus" />
+        {{ 'adminQuiz.create' | translate }}
+      </a>
+    }
+  </div>
 </section>
 
 @let groups = topics();
@@ -19,6 +27,17 @@
     <p class="typo-muted">
       {{ (auth.hasRole('ADMIN') ? 'home.emptyHintAdmin' : 'home.emptyHint') | translate }}
     </p>
+    @if (auth.hasRole('ADMIN')) {
+      <div class="flex flex-wrap justify-center gap-2 mt-2">
+        <a class="btn btn--secondary btn--md" [routerLink]="adminTopicsUrl">
+          {{ 'nav.topics' | translate }}
+        </a>
+        <a class="btn btn--primary btn--md" [routerLink]="newQuizUrl">
+          <app-icon name="plus" />
+          {{ 'adminQuiz.create' | translate }}
+        </a>
+      </div>
+    }
   </div>
 } @else {
   <div class="flex flex-col gap-8">

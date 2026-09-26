@@ -2,8 +2,9 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable, finalize } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { ConfirmDialogService } from '../../../core/confirm/confirm-dialog.service';
-import { ERROR_CODES } from '../../../core/config';
+import { ERROR_CODES, ROUTES } from '../../../core/config';
 import { handleErrorCode } from '../../../core/error/error-handling';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
@@ -24,6 +25,7 @@ import { AdminTopicsService } from '../admin-topics.service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     ButtonComponent,
     IconComponent,
     InputTextComponent,
@@ -40,6 +42,9 @@ export class AdminTopicsComponent {
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
+
+  readonly adminQuizzesUrl = ROUTES.adminQuizzes;
+  readonly newQuizUrl = ROUTES.adminQuizNew;
 
   topics = signal<Topic[] | null>(null);
   saving = signal(false);

@@ -10,6 +10,9 @@
     </a>
   </section>
 } @else if (quiz(); as quiz) {
+  <div class="max-w-2xl mx-auto">
+    <app-breadcrumb [items]="breadcrumb()" />
+  </div>
   <article class="max-w-2xl mx-auto card-surface p-6 sm:p-8 flex flex-col gap-4 anim-slide-up-in">
     <div class="flex flex-wrap items-center gap-2">
       <a

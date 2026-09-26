@@ -50,7 +50,7 @@ const QUIZ: Quiz = {
 describe('QuizEditorComponent', () => {
   let http: HttpTestingController;
 
-  function create(id: string | null) {
+  function create(id: string | null, query: Record<string, string> = {}) {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
@@ -58,7 +58,12 @@ describe('QuizEditorComponent', () => {
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap(id ? { id } : {}) } },
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap(id ? { id } : {}),
+              queryParamMap: convertToParamMap(query),
+            },
+          },
         },
         { provide: TranslateService, useValue: { t: (key: string) => key, locale: signal('vn') } },
         { provide: ToastService, useValue: { success: jest.fn() } },
@@ -84,6 +89,12 @@ describe('QuizEditorComponent', () => {
     editor.save('PUBLISHED');
     expect(editor.emptyError()).toBe(true);
     http.expectNone(`${API}/quizzes`);
+  });
+
+  it('mở từ "Tạo đề trong chủ đề này" -> chọn sẵn chủ đề', () => {
+    const editor = create(null, { topicId: '5' });
+    expect(editor.form.controls.topicId.value).toBe('5');
+    expect(editor.hasUnsavedChanges()).toBe(false);
   });
 
   it('đề mới chưa điền đủ -> không gửi', () => {
@@ -125,7 +136,14 @@ describe('QuizEditorComponent', () => {
     expect(editor.importCapacity()).toBe(199);
 
     editor.importQuestions([
-      { line: 1, content: 'Q', explanation: 'vì', options: ['a', 'b'], correctIndex: 1, error: null },
+      {
+        line: 1,
+        content: 'Q',
+        explanation: 'vì',
+        options: ['a', 'b'],
+        correctIndex: 1,
+        error: null,
+      },
     ]);
 
     expect(editor.questions.length).toBe(2);

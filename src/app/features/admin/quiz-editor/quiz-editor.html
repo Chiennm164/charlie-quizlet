@@ -1,14 +1,22 @@
+<app-breadcrumb [items]="breadcrumb()" />
 <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
   <app-page-header
     [title]="(editingId ? 'adminQuiz.editTitle' : 'adminQuiz.createTitle') | translate"
     [description]="'adminQuiz.editorDescription' | translate"
   />
   @if (editingId && !loading()) {
-    <span
-      class="quiz-chip typo-caption self-start"
-      [class.quiz-chip--primary]="savedStatus() === 'PUBLISHED'"
-      >{{ 'quiz.status.' + savedStatus() | translate }}</span
-    >
+    <div class="flex items-center gap-2 self-start shrink-0">
+      <span
+        class="quiz-chip typo-caption"
+        [class.quiz-chip--primary]="savedStatus() === 'PUBLISHED'"
+        >{{ 'quiz.status.' + savedStatus() | translate }}</span
+      >
+      @if (savedStatus() === 'PUBLISHED' && viewUrl) {
+        <a class="btn btn--ghost btn--sm" [routerLink]="viewUrl">
+          {{ 'adminQuiz.viewAsStudent' | translate }}
+        </a>
+      }
+    </div>
   }
 </div>
 

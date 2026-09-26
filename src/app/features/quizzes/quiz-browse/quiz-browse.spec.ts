@@ -6,6 +6,7 @@ import { ActivatedRoute, ParamMap, Router, convertToParamMap } from '@angular/ro
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { TranslateService } from '../../../core/i18n/translate.service';
+import { ScrollRestoreService } from '../../../core/navigation/scroll-restore.service';
 import { QuizBrowseComponent } from './quiz-browse';
 
 const API = environment.apiUrl;
@@ -29,6 +30,7 @@ describe('QuizBrowseComponent', () => {
           useValue: { queryParamMap, snapshot: { queryParamMap: queryParamMap.value } },
         },
         { provide: Router, useValue: { navigate } },
+        { provide: ScrollRestoreService, useValue: { restore: jest.fn() } },
         { provide: TranslateService, useValue: { t: (key: string) => key, locale: signal('vn') } },
       ],
     });

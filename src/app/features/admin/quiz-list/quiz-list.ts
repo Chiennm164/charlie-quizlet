@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Params, Router, RouterLink } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
 import { APP_SETTINGS, ROUTES, adminQuizEditUrl, quizUrl } from '../../../core/config';
+import { ScrollRestoreService } from '../../../core/navigation/scroll-restore.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { QuizStatus } from '../../../core/models';
@@ -78,6 +79,7 @@ export class AdminQuizListComponent {
     map(paramsFrom),
     distinctUntilChanged(sameParams),
   );
+  params = toSignal(this.params$, { initialValue: this.initial });
 
   loading = signal(true);
   result = toSignal(
@@ -115,6 +117,12 @@ export class AdminQuizListComponent {
   private dateLocale = computed(() => APP_SETTINGS.i18n.formatLocale[this.translate.locale()]);
 
   constructor() {
+    // Back về trang này: cuộn lại chỗ đang xem khi danh sách đã hiện.
+    const scrollRestore = inject(ScrollRestoreService);
+    effect(() => {
+      if (this.result()) scrollRestore.restore();
+    });
+
     this.searchControl.valueChanges
       .pipe(
         debounceTime(searchDebounceMs),
@@ -150,7 +158,6 @@ export class AdminQuizListComponent {
 
   goToPage(page: number): void {
     this.updateQuery({ page: page > 0 ? page : null }, false);
-    window.scrollTo({ top: 0 });
   }
 
   private updateQuery(queryParams: Params, replaceUrl = true): void {

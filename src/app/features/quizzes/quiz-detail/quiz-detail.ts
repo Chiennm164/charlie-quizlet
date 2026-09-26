@@ -2,11 +2,18 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
-import { APP_SETTINGS, ERROR_CODES, ROUTES, adminQuizEditUrl } from '../../../core/config';
+import {
+  APP_SETTINGS,
+  DEFAULT_AUTHENTICATED_ROUTE,
+  ERROR_CODES,
+  ROUTES,
+  adminQuizEditUrl,
+} from '../../../core/config';
 import { handleErrorCode } from '../../../core/error/error-handling';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { Quiz } from '../../../core/models';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/ui/breadcrumb/breadcrumb';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { LoadingComponent } from '../../../shared/ui/loading/loading';
 import { MascotComponent } from '../../../shared/ui/mascot/mascot';
@@ -17,7 +24,14 @@ import { QuizzesService } from '../quizzes.service';
 @Component({
   selector: 'app-quiz-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent, LoadingComponent, MascotComponent, TranslatePipe],
+  imports: [
+    RouterLink,
+    BreadcrumbComponent,
+    IconComponent,
+    LoadingComponent,
+    MascotComponent,
+    TranslatePipe,
+  ],
   templateUrl: './quiz-detail.html',
 })
 export class QuizDetailComponent {
@@ -29,6 +43,19 @@ export class QuizDetailComponent {
   quiz = signal<Quiz | null>(null);
   loading = signal(true);
   notFound = signal(false);
+
+  /** Trang chủ › Bộ đề › <chủ đề> › <tên đề>: bấm để quay lại danh sách (lọc sẵn theo chủ đề). */
+  breadcrumb = computed<BreadcrumbItem[]>(() => {
+    this.translate.locale();
+    const quiz = this.quiz();
+    if (!quiz) return [];
+    return [
+      { label: this.translate.t('nav.home'), url: DEFAULT_AUTHENTICATED_ROUTE },
+      { label: this.translate.t('nav.quizzes'), url: ROUTES.quizzes },
+      { label: quiz.topic.name, url: ROUTES.quizzes, queryParams: { topicId: quiz.topic.id } },
+      { label: quiz.title },
+    ];
+  });
 
   publishedAt = computed(() =>
     formatDate(this.quiz()?.publishedAt, APP_SETTINGS.i18n.formatLocale[this.translate.locale()]),

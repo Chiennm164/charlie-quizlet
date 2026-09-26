@@ -103,7 +103,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/forbidden/forbidden').then((m) => m.ForbiddenComponent),
       },
+      // URL không khớp route nào (đặt cuối cùng). Chưa đăng nhập thì authGuard của layout đưa về /login trước.
+      {
+        path: '**',
+        title: 'notFound.pageTitle',
+        loadComponent: () =>
+          import('./features/not-found/not-found').then((m) => m.NotFoundComponent),
+      },
     ],
   },
-  { path: '**', redirectTo: ROUTE_SEGMENTS.home },
 ];

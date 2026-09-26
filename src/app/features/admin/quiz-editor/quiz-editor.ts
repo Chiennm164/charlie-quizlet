@@ -15,11 +15,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { catchError, finalize, map, of, startWith } from 'rxjs';
 import { ConfirmDialogService } from '../../../core/confirm/confirm-dialog.service';
-import { APP_SETTINGS, ROUTES, adminQuizEditUrl } from '../../../core/config';
+import { APP_SETTINGS, ROUTES, adminQuizEditUrl, quizUrl } from '../../../core/config';
 import { HasUnsavedChanges } from '../../../core/guards/unsaved-changes.guard';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { Quiz, QuizRequest, QuizStatus } from '../../../core/models';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/ui/breadcrumb/breadcrumb';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { InputNumberComponent } from '../../../shared/ui/input-number/input-number';
@@ -58,6 +59,7 @@ const v = APP_SETTINGS.validation;
     RouterLink,
     CdkDropList,
     CdkDrag,
+    BreadcrumbComponent,
     ButtonComponent,
     IconComponent,
     InputNumberComponent,
@@ -84,8 +86,11 @@ export class QuizEditorComponent implements HasUnsavedChanges {
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
+  private route = inject(ActivatedRoute).snapshot;
   /** Có id = đang sửa đề đã có. */
-  readonly editingId = Number(inject(ActivatedRoute).snapshot.paramMap.get('id')) || null;
+  readonly editingId = Number(this.route.paramMap.get('id')) || null;
+  /** Trang học sinh của đề đang sửa (nút "Xem như học sinh" khi đề đã xuất bản). */
+  readonly viewUrl = this.editingId ? quizUrl(this.editingId) : null;
   readonly listUrl = ROUTES.adminQuizzes;
   readonly topicsUrl = ROUTES.adminTopics;
   readonly maxQuestions = v.quizMaxQuestions;
@@ -137,11 +142,24 @@ export class QuizEditorComponent implements HasUnsavedChanges {
   );
   noTopics = computed(() => this.topics()?.length === 0);
 
+  breadcrumb = computed<BreadcrumbItem[]>(() => {
+    this.translate.locale();
+    return [
+      { label: this.translate.t('nav.manageQuizzes'), url: ROUTES.adminQuizzes },
+      {
+        label: this.translate.t(this.editingId ? 'adminQuiz.editTitle' : 'adminQuiz.createTitle'),
+      },
+    ];
+  });
+
   constructor() {
     if (this.editingId) {
       this.load(this.editingId);
     } else {
       this.questions.push(createQuestion());
+      // Mở từ "Tạo đề trong chủ đề này" (/admin/quizzes/new?topicId=5): chọn sẵn chủ đề.
+      const topicId = this.route.queryParamMap.get('topicId');
+      if (topicId) this.form.controls.topicId.setValue(topicId);
     }
   }
 

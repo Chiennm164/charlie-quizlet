@@ -42,21 +42,50 @@
     </div>
   </header>
 
-  @if (auth.hasRole('ADMIN')) {
-    <nav class="admin-bar" [attr.aria-label]="'adminNav.label' | translate">
-      <div class="max-w-6xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
-        <span class="admin-bar__title">{{ 'adminNav.title' | translate }}</span>
-        <a class="admin-bar__link" [routerLink]="adminQuizzesRoute" routerLinkActive="is-active">
+  <nav class="app-nav" [attr.aria-label]="'nav.label' | translate">
+    <div class="max-w-6xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
+      <a
+        class="app-nav__link"
+        [routerLink]="homeRoute"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+      >
+        <app-icon name="book-open" />
+        {{ 'nav.home' | translate }}
+      </a>
+      <a
+        class="app-nav__link"
+        [routerLink]="quizzesRoute"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+      >
+        <app-icon name="search" />
+        {{ 'nav.quizzes' | translate }}
+      </a>
+      @if (auth.hasRole('ADMIN')) {
+        <span class="app-nav__divider" aria-hidden="true"></span>
+        <span class="app-nav__title">{{ 'nav.admin' | translate }}</span>
+        <a
+          class="app-nav__link"
+          [routerLink]="adminQuizzesRoute"
+          routerLinkActive="is-active"
+          ariaCurrentWhenActive="page"
+        >
           <app-icon name="clipboard-check" />
-          {{ 'adminNav.quizzes' | translate }}
+          {{ 'nav.manageQuizzes' | translate }}
         </a>
-        <a class="admin-bar__link" [routerLink]="adminTopicsRoute" routerLinkActive="is-active">
+        <a
+          class="app-nav__link"
+          [routerLink]="adminTopicsRoute"
+          routerLinkActive="is-active"
+          ariaCurrentWhenActive="page"
+        >
           <app-icon name="layers" />
-          {{ 'adminNav.topics' | translate }}
+          {{ 'nav.topics' | translate }}
         </a>
-      </div>
-    </nav>
-  }
+      }
+    </div>
+  </nav>
 
   <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-6">
     <router-outlet />

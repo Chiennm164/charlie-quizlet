@@ -63,7 +63,22 @@
               {{ 'adminTopic.quizCount' | translate: { n: topic.quizCount } }}
             </p>
           </div>
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
+            <a
+              class="btn btn--ghost btn--sm"
+              [routerLink]="adminQuizzesUrl"
+              [queryParams]="{ topicId: topic.id }"
+            >
+              {{ 'adminTopic.viewQuizzes' | translate }}
+            </a>
+            <a
+              class="btn btn--secondary btn--sm"
+              [routerLink]="newQuizUrl"
+              [queryParams]="{ topicId: topic.id }"
+            >
+              <app-icon name="plus" />
+              {{ 'adminTopic.createQuiz' | translate }}
+            </a>
             <app-button variant="secondary" size="sm" (clicked)="startRename(topic)">
               <app-icon name="pencil" />
               {{ 'adminTopic.rename' | translate }}

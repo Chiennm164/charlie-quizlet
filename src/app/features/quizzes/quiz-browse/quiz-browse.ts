@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
 import { APP_SETTINGS } from '../../../core/config';
+import { ScrollRestoreService } from '../../../core/navigation/scroll-restore.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { QuizListParams, QuizSort } from '../../../core/models';
@@ -106,6 +107,12 @@ export class QuizBrowseComponent {
   });
 
   constructor() {
+    // Back về trang này: cuộn lại chỗ đang xem khi danh sách đã hiện.
+    const scrollRestore = inject(ScrollRestoreService);
+    effect(() => {
+      if (this.result()) scrollRestore.restore();
+    });
+
     this.searchControl.valueChanges
       .pipe(
         debounceTime(searchDebounceMs),
@@ -137,7 +144,6 @@ export class QuizBrowseComponent {
   goToPage(page: number): void {
     // Đổi trang thì thêm vào lịch sử (Back quay lại trang trước); gõ tìm kiếm / đổi bộ lọc thì không.
     this.updateQuery({ page: page > 0 ? page : null }, false);
-    window.scrollTo({ top: 0 });
   }
 
   /** null = bỏ param khỏi URL (giá trị mặc định). */

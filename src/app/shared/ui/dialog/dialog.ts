@@ -7,6 +7,7 @@ export type DialogSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-dialog',
   standalone: true,
+  host: { '(document:keydown.escape)': 'onEscape()' },
   imports: [IconComponent, TranslatePipe],
   template: `
     @if (open()) {
@@ -52,6 +53,11 @@ export class DialogComponent {
   closeOnOverlay = input(true);
 
   closed = output<void>();
+
+  /** Esc đóng dialog đang mở (giống bấm nút ×). */
+  onEscape(): void {
+    if (this.open()) this.closed.emit();
+  }
 
   onOverlayClick(event: MouseEvent): void {
     if (this.closeOnOverlay() && event.target === event.currentTarget) {

@@ -243,12 +243,6 @@
     "notFoundDescription": "The quiz may have been deleted or is not published yet.",
     "backToBrowse": "See other quizzes"
   },
-  "adminNav": {
-    "label": "Admin menu",
-    "title": "Admin",
-    "quizzes": "Quizzes",
-    "topics": "Topics"
-  },
   "adminTopic": {
     "title": "Topics",
     "description": "Each quiz belongs to a topic. Students see quizzes grouped by topic on the home page.",
@@ -265,7 +259,9 @@
     "deleteTitle": "Delete topic",
     "deleteConfirm": "Delete topic \"{name}\"? This cannot be undone.",
     "inUseHint": "The topic still has quizzes — move or delete them first",
-    "nameTaken": "This topic name already exists"
+    "nameTaken": "This topic name already exists",
+    "viewQuizzes": "View quizzes",
+    "createQuiz": "New quiz"
   },
   "adminQuiz": {
     "listTitle": "Manage quizzes",
@@ -345,6 +341,21 @@
       "overCapacity": "You can add at most {n} more questions",
       "submit": "Add {n} questions",
       "done": "Added {n} questions"
-    }
+    },
+    "viewAsStudent": "View as student"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "quizzes": "Quizzes",
+    "admin": "Admin",
+    "manageQuizzes": "Manage quizzes",
+    "topics": "Topics"
+  },
+  "notFound": {
+    "pageTitle": "Page not found",
+    "title": "This page does not exist",
+    "description": "The link may be wrong or the page no longer exists.",
+    "browse": "Browse quizzes"
   }
 }

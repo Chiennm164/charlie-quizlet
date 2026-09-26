@@ -243,12 +243,6 @@
     "notFoundDescription": "Bộ đề có thể đã bị xoá hoặc chưa được xuất bản.",
     "backToBrowse": "Xem các bộ đề khác"
   },
-  "adminNav": {
-    "label": "Menu quản trị",
-    "title": "Quản trị",
-    "quizzes": "Bộ đề",
-    "topics": "Chủ đề"
-  },
   "adminTopic": {
     "title": "Chủ đề",
     "description": "Mỗi bộ đề thuộc một chủ đề. Học sinh thấy các bộ đề theo chủ đề trên trang chủ.",
@@ -265,7 +259,9 @@
     "deleteTitle": "Xoá chủ đề",
     "deleteConfirm": "Xoá chủ đề \"{name}\"? Việc này không hoàn tác được.",
     "inUseHint": "Chủ đề còn bộ đề — chuyển hoặc xoá các bộ đề trước",
-    "nameTaken": "Tên chủ đề đã tồn tại"
+    "nameTaken": "Tên chủ đề đã tồn tại",
+    "viewQuizzes": "Xem đề",
+    "createQuiz": "Tạo đề"
   },
   "adminQuiz": {
     "listTitle": "Quản lý bộ đề",
@@ -345,6 +341,21 @@
       "overCapacity": "Chỉ thêm được tối đa {n} câu nữa",
       "submit": "Thêm {n} câu",
       "done": "Đã thêm {n} câu hỏi"
-    }
+    },
+    "viewAsStudent": "Xem như học sinh"
+  },
+  "nav": {
+    "label": "Điều hướng chính",
+    "home": "Trang chủ",
+    "quizzes": "Bộ đề",
+    "admin": "Quản trị",
+    "manageQuizzes": "Quản lý đề",
+    "topics": "Chủ đề"
+  },
+  "notFound": {
+    "pageTitle": "Không tìm thấy trang",
+    "title": "Không tìm thấy trang này",
+    "description": "Đường dẫn có thể đã sai hoặc trang không còn tồn tại.",
+    "browse": "Xem các bộ đề"
   }
 }

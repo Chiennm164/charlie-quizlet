@@ -34,6 +34,7 @@ export class MainLayoutComponent {
   private translate = inject(TranslateService);
 
   readonly homeRoute = DEFAULT_AUTHENTICATED_ROUTE;
+  readonly quizzesRoute = ROUTES.quizzes;
   readonly adminQuizzesRoute = ROUTES.adminQuizzes;
   readonly adminTopicsRoute = ROUTES.adminTopics;
   accountOpen = signal(false);

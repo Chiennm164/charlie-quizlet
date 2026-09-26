@@ -129,18 +129,20 @@
   @apply rounded-md bg-bg-muted px-4 py-3 flex flex-col gap-1;
 }
 
-/* ---- Thanh menu Admin dưới header (main-layout): .admin-bar, .admin-bar__title, .admin-bar__link (+ .is-active) ---- */
-.admin-bar {
+/* ---- Thanh menu dưới header (main-layout): .app-nav, .app-nav__link (+ .is-active), .app-nav__divider,
+   .app-nav__title (nhãn "Quản trị" trước các mục của Admin) ---- */
+.app-nav {
   @apply bg-surface border-b border-border;
 }
 
-.admin-bar__title {
-  @apply typo-caption uppercase tracking-wide font-semibold mr-2 shrink-0;
-}
-
-.admin-bar__link {
-  @apply inline-flex items-center gap-1.5 px-3 py-2 text-body-sm font-semibold text-text-muted border-b-2
+.app-nav__link {
+  @apply inline-flex items-center gap-1.5 px-2 sm:px-3 py-2 text-body-sm font-semibold text-text-muted border-b-2
     border-transparent transition-colors whitespace-nowrap;
+
+  /* Màn nhỏ: bỏ icon cho đủ chỗ cả 4 mục trên 1 hàng (ẩn ở đây vì :host của app-icon tự đặt display). */
+  & app-icon {
+    @apply hidden sm:inline-flex;
+  }
 
   &:hover {
     @apply text-text;
@@ -149,4 +151,41 @@
   &.is-active {
     @apply text-primary border-primary;
   }
+}
+
+.app-nav__divider {
+  @apply w-px h-5 bg-border mx-1 sm:mx-2 shrink-0;
+}
+
+.app-nav__title {
+  @apply hidden sm:inline typo-caption uppercase tracking-wide font-semibold mr-1 shrink-0;
+}
+
+/* ---- Breadcrumb (shared/ui/breadcrumb): .breadcrumb__list, __item, __link, __separator, __current ---- */
+.breadcrumb {
+  @apply mb-3;
+}
+
+.breadcrumb__list {
+  @apply flex flex-wrap items-center gap-1 typo-body-sm;
+}
+
+.breadcrumb__item {
+  @apply inline-flex items-center gap-1 min-w-0;
+}
+
+.breadcrumb__link {
+  @apply text-text-muted rounded-sm transition-colors;
+
+  &:hover {
+    @apply text-primary underline;
+  }
+}
+
+.breadcrumb__separator {
+  @apply text-text-muted;
+}
+
+.breadcrumb__current {
+  @apply text-text font-semibold truncate max-w-[60vw] sm:max-w-md;
 }

@@ -1,9 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { APP_SETTINGS, ROUTES } from '../../core/config';
+import { ScrollRestoreService } from '../../core/navigation/scroll-restore.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslateService } from '../../core/i18n/translate.service';
 import { TopicQuizzes } from '../../core/models';
@@ -32,6 +33,8 @@ export class HomeComponent {
   private translate = inject(TranslateService);
 
   readonly browseUrl = ROUTES.quizzes;
+  readonly newQuizUrl = ROUTES.adminQuizNew;
+  readonly adminTopicsUrl = ROUTES.adminTopics;
 
   /** null = đang tải. Lỗi đã hiện ở dialog chung -> coi như chưa có đề. */
   topics = toSignal<TopicQuizzes[] | null>(
@@ -40,6 +43,14 @@ export class HomeComponent {
       .pipe(catchError(() => of([]))),
     { initialValue: null },
   );
+
+  constructor() {
+    // Back về trang này: cuộn lại chỗ đang xem khi danh sách đã hiện.
+    const scrollRestore = inject(ScrollRestoreService);
+    effect(() => {
+      if (this.topics()) scrollRestore.restore();
+    });
+  }
 
   greeting = computed(() => {
     this.translate.ready();
