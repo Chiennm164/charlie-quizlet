@@ -98,6 +98,11 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - **Countdown**: `<app-countdown [seconds]>` hoặc `[targetDate]`, tự dọn interval; `finished` phát 1 lần.
 - Các ô nhập là `ControlValueAccessor`: dùng `formControlName`; không dùng `[(ngModel)]`.
 
+## 8b. Phím tắt
+
+- Phím tắt gắn bằng directive `appShortcut` lên đúng nút có cùng chức năng (`<button appShortcut=" " (shortcut)="flip()" (click)="flip()">`) — không tự nghe `document:keydown` trong component. Directive đã bỏ qua khi đang gõ trong ô nhập / giữ Ctrl-Alt-Meta / nút disabled, và gắn `aria-keyshortcuts`.
+- Hiện gợi ý phím cho người dùng (`<kbd class="kbd">`).
+
 ## 9. Test
 
 - Chạy `npm test` (Jest), không dùng `ng test`. Test đặt cạnh file nguồn: `xxx.spec.ts`.

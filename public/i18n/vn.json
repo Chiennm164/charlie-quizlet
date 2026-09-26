@@ -313,5 +313,28 @@
     "emptyTitle": "Bạn chưa có học phần nào",
     "emptyHint": "Tạo học phần đầu tiên để bắt đầu học thôi!",
     "backToList": "Về danh sách học phần"
+  },
+  "flashcards": {
+    "pageTitle": "Thẻ ghi nhớ",
+    "modeDescription": "Lật thẻ, tự kiểm tra xem bạn đã nhớ từ nào",
+    "round": "Vòng {n}",
+    "known": "Đã nhớ",
+    "unknown": "Chưa nhớ",
+    "progress": "Tiến độ vòng học",
+    "flip": "Lật thẻ (Space)",
+    "prev": "Thẻ trước (←)",
+    "next": "Thẻ sau (→)",
+    "markKnown": "Đã nhớ",
+    "markUnknown": "Chưa nhớ",
+    "shuffle": "Trộn thẻ",
+    "definitionFirst": "Hiện định nghĩa trước",
+    "shortcutsHint": "Space: lật · ←/→: chuyển thẻ · 1: chưa nhớ · 2: đã nhớ",
+    "roundEndTitle": "Hết vòng rồi!",
+    "roundEndSummary": "Bạn đã nhớ {known} thẻ, còn {unknown} thẻ cần ôn thêm.",
+    "continueUnknown": "Ôn tiếp {n} thẻ chưa nhớ",
+    "restart": "Học lại từ đầu",
+    "doneTitle": "Tuyệt vời!",
+    "doneSummary": "Bạn đã nhớ hết {n} thẻ của học phần này.",
+    "backToSet": "Về học phần"
   }
 }

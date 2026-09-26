@@ -1,6 +1,7 @@
-import { Component, forwardRef, input, signal } from '@angular/core';
+import { Component, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+/** Nhãn truyền bằng nội dung bên trong: <app-checkbox formControlName="x">Nhãn</app-checkbox>. */
 @Component({
   selector: 'app-checkbox',
   standalone: true,
@@ -26,8 +27,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class CheckboxComponent implements ControlValueAccessor {
-  label = input<string | null>(null);
-
   checked = signal(false);
   disabled = signal(false);
 

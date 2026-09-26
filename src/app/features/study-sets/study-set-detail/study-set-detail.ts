@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../core/confirm/confirm-dialog.service';
-import { ERROR_CODES, ROUTES, studySetEditUrl } from '../../../core/config';
+import { ERROR_CODES, ROUTES, studySetEditUrl, studySetFlashcardsUrl } from '../../../core/config';
 import { handleErrorCode } from '../../../core/error/error-handling';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
@@ -41,6 +41,7 @@ export class StudySetDetailComponent {
 
   private readonly id = Number(inject(ActivatedRoute).snapshot.paramMap.get('id'));
   readonly editUrl = studySetEditUrl(this.id);
+  readonly flashcardsUrl = studySetFlashcardsUrl(this.id);
   readonly listUrl = ROUTES.studySets;
 
   set = signal<StudySet | null>(null);

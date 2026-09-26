@@ -43,6 +43,8 @@ const QUICK_ACTIONS: QuickAction[] = [
     icon: 'layers',
     titleKey: 'home.actionFlashcards',
     descriptionKey: 'home.actionFlashcardsDesc',
+    // Chọn học phần trước rồi mới học thẻ.
+    route: ROUTES.studySets,
   },
   { icon: 'clipboard-check', titleKey: 'home.actionQuiz', descriptionKey: 'home.actionQuizDesc' },
   {

@@ -55,7 +55,7 @@ Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có s
 **Angular:** `FormArray`, custom validator (tối thiểu 2 thẻ, trùng thuật ngữ), `CanDeactivate`, tìm kiếm bằng `debounceTime` / `switchMap` so với `httpResource` (Signals vs RxJS).
 
 ### Giai đoạn 3 — Chế độ học trên học phần
-- [ ] Thẻ ghi nhớ: lật thẻ (CSS 3D), phím tắt (Space lật, ←/→ chuyển thẻ), trộn thẻ, đánh dấu đã nhớ / chưa nhớ → vòng sau chỉ còn thẻ chưa nhớ
+- [x] Thẻ ghi nhớ: lật thẻ (CSS 3D), phím tắt (Space lật, ←/→ chuyển thẻ), trộn thẻ, đánh dấu đã nhớ / chưa nhớ → vòng sau chỉ còn thẻ chưa nhớ
 - [ ] Ôn tập ngắt quãng (Leitner hoặc SM-2 kiểu Anki): lưu tiến độ từng thẻ theo user, Home hiện "Hôm nay cần ôn N thẻ"
 - [ ] Phát âm thuật ngữ bằng Web Speech API
 

@@ -24,6 +24,7 @@ export const ROUTES = Object.fromEntries(
 /** Đường dẫn có tham số (route khai báo trong app.routes.ts: `study-sets/:id`, `study-sets/:id/edit`). */
 export const studySetUrl = (id: number) => `/${ROUTE_SEGMENTS.studySets}/${id}`;
 export const studySetEditUrl = (id: number) => `${studySetUrl(id)}/edit`;
+export const studySetFlashcardsUrl = (id: number) => `${studySetUrl(id)}/flashcards`;
 
 /** Trang mặc định sau khi đăng nhập / đăng ký thành công. */
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.home;

@@ -80,6 +80,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: `${ROUTE_SEGMENTS.studySets}/:id/flashcards`,
+        title: 'flashcards.pageTitle',
+        loadComponent: () =>
+          import('./features/study-sets/flashcards/flashcards').then((m) => m.FlashcardsComponent),
+      },
+      {
         path: `${ROUTE_SEGMENTS.studySets}/:id`,
         title: 'studySet.pageTitle',
         loadComponent: () =>

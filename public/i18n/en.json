@@ -313,5 +313,28 @@
     "emptyTitle": "You have no study sets yet",
     "emptyHint": "Create your first study set to start learning!",
     "backToList": "Back to my study sets"
+  },
+  "flashcards": {
+    "pageTitle": "Flashcards",
+    "modeDescription": "Flip cards and check which terms you remember",
+    "round": "Round {n}",
+    "known": "Know",
+    "unknown": "Still learning",
+    "progress": "Round progress",
+    "flip": "Flip card (Space)",
+    "prev": "Previous card (←)",
+    "next": "Next card (→)",
+    "markKnown": "Know it",
+    "markUnknown": "Still learning",
+    "shuffle": "Shuffle",
+    "definitionFirst": "Show definition first",
+    "shortcutsHint": "Space: flip · ←/→: move · 1: still learning · 2: know it",
+    "roundEndTitle": "Round finished!",
+    "roundEndSummary": "You know {known} cards and have {unknown} left to review.",
+    "continueUnknown": "Review {n} remaining cards",
+    "restart": "Start over",
+    "doneTitle": "Awesome!",
+    "doneSummary": "You know all {n} cards in this study set.",
+    "backToSet": "Back to study set"
   }
 }

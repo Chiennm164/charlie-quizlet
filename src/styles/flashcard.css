@@ -1,0 +1,100 @@
+/* =========================================================
+   Thẻ ghi nhớ: .flashcard (nút bấm để lật, có phối cảnh 3D), .flashcard__inner (xoay 180° khi .is-flipped),
+   .flashcard__face (2 mặt, mặt sau .flashcard__face--back), .flashcard__label, .flashcard__text.
+   Trạng thái đánh dấu: .is-known (viền xanh) / .is-unknown (viền đỏ).
+   Thanh tiến độ vòng: .flashcard-progress, .flashcard-progress__bar.  Phím tắt: .kbd.
+   Người dùng bật "giảm chuyển động": transition bị tắt chung trong animations.css -> thẻ đổi mặt tức thì.
+   ========================================================= */
+
+.flashcard {
+  @apply block w-full h-72 sm:h-80 cursor-pointer rounded-lg;
+  perspective: 1400px;
+
+  &:focus-visible {
+    outline-offset: 4px;
+  }
+}
+
+.flashcard__inner {
+  @apply relative block w-full h-full;
+  transform-style: preserve-3d;
+  transition: transform var(--cq-duration-slow) var(--cq-ease-out);
+
+  .flashcard.is-flipped & {
+    transform: rotateY(180deg);
+  }
+}
+
+.flashcard__face {
+  @apply absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 overflow-auto
+    card-surface shadow-md;
+  backface-visibility: hidden;
+
+  .flashcard.is-known & {
+    @apply border-success;
+  }
+
+  .flashcard.is-unknown & {
+    @apply border-danger;
+  }
+}
+
+.flashcard__face--back {
+  @apply bg-bg-muted;
+  transform: rotateY(180deg);
+}
+
+.flashcard__label {
+  @apply absolute top-4 left-5 typo-caption uppercase tracking-wide;
+}
+
+.flashcard__text {
+  @apply text-page-title text-text-strong text-center whitespace-pre-line break-words max-w-full;
+}
+
+.flashcard-progress {
+  @apply h-3 w-full rounded-full bg-surface border-2 border-border overflow-hidden;
+}
+
+.flashcard-progress__bar {
+  @apply block h-full rounded-full bg-primary transition-all;
+}
+
+/* Gợi ý phím tắt cạnh nhãn nút. */
+.kbd {
+  @apply hidden sm:inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-sm border border-border
+    bg-bg-muted text-caption font-semibold text-text-muted;
+}
+
+.kbd--inverse {
+  @apply border-text-inverse/40 bg-text-inverse/15 text-text-inverse;
+}
+
+/* Nút đánh dấu: không xuống dòng; màn nhỏ bớt padding và ẩn icon cho vừa 1 hàng với nút ‹ ›.
+   (Ẩn icon ở đây vì :host của app-icon tự đặt display, class `hidden` gắn trên thẻ không thắng được.) */
+.flashcard-mark {
+  @apply whitespace-nowrap px-3 sm:px-5;
+
+  & app-icon {
+    @apply hidden sm:inline-flex;
+  }
+}
+
+/* Nút thẻ trước / sau: chỉ có icon nên bớt padding. */
+.flashcard-nav {
+  @apply px-3;
+}
+
+/* Nút "Chưa nhớ": chữ đỏ để phân biệt với "Đã nhớ". */
+.flashcard-mark--unknown {
+  @apply text-danger;
+}
+
+/* Lối vào 1 chế độ học trên trang học phần (thẻ ghi nhớ, sau này: kiểm tra...). */
+.study-mode {
+  @apply flex items-center gap-3 p-4 transition-all;
+
+  &:hover {
+    @apply border-primary -translate-y-0.5;
+  }
+}

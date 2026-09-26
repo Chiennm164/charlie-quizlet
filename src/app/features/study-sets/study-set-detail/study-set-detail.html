@@ -40,6 +40,19 @@
     }
   </section>
 
+  <a class="study-mode card-surface mb-6" [routerLink]="flashcardsUrl">
+    <span
+      class="shrink-0 w-12 h-12 rounded-full bg-primary-soft text-primary flex items-center justify-center"
+    >
+      <app-icon name="layers" [size]="24" />
+    </span>
+    <span class="min-w-0">
+      <span class="block typo-card-title">{{ 'flashcards.pageTitle' | translate }}</span>
+      <span class="block typo-muted">{{ 'flashcards.modeDescription' | translate }}</span>
+    </span>
+    <app-icon name="chevron-right" class="ml-auto text-text-muted" />
+  </a>
+
   <ol class="flex flex-col gap-2">
     @for (card of set.cards; track card.id) {
       <li class="card-surface p-4 grid gap-2 md:grid-cols-[1fr_2fr] md:gap-6">
