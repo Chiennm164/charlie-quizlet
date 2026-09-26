@@ -19,6 +19,8 @@ export const ERROR_CODES = {
   AUTH_USER_NOT_FOUND: 'AUTH_USER_NOT_FOUND',
   AUTH_EMAIL_ALREADY_REGISTERED: 'AUTH_EMAIL_ALREADY_REGISTERED',
   AUTH_RESET_TOKEN_INVALID: 'AUTH_RESET_TOKEN_INVALID',
+  /** Refresh token hết hạn / đã thu hồi: phiên đã kết thúc, phải đăng nhập lại. */
+  AUTH_REFRESH_TOKEN_INVALID: 'AUTH_REFRESH_TOKEN_INVALID',
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

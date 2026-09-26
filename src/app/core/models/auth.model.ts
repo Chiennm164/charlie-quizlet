@@ -17,7 +17,14 @@ export interface AuthResponse {
   tokenType: string;
   /** Token lifetime in seconds. */
   expiresIn: number;
+  /** Dùng 1 lần để lấy cặp token mới (`/auth/refresh`) khi access token hết hạn. */
+  refreshToken: string;
   user: User;
+}
+
+/** Body của `/auth/refresh` và `/auth/logout`. */
+export interface RefreshTokenRequest {
+  refreshToken: string;
 }
 
 export interface ForgotPasswordRequest {

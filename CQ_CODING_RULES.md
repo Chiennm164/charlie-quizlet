@@ -35,7 +35,9 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 
 - Logic token / phiên chỉ nằm trong `AuthService` (`core/auth`). Không đọc/ghi token ở nơi khác.
 - Route cần đăng nhập đặt làm **route con của `MainLayoutComponent`** (đã có `authGuard`); trang cho khách dùng `guestGuard`. Không kiểm tra đăng nhập / role bằng `if` rải rác trong component.
-- Refresh token chưa có (xem [CQ_SPEC.md](CQ_SPEC.md) mục 2) — khi làm, đặt trong `AuthService` + `authInterceptor`.
+- Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('TEACHER', 'ADMIN')]` vào route (không đủ quyền → trang 403). Ẩn/hiện nút, thẻ theo role thì dùng `auth.hasRole(...)`. Guard FE chỉ để giao diện đúng — BE vẫn phải tự kiểm tra quyền.
+- Làm mới phiên (refresh token) do `AuthService` + `authInterceptor` lo: component / service **không** tự bắt 401, tự gọi `/auth/refresh` hay tự đọc refresh token.
+- API BE mới không cần đăng nhập: thêm vào `PUBLIC_API_ENDPOINTS` (`core/config/api-endpoints.ts`) để interceptor không gắn token, không làm mới phiên khi gặp 401.
 
 ## 5. Cấu trúc, cấu hình & đặt tên
 

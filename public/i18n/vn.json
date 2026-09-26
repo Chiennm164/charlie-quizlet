@@ -157,6 +157,12 @@
     },
     "pageTitle": "Trang chủ"
   },
+  "forbidden": {
+    "pageTitle": "Không có quyền truy cập",
+    "title": "Bạn không có quyền xem trang này",
+    "description": "Trang này dành cho vai trò khác. Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ quản trị viên.",
+    "backHome": "Về trang chủ"
+  },
   "authLayout": {
     "login": {
       "title": "Chào mừng bạn quay lại!",

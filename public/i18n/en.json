@@ -157,6 +157,12 @@
     },
     "pageTitle": "Home"
   },
+  "forbidden": {
+    "pageTitle": "Access denied",
+    "title": "You don't have permission to view this page",
+    "description": "This page is for a different role. If you think this is a mistake, contact an administrator.",
+    "backHome": "Back to home"
+  },
   "authLayout": {
     "login": {
       "title": "Welcome back!",

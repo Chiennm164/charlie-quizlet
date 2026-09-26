@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { DEFAULT_AUTHENTICATED_ROUTE, RETURN_URL_PARAM, ROUTES } from '../config';
+import { Role } from '../models';
 import { AuthService } from './auth.service';
 
 /** Chỉ cho vào khi đã đăng nhập; chưa đăng nhập thì về /login, kèm returnUrl để quay lại sau. */
@@ -19,3 +20,14 @@ export const guestGuard: CanActivateFn = () => {
     ? inject(Router).createUrlTree([DEFAULT_AUTHENTICATED_ROUTE])
     : true;
 };
+
+/**
+ * Chỉ cho vào khi user có 1 trong các role; không đủ quyền thì về trang 403. Dùng cho route con của
+ * MainLayout (authGuard ở route cha chạy trước, tới đây user đã đăng nhập):
+ *
+ *   { path: ..., canActivate: [roleGuard('TEACHER', 'ADMIN')], loadComponent: ... }
+ */
+export const roleGuard =
+  (...roles: Role[]): CanActivateFn =>
+  () =>
+    inject(AuthService).hasRole(...roles) || inject(Router).createUrlTree([ROUTES.forbidden]);

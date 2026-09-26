@@ -2,5 +2,6 @@
 export const STORAGE_KEYS = {
   accessToken: 'cq_access_token',
   tokenExpiresAt: 'cq_token_expires_at',
+  refreshToken: 'cq_refresh_token',
   locale: 'cq_locale',
 } as const;

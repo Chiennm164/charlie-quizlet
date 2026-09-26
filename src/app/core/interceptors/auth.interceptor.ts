@@ -1,36 +1,50 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { isHttpStatus } from '../../shared/utils/common.utils';
-import { API_ENDPOINTS, HTTP_STATUS, RETURN_URL_PARAM, ROUTES } from '../config';
+import { hasErrorCode } from '../../shared/utils/common.utils';
+import { ERROR_CODES, PUBLIC_API_ENDPOINTS, RETURN_URL_PARAM, ROUTES } from '../config';
 
 /**
- * Gắn Bearer token vào mọi request gọi BE. Nếu BE trả 401 (token hết hạn / bị thu hồi)
- * ở API cần đăng nhập thì xoá phiên và đưa về trang login.
+ * Gắn access token vào request gọi BE (trừ API công khai) và giữ phiên đăng nhập:
+ * - access token đã hết hạn → làm mới bằng refresh token rồi mới gửi request;
+ * - BE vẫn trả 401 COMMON_UNAUTHORIZED → làm mới rồi gửi lại request 1 lần;
+ * - phiên đã kết thúc (không còn refresh token dùng được) → đăng xuất, về trang login kèm returnUrl.
+ * Làm mới bị lỗi mạng thì giữ phiên, lỗi trả về nơi gọi như bình thường.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  if (!req.url.startsWith(environment.apiUrl)) {
+  if (!req.url.startsWith(environment.apiUrl) || PUBLIC_API_ENDPOINTS.includes(req.url)) {
     return next(req);
   }
 
   const auth = inject(AuthService);
   const router = inject(Router);
-  const token = auth.getToken();
-  const request = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
-  return next(request).pipe(
+  const send = (token: string | null) =>
+    next(token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req);
+
+  const endSessionIfExpired = (err: unknown) => {
+    if (!auth.hasRefreshToken()) {
+      auth.logout();
+      router.navigate([ROUTES.login], { queryParams: { [RETURN_URL_PARAM]: router.url } });
+    }
+    return throwError(() => err);
+  };
+
+  const refreshThenSend = () =>
+    auth.refresh().pipe(catchError(endSessionIfExpired), switchMap(send));
+
+  const token = auth.getToken();
+  if (!token && auth.hasRefreshToken()) {
+    return refreshThenSend();
+  }
+
+  return send(token).pipe(
     catchError((err: unknown) => {
-      // 401 ở /auth/login, /auth/register... là lỗi nghiệp vụ, để component tự xử lý.
-      const isAuthEndpoint =
-        req.url.startsWith(`${API_ENDPOINTS.auth.base}/`) && req.url !== API_ENDPOINTS.auth.me;
-      if (isHttpStatus(err, HTTP_STATUS.unauthorized) && token && !isAuthEndpoint) {
-        auth.logout();
-        router.navigate([ROUTES.login], { queryParams: { [RETURN_URL_PARAM]: router.url } });
-      }
-      return throwError(() => err);
+      if (!hasErrorCode(err, ERROR_CODES.COMMON_UNAUTHORIZED)) return throwError(() => err);
+      return auth.hasRefreshToken() ? refreshThenSend() : endSessionIfExpired(err);
     }),
   );
 };

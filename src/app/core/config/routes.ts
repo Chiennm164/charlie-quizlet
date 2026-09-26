@@ -8,6 +8,7 @@ export const ROUTE_SEGMENTS = {
   forgotPassword: 'forgot-password',
   resetPassword: 'reset-password',
   home: 'home',
+  forbidden: 'forbidden',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;

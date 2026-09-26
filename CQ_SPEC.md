@@ -16,21 +16,22 @@
 ```
 [Login form] --(email/password)--> [BE /auth/login]
                                          |
-                                   access token (JWT, ngắn hạn)
-                                   refresh token (dài hạn)
+                                   access token (JWT, 15 phút)
+                                   refresh token (30 ngày, dùng 1 lần)
                                          |
-                                   lưu vào FE (memory/secure storage)
+                  lưu ở FE: localStorage ("ghi nhớ đăng nhập") / sessionStorage
                                          |
         +--------------------------------+--------------------------------+
         |                                                                 |
-  [HTTP Interceptor]                                            [Route Guard]
-  - gắn access token vào mọi request                             - đọc role từ token/session
-  - nếu 401 -> gọi /auth/refresh bằng refresh token              - chặn truy cập route không đúng role
-  - refresh thành công -> retry request cũ                       - redirect về trang phù hợp (403/login)
-  - refresh thất bại -> logout, về trang login
+  [authInterceptor]                                             [Route Guard]
+  - gắn access token (trừ API công khai)                         - authGuard: phải đăng nhập
+  - token hết hạn / 401 -> gọi /auth/refresh                     - roleGuard('TEACHER', ...): đúng role
+  - làm mới xong -> gửi (lại) request                            - không đủ quyền -> trang 403
+  - phiên đã kết thúc -> logout, về trang login
 ```
 
-- **Đăng xuất**: xoá token phía FE, gọi BE để thu hồi refresh token.
+- **Làm mới phiên**: refresh token chỉ dùng 1 lần — BE thu hồi token cũ và cấp cặp token mới. Token đã thu hồi mà bị dùng lại (quá 10 giây sau khi bị thay) → nghi bị lộ, BE thu hồi cả phiên.
+- **Đăng xuất**: xoá token phía FE, gọi BE để thu hồi refresh token. Đặt lại mật khẩu → BE thu hồi mọi phiên của user.
 - **Phê duyệt tài khoản**: một số role (vd. `TEACHER`) có thể cần 1–2 cấp phê duyệt trước khi được kích hoạt (chi tiết theo BE).
 
 ## 3. Luồng theo vai trò
@@ -142,7 +143,7 @@ BE REST API (Spring Boot) --> PostgreSQL
 ```
 src/app/
 ├── core/                    # dùng toàn app, khởi tạo 1 lần
-│   ├── auth/                # AuthService (token, phiên), authGuard / guestGuard
+│   ├── auth/                # AuthService (token, phiên), authGuard / guestGuard / roleGuard
 │   ├── config/              # CẤU HÌNH CHUNG, mỗi nhóm 1 file:
 │   │   ├── app-settings.ts  #   hành vi app: tên app, ngôn ngữ, validate, ghi nhớ đăng nhập, toast...
 │   │   ├── api-endpoints.ts #   URL gọi BE
@@ -155,7 +156,7 @@ src/app/
 │   ├── interceptors/        # locale → auth → error → loading
 │   ├── layout/              # main-layout (sau đăng nhập), auth-layout (login/register/...)
 │   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
-├── features/                # màn hình theo nghiệp vụ: auth, home
+├── features/                # màn hình theo nghiệp vụ: auth, home, forbidden (trang 403)
 │   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
 └── shared/                  # tái sử dụng, không logic nghiệp vụ
     ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
@@ -174,13 +175,13 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 **Đã có**
 
 - **Auth**: đăng ký, đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
+- **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403.
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
 - **Giao diện**: layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập + trang home (lời chào, thẻ chức năng "Sắp ra mắt", thông tin tài khoản), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
 - **Nền tảng**: cấu hình tập trung (`core/config`), token style (màu, chữ, animation), animation hiện/ẩn + chuyển trang, unit test cho auth, guard, interceptor, util.
 
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
 
-- Refresh token + thu hồi token khi đăng xuất (mục 2).
 - Chọn vai trò khi đăng ký, phê duyệt tài khoản Teacher, dashboard riêng theo vai trò (mục 3).
 - Nghiệp vụ chính: flashcard, câu hỏi, đề thi, làm bài, kết quả (mục 3b).
 - Gửi email thật (SMTP) cho quên mật khẩu.

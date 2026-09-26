@@ -70,8 +70,13 @@ describe('errorInterceptor', () => {
     expect(show).not.toHaveBeenCalled();
   });
 
-  it('phiên hết hạn (COMMON_UNAUTHORIZED) -> không hiện dialog (authInterceptor đưa về login)', () => {
+  it('phiên hết hạn (COMMON_UNAUTHORIZED) -> không hiện dialog (authInterceptor làm mới phiên)', () => {
     callFailing(401, 'COMMON_UNAUTHORIZED');
+    expect(show).not.toHaveBeenCalled();
+  });
+
+  it('refresh token hết hạn (AUTH_REFRESH_TOKEN_INVALID) -> không hiện dialog (authInterceptor đưa về login)', () => {
+    callFailing(401, 'AUTH_REFRESH_TOKEN_INVALID');
     expect(show).not.toHaveBeenCalled();
   });
 

@@ -7,15 +7,23 @@ import {
   UrlTree,
   provideRouter,
 } from '@angular/router';
-import { authGuard, guestGuard } from './auth.guards';
+import { Role } from '../models';
+import { authGuard, guestGuard, roleGuard } from './auth.guards';
 import { AuthService } from './auth.service';
 
 describe('auth guards', () => {
   const isAuthenticated = signal(false);
+  const role = signal<Role>('STUDENT');
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: AuthService, useValue: { isAuthenticated } }],
+      providers: [
+        provideRouter([]),
+        {
+          provide: AuthService,
+          useValue: { isAuthenticated, hasRole: (...roles: Role[]) => roles.includes(role()) },
+        },
+      ],
     });
   });
 
@@ -44,5 +52,15 @@ describe('auth guards', () => {
   it('guestGuard: chưa đăng nhập -> cho vào', () => {
     isAuthenticated.set(false);
     expect(run(guestGuard)).toBe(true);
+  });
+
+  it('roleGuard: có 1 trong các role yêu cầu -> cho vào', () => {
+    role.set('TEACHER');
+    expect(run(roleGuard('TEACHER', 'ADMIN'))).toBe(true);
+  });
+
+  it('roleGuard: không đủ quyền -> trang 403', () => {
+    role.set('STUDENT');
+    expect(serialize(run(roleGuard('TEACHER', 'ADMIN')))).toBe('/forbidden');
   });
 });

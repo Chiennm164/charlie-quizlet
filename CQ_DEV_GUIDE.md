@@ -25,7 +25,7 @@ Tài liệu "làm thế nào" kèm code mẫu. Quy định bắt buộc xem [CQ_
 ```
 src/app/
 ├── core/                    # dùng toàn app, khởi tạo 1 lần
-│   ├── auth/                # AuthService (token, phiên đăng nhập), authGuard / guestGuard
+│   ├── auth/                # AuthService (token, phiên đăng nhập), authGuard / guestGuard / roleGuard
 │   ├── config/              # CẤU HÌNH CHUNG (mục 2)
 │   ├── error/               # dialog lỗi chung + handleErrorCode / markErrorHandled
 │   ├── i18n/                # TranslateService, pipe translate, tiêu đề tab theo ngôn ngữ
@@ -47,11 +47,19 @@ src/environments/            # URL API theo môi trường
 ```
 Component → Service (HttpClient)
   → localeInterceptor   gắn Accept-Language (vi/en) để BE trả thông báo đúng ngôn ngữ
-  → authInterceptor     gắn Bearer token; 401 phiên hết hạn → đăng xuất, về /login?returnUrl=...
+  → authInterceptor     gắn Bearer token; access token hết hạn → tự làm mới rồi gửi (lại) request;
+                        phiên đã kết thúc → đăng xuất, về /login?returnUrl=...
   → errorInterceptor    lỗi → dialog lỗi chung (trừ khi nơi gọi tự xử lý, mục 4)
   → loadingInterceptor  bật/tắt loading toàn màn hình
   → BE
 ```
+
+**Phiên đăng nhập** (chi tiết trong `AuthService`):
+
+- Đăng nhập / đăng ký nhận **access token** (JWT, mặc định 15 phút) + **refresh token** (mặc định 30 ngày), lưu localStorage nếu "ghi nhớ đăng nhập", không thì sessionStorage.
+- Access token hết hạn: `authInterceptor` gọi `/auth/refresh` lấy cặp token mới rồi gửi request. Nhiều request cùng lúc chỉ làm mới 1 lần; refresh token chỉ dùng được 1 lần (BE thu hồi token cũ).
+- Refresh token hết hạn / bị thu hồi (đăng xuất, đổi mật khẩu) → xoá phiên, về trang login. Lỗi mạng khi làm mới → giữ phiên.
+- Đăng xuất (`auth.logout()`): xoá token ở FE + báo BE thu hồi refresh token.
 
 Lúc khởi động app: nạp file dịch (`TranslateService.init`) và khôi phục phiên (`AuthService.restoreSession` gọi `/auth/me`).
 
@@ -175,7 +183,7 @@ Mọi API lỗi đều trả RFC 9457 problem detail kèm 3 trường ([problem-
 
 API lỗi → `errorInterceptor` **tự hiện dialog lỗi chung** (câu lỗi, mô tả, danh sách lỗi theo field, mã lỗi). Component không cần viết gì.
 
-Ngoại lệ duy nhất: `COMMON_UNAUTHORIZED` (phiên hết hạn) — app đã tự đăng xuất và đưa về trang login nên không hiện dialog.
+Ngoại lệ: `COMMON_UNAUTHORIZED` (access token hết hạn) và `AUTH_REFRESH_TOKEN_INVALID` (phiên đã kết thúc) — `authInterceptor` tự làm mới phiên hoặc đưa về trang login nên không hiện dialog.
 
 ### 4.3 Tự xử lý một mã lỗi
 
@@ -438,8 +446,9 @@ Ví dụ trang "Học phần của tôi" (cần đăng nhập):
      loadComponent: () => import('./features/study-set/study-set-list/study-set-list').then((m) => m.StudySetListComponent),
    },
    ```
+   Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('TEACHER', 'ADMIN')]` — user không đủ quyền được đưa tới trang 403 (`/forbidden`).
    Trang cho khách (login/register...) đặt ở cấp ngoài cùng với `canActivate: [guestGuard]` và dùng `<app-auth-layout page="...">`.
-4. **API** — URL vào `API_ENDPOINTS`, model vào `models/`, service theo mục 3.
+4. **API** — URL vào `API_ENDPOINTS`, model vào `models/`, service theo mục 3. API không cần đăng nhập thì thêm vào `PUBLIC_API_ENDPOINTS`.
 5. **Chuỗi** — thêm key vào cả `vn.json` và `en.json`.
 6. **Test** — service/guard/logic quan trọng có `*.spec.ts` cạnh file nguồn.
 

@@ -1,7 +1,7 @@
 # Charlie Quizlet — Frontend
 
 Ứng dụng học tập / thi trắc nghiệm kiểu Quizlet (Angular 22 zoneless, Tailwind CSS v4, Jest).
-Backend là repo riêng: [`charlie-quizlet-be`](../charlie-quizlet-be) (Spring Boot + PostgreSQL).
+Backend là repo riêng: [`charlie-quizlet-be`](../charlie-quizlet-be) (Spring Boot + PostgreSQL). Quy tắc và hướng dẫn phía BE nằm trong `CQ_CODING_RULES.md` / `CQ_DEV_GUIDE.md` của repo đó.
 
 ## Tài liệu
 

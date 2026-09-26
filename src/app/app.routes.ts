@@ -52,6 +52,13 @@ export const routes: Routes = [
         title: 'home.pageTitle',
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
       },
+      // Trang cho 1 số role: thêm canActivate: [roleGuard('TEACHER', 'ADMIN')] — không đủ quyền về trang 403.
+      {
+        path: ROUTE_SEGMENTS.forbidden,
+        title: 'forbidden.pageTitle',
+        loadComponent: () =>
+          import('./features/forbidden/forbidden').then((m) => m.ForbiddenComponent),
+      },
     ],
   },
   { path: '**', redirectTo: ROUTE_SEGMENTS.home },
