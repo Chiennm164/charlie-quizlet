@@ -28,6 +28,8 @@ src/app/
 │   ├── auth/                # AuthService (token, phiên đăng nhập), authGuard / guestGuard / roleGuard
 │   ├── config/              # CẤU HÌNH CHUNG (mục 2)
 │   ├── error/               # dialog lỗi chung + handleErrorCode / markErrorHandled
+│   ├── confirm/             # ConfirmDialogService — hộp thoại xác nhận dùng chung
+│   ├── guards/              # unsavedChangesGuard (rời trang khi chưa lưu)
 │   ├── i18n/                # TranslateService, pipe translate, tiêu đề tab theo ngôn ngữ
 │   ├── interceptors/        # locale → auth → error → loading (thứ tự trong app.config.ts)
 │   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register...)
@@ -239,7 +241,7 @@ Chọn đúng kênh:
 | Thao tác **thành công**, thông tin nhẹ, không cần người dùng làm gì | **Toast** (tự tắt) | "Đã lưu", "Bạn đã đăng xuất" |
 | **API lỗi** | **Dialog lỗi chung** (tự động) | "Email hoặc mật khẩu không đúng" |
 | Lỗi **gắn với một ô nhập** | **Lỗi dưới ô** (`errorMessage` của input) | "Tối thiểu 8 ký tự", "Email này đã được đăng ký" |
-| Cần **xác nhận** trước khi làm (xoá, nộp bài...) | **Dialog** (`app-dialog`) có nút Huỷ / Đồng ý | "Bạn chắc chắn muốn xoá?" |
+| Cần **xác nhận** trước khi làm (xoá, nộp bài...) | `await confirmDialog.confirm({ title, message, danger })` (`ConfirmDialogService`) | "Bạn chắc chắn muốn xoá?" |
 | Trạng thái của cả khối nội dung | Chữ lỗi độc lập `<app-text-error [reserveSpace]="false">` | "Link đặt lại mật khẩu đã hết hạn" |
 
 Nguyên tắc:

@@ -36,6 +36,12 @@ export const APP_SETTINGS = {
     passwordMaxLength: 72,
     emailMaxLength: 255,
     fullNameMaxLength: 255,
+    studySetTitleMaxLength: 255,
+    studySetDescriptionMaxLength: 2000,
+    cardTermMaxLength: 500,
+    cardDefinitionMaxLength: 2000,
+    studySetMinCards: 2,
+    studySetMaxCards: 500,
   },
 
   ui: {

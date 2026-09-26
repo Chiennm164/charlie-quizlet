@@ -1,10 +1,12 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import type { TranslateService } from '../../core/i18n/translate.service';
 import {
   AppValidators,
   controlErrorMessage,
+  minItemsValidator,
   notBlankValidator,
   passwordMatchValidator,
+  uniqueValuesValidator,
 } from './validation.utils';
 
 describe('passwordMatchValidator', () => {
@@ -91,5 +93,41 @@ describe('AppValidators', () => {
     expect(control.hasError('email')).toBe(true);
     control.setValue('an@example.com');
     expect(control.valid).toBe(true);
+  });
+});
+
+describe('minItemsValidator', () => {
+  it('báo minItems trên FormArray khi thiếu phần tử', () => {
+    const array = new FormArray([new FormControl('a')], minItemsValidator(2));
+    expect(array.errors).toEqual({ minItems: { min: 2, actual: 1 } });
+
+    array.push(new FormControl('b'));
+    expect(array.errors).toBeNull();
+  });
+});
+
+describe('uniqueValuesValidator', () => {
+  const row = (term: string) => new FormGroup({ term: new FormControl(term, Validators.required) });
+  const build = (...terms: string[]) =>
+    new FormArray(terms.map(row), uniqueValuesValidator('term'));
+
+  it('gắn lỗi duplicate vào mọi dòng trùng (bỏ khoảng trắng, không phân biệt hoa thường)', () => {
+    const array = build('Apple', ' apple ', 'cat');
+    expect(array.at(0).controls.term.hasError('duplicate')).toBe(true);
+    expect(array.at(1).controls.term.hasError('duplicate')).toBe(true);
+    expect(array.at(2).controls.term.hasError('duplicate')).toBe(false);
+    expect(array.hasError('duplicate')).toBe(true);
+  });
+
+  it('hết trùng thì gỡ lỗi, giữ lỗi khác; ô trống không tính là trùng', () => {
+    const array = build('apple', 'apple');
+    array.at(1).controls.term.setValue('');
+    expect(array.at(0).controls.term.errors).toBeNull();
+    expect(array.at(1).controls.term.hasError('required')).toBe(true);
+    expect(array.at(1).controls.term.hasError('duplicate')).toBe(false);
+
+    array.push(row(''));
+    expect(array.valid).toBe(false);
+    expect(array.hasError('duplicate')).toBe(false);
   });
 });

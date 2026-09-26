@@ -47,8 +47,8 @@ Giai đoạn 2–4 không cần phân quyền hay phê duyệt, nên sớm có s
 **Angular:** RxJS trong interceptor (`switchMap`, `catchError`, `share`), functional guard.
 
 ### Giai đoạn 2 — Học phần (lõi kiểu Quizlet)
-- [ ] Tạo / sửa / xoá học phần: tiêu đề, mô tả, công khai / riêng tư, danh sách thẻ (thuật ngữ – định nghĩa)
-- [ ] Trình soạn thẻ: thêm / xoá / sắp xếp dòng (kéo-thả cần cài `@angular/cdk`), nhấn Tab ở dòng cuối tự thêm dòng mới, cảnh báo khi rời trang chưa lưu
+- [x] Tạo / sửa / xoá học phần: tiêu đề, mô tả, công khai / riêng tư, danh sách thẻ (thuật ngữ – định nghĩa)
+- [x] Trình soạn thẻ: thêm / xoá / sắp xếp dòng (kéo-thả cần cài `@angular/cdk`), nhấn Tab ở dòng cuối tự thêm dòng mới, cảnh báo khi rời trang chưa lưu
 - [ ] Import nhanh: dán văn bản `thuật ngữ<Tab>định nghĩa` mỗi dòng (copy thẳng từ Excel / Google Sheets) → xem trước → lưu
 - [ ] Học phần của tôi: tìm kiếm, lọc, sắp xếp, phân trang
 

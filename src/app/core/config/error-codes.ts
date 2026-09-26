@@ -24,6 +24,10 @@ export const ERROR_CODES = {
   AUTH_CURRENT_PASSWORD_INCORRECT: 'AUTH_CURRENT_PASSWORD_INCORRECT',
   /** Duyệt / từ chối tài khoản không còn chờ duyệt (vd. Admin khác vừa xử lý). */
   ADMIN_USER_NOT_PENDING: 'ADMIN_USER_NOT_PENDING',
+  /** Không tồn tại, hoặc riêng tư và không phải của mình. */
+  STUDY_SET_NOT_FOUND: 'STUDY_SET_NOT_FOUND',
+  STUDY_SET_DUPLICATE_TERM: 'STUDY_SET_DUPLICATE_TERM',
+  STUDY_SET_CARD_NOT_FOUND: 'STUDY_SET_CARD_NOT_FOUND',
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

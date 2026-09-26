@@ -10,6 +10,8 @@ export const ROUTE_SEGMENTS = {
   home: 'home',
   forbidden: 'forbidden',
   adminPendingUsers: 'admin/users/pending',
+  studySets: 'study-sets',
+  studySetNew: 'study-sets/new',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;
@@ -18,6 +20,10 @@ type RouteKey = keyof typeof ROUTE_SEGMENTS;
 export const ROUTES = Object.fromEntries(
   Object.entries(ROUTE_SEGMENTS).map(([key, segment]) => [key, `/${segment}`]),
 ) as { readonly [K in RouteKey]: `/${(typeof ROUTE_SEGMENTS)[K]}` };
+
+/** Đường dẫn có tham số (route khai báo trong app.routes.ts: `study-sets/:id`, `study-sets/:id/edit`). */
+export const studySetUrl = (id: number) => `/${ROUTE_SEGMENTS.studySets}/${id}`;
+export const studySetEditUrl = (id: number) => `${studySetUrl(id)}/edit`;
 
 /** Trang mặc định sau khi đăng nhập / đăng ký thành công. */
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.home;

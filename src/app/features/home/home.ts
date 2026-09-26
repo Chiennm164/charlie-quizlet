@@ -27,7 +27,12 @@ const QUICK_ACTIONS: QuickAction[] = [
     roles: ['ADMIN'],
     route: ROUTES.adminPendingUsers,
   },
-  { icon: 'plus', titleKey: 'home.actionCreateSet', descriptionKey: 'home.actionCreateSetDesc' },
+  {
+    icon: 'plus',
+    titleKey: 'home.actionCreateSet',
+    descriptionKey: 'home.actionCreateSetDesc',
+    route: ROUTES.studySetNew,
+  },
   { icon: 'book-open', titleKey: 'home.actionMySets', descriptionKey: 'home.actionMySetsDesc' },
   {
     icon: 'layers',

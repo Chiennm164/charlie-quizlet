@@ -1,0 +1,125 @@
+<app-page-header
+  [title]="(editingId ? 'studySet.editTitle' : 'studySet.createTitle') | translate"
+  [description]="'studySet.editorDescription' | translate"
+/>
+
+@if (loading()) {
+  <app-loading />
+} @else {
+  <form
+    [formGroup]="form"
+    [attr.aria-busy]="saving()"
+    (ngSubmit)="save()"
+    class="flex flex-col gap-6"
+    novalidate
+  >
+    <section class="bg-surface border border-border rounded-lg p-4 flex flex-col gap-2">
+      <app-input-text
+        name="title"
+        [label]="'studySet.title' | translate"
+        [placeholder]="'studySet.titlePlaceholder' | translate"
+        [required]="true"
+        formControlName="title"
+        [errorMessage]="errorFor(form.controls.title)"
+      />
+      <app-textarea
+        [label]="'studySet.description' | translate"
+        [placeholder]="'studySet.descriptionPlaceholder' | translate"
+        [rows]="2"
+        formControlName="description"
+        [errorMessage]="errorFor(form.controls.description)"
+      />
+      <app-radio-group
+        [label]="'studySet.visibilityLabel' | translate"
+        [horizontal]="true"
+        [options]="visibilityOptions()"
+        formControlName="visibility"
+      />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="typo-section-title">
+          {{ 'studySet.cardsTitle' | translate: { n: cardCount() } }}
+        </h2>
+        <span class="typo-caption text-text-muted hidden sm:inline">
+          {{ 'studySet.tabHint' | translate }}
+        </span>
+      </div>
+
+      <div
+        formArrayName="cards"
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+        class="card-editor"
+      >
+        @for (card of cards.controls; track card; let i = $index, last = $last) {
+          <div #cardRow class="card-editor__row" cdkDrag cdkDragLockAxis="y" [formGroupName]="i">
+            <div class="card-editor__toolbar">
+              <span class="typo-card-title">{{ i + 1 }}</span>
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm card-editor__handle"
+                  cdkDragHandle
+                  [attr.aria-label]="'studySet.dragCard' | translate"
+                >
+                  <app-icon name="grip-vertical" class="text-text-muted" />
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  [disabled]="cardCount() <= minCards"
+                  [attr.aria-label]="'studySet.removeCard' | translate: { n: i + 1 }"
+                  (click)="removeCard(i)"
+                >
+                  <app-icon name="trash" class="text-text-muted" />
+                </button>
+              </div>
+            </div>
+
+            <div class="grid gap-x-4 md:grid-cols-2">
+              <app-textarea
+                [label]="'studySet.term' | translate"
+                [required]="true"
+                [rows]="2"
+                formControlName="term"
+                [errorMessage]="errorFor(card.controls.term)"
+              />
+              <div (keydown)="onDefinitionKeydown($event, i)">
+                <app-textarea
+                  [label]="'studySet.definition' | translate"
+                  [required]="true"
+                  [rows]="2"
+                  formControlName="definition"
+                  [errorMessage]="errorFor(card.controls.definition)"
+                />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <app-text-error [message]="cardsError()" [reserveSpace]="false" />
+
+      <app-button
+        variant="secondary"
+        [block]="true"
+        [disabled]="cardCount() >= maxCards"
+        (clicked)="addCard(true)"
+      >
+        <app-icon name="plus" />
+        {{ 'studySet.addCard' | translate }}
+      </app-button>
+    </section>
+
+    <div class="flex justify-end gap-2">
+      <a class="btn btn--secondary btn--md" [routerLink]="cancelUrl">
+        {{ 'common.cancel' | translate }}
+      </a>
+      <app-button type="submit" [loading]="saving()">
+        {{ (editingId ? 'common.save' : 'studySet.create') | translate }}
+      </app-button>
+    </div>
+  </form>
+}

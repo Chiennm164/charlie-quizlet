@@ -77,7 +77,12 @@ export class RadioGroupComponent implements ControlValueAccessor {
   onTouched: () => void = () => {};
 
   constructor() {
-    effect(() => this.value.set(this.valueInput()));
+    // Chỉ khi có bind [value]: dùng với Reactive Forms thì [value] để trống (null) — effect chạy sau writeValue,
+    // không bỏ qua null sẽ xoá mất giá trị form vừa đặt.
+    effect(() => {
+      const value = this.valueInput();
+      if (value !== null) this.value.set(value);
+    });
   }
 
   onSelect(value: string): void {

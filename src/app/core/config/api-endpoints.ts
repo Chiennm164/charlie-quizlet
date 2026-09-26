@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 /** Mọi URL gọi BE — service dùng hằng số này, không tự ghép chuỗi URL. */
 const AUTH_BASE = `${environment.apiUrl}/auth`;
 const ADMIN_BASE = `${environment.apiUrl}/admin`;
+const STUDY_SETS_BASE = `${environment.apiUrl}/study-sets`;
 
 export const API_ENDPOINTS = {
   auth: {
@@ -15,6 +16,10 @@ export const API_ENDPOINTS = {
     /** GET: user hiện tại; PATCH: sửa hồ sơ. */
     me: `${AUTH_BASE}/me`,
     changePassword: `${AUTH_BASE}/change-password`,
+  },
+  studySets: {
+    base: STUDY_SETS_BASE,
+    detail: (id: number) => `${STUDY_SETS_BASE}/${id}`,
   },
   admin: {
     pendingUsers: `${ADMIN_BASE}/users/pending`,

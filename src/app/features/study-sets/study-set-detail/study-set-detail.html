@@ -1,0 +1,52 @@
+@if (loading()) {
+  <app-loading />
+} @else if (notFound()) {
+  <section class="max-w-md mx-auto py-12 flex flex-col items-center text-center gap-3">
+    <h1 class="typo-page-title">{{ 'studySet.notFoundTitle' | translate }}</h1>
+    <p class="typo-muted">{{ 'studySet.notFoundDescription' | translate }}</p>
+    <a class="btn btn--primary btn--md mt-3" [routerLink]="homeUrl">
+      {{ 'forbidden.backHome' | translate }}
+    </a>
+  </section>
+} @else if (set(); as set) {
+  <section class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div class="min-w-0">
+      <h1 class="typo-page-title break-words">{{ set.title }}</h1>
+      <p class="typo-muted mt-1 flex flex-wrap items-center gap-2">
+        <span>{{ 'studySet.cardCount' | translate: { n: set.cards.length } }}</span>
+        <span aria-hidden="true">·</span>
+        <span>{{ 'studySet.by' | translate: { name: set.owner.fullName } }}</span>
+        <span class="typo-caption px-2 py-0.5 rounded-full bg-bg-muted border border-border">{{
+          'studySet.visibility.' + set.visibility | translate
+        }}</span>
+      </p>
+      @if (set.description) {
+        <p class="typo-body mt-3 whitespace-pre-line">{{ set.description }}</p>
+      }
+    </div>
+
+    @if (isOwner()) {
+      <div class="flex gap-2 shrink-0">
+        <a class="btn btn--secondary btn--md" [routerLink]="editUrl">
+          <app-icon name="pencil" />
+          {{ 'studySet.edit' | translate }}
+        </a>
+        <app-button variant="danger" [loading]="deleting()" (clicked)="confirmDelete()">
+          <app-icon name="trash" />
+          {{ 'studySet.delete' | translate }}
+        </app-button>
+      </div>
+    }
+  </section>
+
+  <ol class="flex flex-col gap-2">
+    @for (card of set.cards; track card.id) {
+      <li
+        class="bg-surface border border-border rounded-lg p-4 grid gap-2 md:grid-cols-[1fr_2fr] md:gap-6"
+      >
+        <p class="typo-body font-medium whitespace-pre-line break-words">{{ card.term }}</p>
+        <p class="typo-body whitespace-pre-line break-words">{{ card.definition }}</p>
+      </li>
+    }
+  </ol>
+}

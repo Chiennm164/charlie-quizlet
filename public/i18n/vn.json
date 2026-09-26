@@ -24,7 +24,12 @@
     "errorTitle": "Đã có lỗi xảy ra",
     "errorDescription": "Vui lòng thử lại. Nếu lỗi vẫn tiếp diễn, hãy liên hệ quản trị viên.",
     "errorCode": "Mã lỗi",
-    "serverUnavailableDescription": "Kiểm tra kết nối mạng của bạn hoặc thử lại sau ít phút."
+    "serverUnavailableDescription": "Kiểm tra kết nối mạng của bạn hoặc thử lại sau ít phút.",
+    "duplicate": "Giá trị này bị trùng",
+    "unsavedTitle": "Rời trang khi chưa lưu?",
+    "unsavedMessage": "Những thay đổi bạn vừa nhập sẽ bị mất.",
+    "unsavedLeave": "Rời trang",
+    "unsavedStay": "Ở lại"
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -225,5 +230,39 @@
     "changePasswordButton": "Đổi mật khẩu",
     "passwordChanged": "Đã đổi mật khẩu. Các thiết bị khác đã bị đăng xuất",
     "currentPasswordIncorrect": "Mật khẩu hiện tại không đúng"
+  },
+  "studySet": {
+    "pageTitle": "Học phần",
+    "createTitle": "Tạo học phần",
+    "editTitle": "Sửa học phần",
+    "editorDescription": "Mỗi thẻ gồm một thuật ngữ và định nghĩa của nó",
+    "title": "Tiêu đề",
+    "titlePlaceholder": "Vd. Từ vựng tiếng Anh — Bài 1",
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Thêm mô tả (không bắt buộc)",
+    "visibilityLabel": "Ai xem được",
+    "visibility": {
+      "PRIVATE": "Chỉ mình tôi",
+      "PUBLIC": "Mọi người có link"
+    },
+    "cardsTitle": "Thẻ ({n})",
+    "tabHint": "Nhấn Tab ở ô định nghĩa cuối cùng để thêm thẻ",
+    "term": "Thuật ngữ",
+    "definition": "Định nghĩa",
+    "addCard": "Thêm thẻ",
+    "removeCard": "Xoá thẻ {n}",
+    "dragCard": "Kéo để đổi vị trí",
+    "minCards": "Học phần cần ít nhất {n} thẻ",
+    "create": "Tạo học phần",
+    "saved": "Đã lưu học phần",
+    "cardCount": "{n} thẻ",
+    "by": "Tạo bởi {name}",
+    "edit": "Sửa",
+    "delete": "Xoá",
+    "deleteTitle": "Xoá học phần",
+    "deleteConfirm": "Học phần \"{title}\" và toàn bộ thẻ sẽ bị xoá vĩnh viễn.",
+    "deleted": "Đã xoá học phần \"{title}\"",
+    "notFoundTitle": "Không tìm thấy học phần",
+    "notFoundDescription": "Học phần có thể đã bị xoá hoặc đang ở chế độ riêng tư."
   }
 }

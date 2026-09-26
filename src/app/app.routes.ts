@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, roleGuard } from './core/auth/auth.guards';
 import { ROUTE_SEGMENTS } from './core/config';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
   // ---- Trang cho khách (đã đăng nhập thì tự chuyển vào /home) ----
@@ -51,6 +52,32 @@ export const routes: Routes = [
         path: ROUTE_SEGMENTS.home,
         title: 'home.pageTitle',
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
+      },
+      {
+        path: ROUTE_SEGMENTS.studySetNew,
+        title: 'studySet.createTitle',
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () =>
+          import('./features/study-sets/study-set-editor/study-set-editor').then(
+            (m) => m.StudySetEditorComponent,
+          ),
+      },
+      {
+        path: `${ROUTE_SEGMENTS.studySets}/:id/edit`,
+        title: 'studySet.editTitle',
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () =>
+          import('./features/study-sets/study-set-editor/study-set-editor').then(
+            (m) => m.StudySetEditorComponent,
+          ),
+      },
+      {
+        path: `${ROUTE_SEGMENTS.studySets}/:id`,
+        title: 'studySet.pageTitle',
+        loadComponent: () =>
+          import('./features/study-sets/study-set-detail/study-set-detail').then(
+            (m) => m.StudySetDetailComponent,
+          ),
       },
       // Trang cho 1 số role: thêm canActivate: [roleGuard('TEACHER', 'ADMIN')] — không đủ quyền về trang 403.
       {

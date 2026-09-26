@@ -29,6 +29,53 @@ export function passwordMatchValidator(passwordKey: string, confirmKey: string):
   };
 }
 
+/**
+ * Validator cho FormArray: số phần tử tối thiểu. Lỗi `minItems: { min, actual }` nằm trên chính FormArray
+ * (không gắn với ô nào) — nơi dùng tự hiển thị.
+ */
+export function minItemsValidator(min: number): ValidatorFn {
+  return (array: AbstractControl): ValidationErrors | null => {
+    const actual = Array.isArray(array.value) ? array.value.length : 0;
+    return actual < min ? { minItems: { min, actual } } : null;
+  };
+}
+
+/**
+ * Validator cho FormArray gồm các FormGroup: báo lỗi `duplicate` trên control `key` của mọi dòng có giá trị trùng
+ * (bỏ khoảng trắng đầu/cuối, không phân biệt hoa thường; ô trống bỏ qua). Giống passwordMatch: gắn lỗi vào đúng ô
+ * để hiện dưới ô đó.
+ */
+export function uniqueValuesValidator(key: string): ValidatorFn {
+  return (array: AbstractControl): ValidationErrors | null => {
+    const controls = (array as unknown as { controls: AbstractControl[] }).controls
+      .map((group) => group.get(key))
+      .filter((control): control is AbstractControl => control !== null);
+    const normalize = (value: unknown) =>
+      String(value ?? '')
+        .trim()
+        .toLowerCase();
+
+    const counts = new Map<string, number>();
+    for (const control of controls) {
+      const value = normalize(control.value);
+      if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
+    }
+
+    let hasDuplicate = false;
+    for (const control of controls) {
+      const duplicate = (counts.get(normalize(control.value)) ?? 0) > 1;
+      hasDuplicate ||= duplicate;
+      const { duplicate: _, ...otherErrors } = control.errors ?? {};
+      if (duplicate) {
+        control.setErrors({ ...otherErrors, duplicate: true });
+      } else if (control.errors?.['duplicate']) {
+        control.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
+      }
+    }
+    return hasDuplicate ? { duplicate: true } : null;
+  };
+}
+
 const { validation } = APP_SETTINGS;
 
 /** Bộ validator theo loại field — giới hạn lấy từ APP_SETTINGS.validation (khớp BE). */
@@ -39,6 +86,12 @@ export const AppValidators: {
   readonly currentPassword: ValidatorFn[];
   readonly newPassword: ValidatorFn[];
   readonly passwordMatch: typeof passwordMatchValidator;
+  readonly studySetTitle: ValidatorFn[];
+  readonly studySetDescription: ValidatorFn[];
+  readonly cardTerm: ValidatorFn[];
+  readonly cardDefinition: ValidatorFn[];
+  /** Danh sách thẻ của học phần: đủ số thẻ tối thiểu, không trùng thuật ngữ. */
+  readonly studySetCards: ValidatorFn[];
 } = {
   required: [Validators.required],
   email: [Validators.required, Validators.email, Validators.maxLength(validation.emailMaxLength)],
@@ -52,6 +105,11 @@ export const AppValidators: {
     Validators.maxLength(validation.passwordMaxLength),
   ],
   passwordMatch: passwordMatchValidator,
+  studySetTitle: [notBlankValidator, Validators.maxLength(validation.studySetTitleMaxLength)],
+  studySetDescription: [Validators.maxLength(validation.studySetDescriptionMaxLength)],
+  cardTerm: [notBlankValidator, Validators.maxLength(validation.cardTermMaxLength)],
+  cardDefinition: [notBlankValidator, Validators.maxLength(validation.cardDefinitionMaxLength)],
+  studySetCards: [minItemsValidator(validation.studySetMinCards), uniqueValuesValidator('term')],
 };
 
 /**
@@ -67,6 +125,7 @@ export const FORM_ERROR_MESSAGE_KEYS: Record<string, string> = {
   passwordMismatch: 'auth.passwordMismatch',
   emailTaken: 'auth.emailTaken',
   currentPasswordIncorrect: 'account.currentPasswordIncorrect',
+  duplicate: 'common.duplicate',
 };
 
 /** Thông báo lỗi (đã dịch) cần hiển thị cho control, hoặc null nếu chưa touched / không có lỗi. */

@@ -28,8 +28,8 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - Chỉ khi cần xử lý riêng 1 mã lỗi mới tự xử lý **ngay trong callback `error`**: `handleErrorCode(err, ERROR_CODES.X, () => ...)` (mã khác vẫn hiện dialog) hoặc `markErrorHandled(err)` (tắt dialog cho mọi mã).
 - **Rẽ nhánh theo `errorCode`, không theo HTTP status.** Mã FE cần dùng khai báo trong `core/config/error-codes.ts`, khớp enum `ErrorCode` ở BE.
 - Nội dung thông báo lỗi API lấy từ BE (bảng `error_codes`, đã dịch) — FE không tự đặt câu cho lỗi API.
-- Chọn kênh thông báo đúng: **toast** cho thành công / thông tin nhẹ; **dialog lỗi chung** cho lỗi API; **lỗi dưới ô nhập** cho lỗi gắn với 1 field; **`app-dialog`** cho xác nhận. Không dùng toast cho lỗi API, không hiện cùng 1 lỗi ở 2 nơi, không dùng `alert()` / `confirm()`.
-- Không đặt thêm `<app-error-dialog>` / `<app-toast-container>` — đã có 1 lần trong `app.html`.
+- Chọn kênh thông báo đúng: **toast** cho thành công / thông tin nhẹ; **dialog lỗi chung** cho lỗi API; **lỗi dưới ô nhập** cho lỗi gắn với 1 field; **`ConfirmDialogService.confirm()`** cho xác nhận (hỏi Có / Không); `app-dialog` cho hộp thoại có nội dung riêng. Không dùng toast cho lỗi API, không hiện cùng 1 lỗi ở 2 nơi, không dùng `alert()` / `confirm()`.
+- Không đặt thêm `<app-error-dialog>` / `<app-confirm-dialog>` / `<app-toast-container>` — đã có 1 lần trong `app.html`.
 
 ## 4. Auth & phân quyền
 
@@ -37,6 +37,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - Route cần đăng nhập đặt làm **route con của `MainLayoutComponent`** (đã có `authGuard`); trang cho khách dùng `guestGuard`. Không kiểm tra đăng nhập / role bằng `if` rải rác trong component.
 - Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('TEACHER', 'ADMIN')]` vào route (không đủ quyền → trang 403). Ẩn/hiện nút, thẻ theo role thì dùng `auth.hasRole(...)`. Guard FE chỉ để giao diện đúng — BE vẫn phải tự kiểm tra quyền.
 - Làm mới phiên (refresh token) do `AuthService` + `authInterceptor` lo: component / service **không** tự bắt 401, tự gọi `/auth/refresh` hay tự đọc refresh token.
+- Trang có form nhập dài (soạn học phần, soạn đề...): route thêm `canDeactivate: [unsavedChangesGuard]`, component implement `HasUnsavedChanges` và chặn `beforeunload` khi còn thay đổi chưa lưu.
 - API BE mới không cần đăng nhập: thêm vào `PUBLIC_API_ENDPOINTS` (`core/config/api-endpoints.ts`) để interceptor không gắn token, không làm mới phiên khi gặp 401.
 
 ## 5. Cấu trúc, cấu hình & đặt tên

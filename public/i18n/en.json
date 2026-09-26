@@ -24,7 +24,12 @@
     "errorTitle": "Something went wrong",
     "errorDescription": "Please try again. If the problem persists, contact an administrator.",
     "errorCode": "Error code",
-    "serverUnavailableDescription": "Check your network connection or try again in a few minutes."
+    "serverUnavailableDescription": "Check your network connection or try again in a few minutes.",
+    "duplicate": "This value is duplicated",
+    "unsavedTitle": "Leave without saving?",
+    "unsavedMessage": "The changes you just made will be lost.",
+    "unsavedLeave": "Leave",
+    "unsavedStay": "Stay"
   },
   "showcase": {
     "title": "UI Component Showcase",
@@ -225,5 +230,39 @@
     "changePasswordButton": "Change password",
     "passwordChanged": "Password changed. Other devices have been logged out",
     "currentPasswordIncorrect": "Current password is incorrect"
+  },
+  "studySet": {
+    "pageTitle": "Study set",
+    "createTitle": "Create study set",
+    "editTitle": "Edit study set",
+    "editorDescription": "Each card has a term and its definition",
+    "title": "Title",
+    "titlePlaceholder": "E.g. English vocabulary — Lesson 1",
+    "description": "Description",
+    "descriptionPlaceholder": "Add a description (optional)",
+    "visibilityLabel": "Who can see it",
+    "visibility": {
+      "PRIVATE": "Only me",
+      "PUBLIC": "Anyone with the link"
+    },
+    "cardsTitle": "Cards ({n})",
+    "tabHint": "Press Tab in the last definition to add a card",
+    "term": "Term",
+    "definition": "Definition",
+    "addCard": "Add card",
+    "removeCard": "Remove card {n}",
+    "dragCard": "Drag to reorder",
+    "minCards": "A study set needs at least {n} cards",
+    "create": "Create study set",
+    "saved": "Study set saved",
+    "cardCount": "{n} cards",
+    "by": "Created by {name}",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteTitle": "Delete study set",
+    "deleteConfirm": "\"{title}\" and all of its cards will be permanently deleted.",
+    "deleted": "Deleted \"{title}\"",
+    "notFoundTitle": "Study set not found",
+    "notFoundDescription": "The study set may have been deleted or is private."
   }
 }
