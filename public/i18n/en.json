@@ -114,7 +114,7 @@
     "loginLink": "Log in",
     "backToLogin": "Back to log in",
     "registerTitle": "Sign up",
-    "registerSubtitle": "Create a Charlie Quizlet account to start studying",
+    "registerSubtitle": "Create a Charlie Quizlet account to start reviewing",
     "fullName": "Full name",
     "fullNamePlaceholder": "John Doe",
     "confirmPassword": "Confirm password",
@@ -147,19 +147,13 @@
     "goodMorning": "Good morning, {name}!",
     "goodAfternoon": "Good afternoon, {name}!",
     "goodEvening": "Good evening, {name}!",
-    "subtitle": "What would you like to study today?",
+    "subtitle": "Which quiz would you like to review today?",
     "quickActions": "Get started",
     "comingSoon": "Coming soon",
-    "actionCreateSet": "Create study set",
-    "actionCreateSetDesc": "Add terms and definitions to start learning",
-    "actionMySets": "My study sets",
-    "actionMySetsDesc": "View and edit the sets you have created",
-    "actionFlashcards": "Flashcards",
-    "actionFlashcardsDesc": "Review terms by flipping cards",
-    "actionQuiz": "Practice test",
-    "actionQuizDesc": "Test your knowledge with auto-generated questions",
+    "actionQuiz": "Quizzes",
+    "actionQuizDesc": "Take multiple-choice quizzes to review what you learned",
     "actionClasses": "Manage classes",
-    "actionClassesDesc": "Create classes and assign study sets to students",
+    "actionClassesDesc": "Create classes and assign quizzes to students",
     "roles": {
       "STUDENT": "Student",
       "TEACHER": "Teacher",
@@ -178,16 +172,16 @@
   "authLayout": {
     "login": {
       "title": "Welcome back!",
-      "subtitle": "Log in to continue your study sets and check your progress.",
-      "feature1": "Pick up right where you left off",
-      "feature2": "Your study sets synced on every device",
-      "feature3": "See results of your recent tests"
+      "subtitle": "Log in to continue your quizzes and see your results.",
+      "feature1": "Take multiple-choice quizzes written by teachers",
+      "feature2": "See your score and an explanation for each question",
+      "feature3": "See results of your recent attempts"
     },
     "register": {
       "title": "Start your learning journey",
-      "subtitle": "Create a free account in a minute and start studying right away.",
-      "feature1": "Create unlimited study sets",
-      "feature2": "Review with flashcards and practice tests",
+      "subtitle": "Create a free account in a minute and start reviewing right away.",
+      "feature1": "Review with multiple-choice quizzes",
+      "feature2": "Practice mode or timed mock tests",
       "feature3": "Completely free for students"
     },
     "forgotPassword": {
@@ -195,7 +189,7 @@
       "subtitle": "Just enter your registered email and we'll send you a link to reset it.",
       "feature1": "The link is sent to your email",
       "feature2": "The link is valid for 30 minutes",
-      "feature3": "Your study data stays intact"
+      "feature3": "Your quiz results stay intact"
     },
     "resetPassword": {
       "title": "Create a new password",
@@ -234,107 +228,5 @@
     "changePasswordButton": "Change password",
     "passwordChanged": "Password changed. Other devices have been logged out",
     "currentPasswordIncorrect": "Current password is incorrect"
-  },
-  "studySet": {
-    "pageTitle": "Study set",
-    "createTitle": "Create study set",
-    "editTitle": "Edit study set",
-    "editorDescription": "Each card has a term and its definition",
-    "title": "Title",
-    "titlePlaceholder": "E.g. English vocabulary — Lesson 1",
-    "description": "Description",
-    "descriptionPlaceholder": "Add a description (optional)",
-    "visibilityLabel": "Who can see it",
-    "visibility": {
-      "PRIVATE": "Only me",
-      "PUBLIC": "Anyone with the link"
-    },
-    "cardsTitle": "Cards ({n})",
-    "tabHint": "Press Tab in the last definition to add a card",
-    "term": "Term",
-    "definition": "Definition",
-    "addCard": "Add card",
-    "removeCard": "Remove card {n}",
-    "dragCard": "Drag to reorder",
-    "minCards": "A study set needs at least {n} cards",
-    "create": "Create study set",
-    "saved": "Study set saved",
-    "cardCount": "{n} cards",
-    "by": "Created by {name}",
-    "edit": "Edit",
-    "delete": "Delete",
-    "deleteTitle": "Delete study set",
-    "deleteConfirm": "\"{title}\" and all of its cards will be permanently deleted.",
-    "deleted": "Deleted \"{title}\"",
-    "notFoundTitle": "Study set not found",
-    "notFoundDescription": "The study set may have been deleted or is private.",
-    "import": {
-      "open": "Import",
-      "title": "Import cards",
-      "textLabel": "Paste your data",
-      "placeholder": "cat\tcon mèo\ndog\tcon chó\n\nCopy 2 columns (term, definition) from Excel / Google Sheets and paste them here",
-      "termSeparatorLabel": "Between term and definition",
-      "termSeparator": {
-        "tab": "Tab",
-        "comma": "Comma"
-      },
-      "cardSeparatorLabel": "Between cards",
-      "cardSeparator": {
-        "newline": "New line",
-        "semicolon": "Semicolon"
-      },
-      "line": "Line",
-      "status": "Status",
-      "errors": {
-        "missingTerm": "Missing term",
-        "missingDefinition": "Missing definition",
-        "termTooLong": "Term is too long",
-        "definitionTooLong": "Definition is too long"
-      },
-      "summary": "{n} valid cards",
-      "errorSummary": "{n} invalid lines will be skipped",
-      "overCapacity": "You can add at most {n} more cards",
-      "submit": "Add {n} cards",
-      "done": "Added {n} cards"
-    },
-    "myTitle": "My study sets",
-    "myDescription": "Study sets you have created",
-    "searchLabel": "Search",
-    "searchPlaceholder": "Type a study set title...",
-    "sortLabel": "Sort by",
-    "sort": {
-      "RECENT": "Recently edited",
-      "NEWEST": "Recently created",
-      "TITLE": "Title A → Z"
-    },
-    "resultCount": "{n} study sets",
-    "noMatch": "No study sets match \"{q}\"",
-    "noMatchHint": "Try another keyword.",
-    "emptyTitle": "You have no study sets yet",
-    "emptyHint": "Create your first study set to start learning!",
-    "backToList": "Back to my study sets"
-  },
-  "flashcards": {
-    "pageTitle": "Flashcards",
-    "modeDescription": "Flip cards and check which terms you remember",
-    "round": "Round {n}",
-    "known": "Know",
-    "unknown": "Still learning",
-    "progress": "Round progress",
-    "flip": "Flip card (Space)",
-    "prev": "Previous card (←)",
-    "next": "Next card (→)",
-    "markKnown": "Know it",
-    "markUnknown": "Still learning",
-    "shuffle": "Shuffle",
-    "definitionFirst": "Show definition first",
-    "shortcutsHint": "Space: flip · ←/→: move · 1: still learning · 2: know it",
-    "roundEndTitle": "Round finished!",
-    "roundEndSummary": "You know {known} cards and have {unknown} left to review.",
-    "continueUnknown": "Review {n} remaining cards",
-    "restart": "Start over",
-    "doneTitle": "Awesome!",
-    "doneSummary": "You know all {n} cards in this study set.",
-    "backToSet": "Back to study set"
   }
 }

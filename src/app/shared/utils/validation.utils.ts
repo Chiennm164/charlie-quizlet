@@ -86,12 +86,6 @@ export const AppValidators: {
   readonly currentPassword: ValidatorFn[];
   readonly newPassword: ValidatorFn[];
   readonly passwordMatch: typeof passwordMatchValidator;
-  readonly studySetTitle: ValidatorFn[];
-  readonly studySetDescription: ValidatorFn[];
-  readonly cardTerm: ValidatorFn[];
-  readonly cardDefinition: ValidatorFn[];
-  /** Danh sách thẻ của học phần: đủ số thẻ tối thiểu, không trùng thuật ngữ. */
-  readonly studySetCards: ValidatorFn[];
 } = {
   required: [Validators.required],
   email: [Validators.required, Validators.email, Validators.maxLength(validation.emailMaxLength)],
@@ -105,11 +99,6 @@ export const AppValidators: {
     Validators.maxLength(validation.passwordMaxLength),
   ],
   passwordMatch: passwordMatchValidator,
-  studySetTitle: [notBlankValidator, Validators.maxLength(validation.studySetTitleMaxLength)],
-  studySetDescription: [Validators.maxLength(validation.studySetDescriptionMaxLength)],
-  cardTerm: [notBlankValidator, Validators.maxLength(validation.cardTermMaxLength)],
-  cardDefinition: [notBlankValidator, Validators.maxLength(validation.cardDefinitionMaxLength)],
-  studySetCards: [minItemsValidator(validation.studySetMinCards), uniqueValuesValidator('term')],
 };
 
 /**

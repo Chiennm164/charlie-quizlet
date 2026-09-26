@@ -37,10 +37,8 @@
 ## 3. Luồng theo vai trò
 
 ### 3.1 STUDENT
-1. Đăng nhập → vào **Dashboard Student** (tổng quan: đề thi sắp/đã làm, bộ flashcard đang học).
-2. **Học flashcard**:
-   - Chọn bộ flashcard → chế độ ôn tập (lật thẻ, đánh dấu nhớ/chưa nhớ, lặp lại thẻ chưa nhớ).
-3. **Làm bài thi**:
+1. Đăng nhập → vào **Dashboard Student** (tổng quan: bộ đề đã làm, điểm gần đây).
+2. **Làm bài**:
    - Chọn đề thi được giao → làm bài (câu hỏi trắc nghiệm, đếm giờ) → nộp bài → xem kết quả/điểm.
 
 ### 3.2 TEACHER
@@ -161,7 +159,7 @@ src/app/
 │   ├── interceptors/        # locale → auth → error → loading
 │   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register/...)
 │   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
-├── features/                # màn hình theo nghiệp vụ: auth, home, study-sets, forbidden (trang 403), admin (duyệt tài khoản)
+├── features/                # màn hình theo nghiệp vụ: auth, home, forbidden (trang 403), admin (duyệt tài khoản)
 │   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
 └── shared/                  # tái sử dụng, không logic nghiệp vụ
     ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
@@ -181,8 +179,7 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 
 - **Auth**: đăng ký (chọn Học sinh / Giáo viên; Giáo viên chờ Admin duyệt), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
 - **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403, trang Admin duyệt / từ chối tài khoản Giáo viên.
-- **Học phần**: tạo / sửa / xoá, trang xem học phần; trình soạn thẻ (thêm / xoá / kéo thả sắp xếp, Tab ở dòng cuối thêm thẻ, cảnh báo rời trang khi chưa lưu), nhập nhanh bằng cách dán 2 cột từ Excel / Sheets; trang "Học phần của tôi" (tìm kiếm, sắp xếp, phân trang, bộ lọc lưu trên URL).
-- **Thẻ ghi nhớ** (`/study-sets/:id/flashcards`): lật thẻ 3D, phím tắt (directive `appShortcut`), trộn thẻ, đảo mặt, đánh dấu đã nhớ / chưa nhớ — vòng sau chỉ còn thẻ chưa nhớ. Tiến độ chưa lưu lên BE.
+- **Dùng chung cho trình soạn / làm đề**: hộp thoại xác nhận (`ConfirmDialogService`), `unsavedChangesGuard`, directive phím tắt `appShortcut`, component phân trang, validator `minItemsValidator` / `uniqueValuesValidator` cho FormArray.
 - **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
 - **Giao diện** (phong cách chibi: pastel hồng tím, font Nunito, nút nổi kiểu nhãn dán, linh vật hổ `app-mascot`): layout auth (header, panel giới thiệu theo từng màn, footer), layout sau đăng nhập (header có dialog tài khoản) + trang home (lời chào, thẻ chức năng), UI kit dùng chung, song ngữ vi/en, tiêu đề tab theo trang.
@@ -191,5 +188,5 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
 
 - Dashboard riêng theo vai trò (mục 3).
-- Nghiệp vụ chính: flashcard, câu hỏi, đề thi, làm bài, kết quả (mục 3b).
+- Nghiệp vụ chính: bộ đề trắc nghiệm (BE đã có API `/api/quizzes`), làm bài, kết quả (mục 3b).
 - Gửi email thật (SMTP) cho quên mật khẩu.

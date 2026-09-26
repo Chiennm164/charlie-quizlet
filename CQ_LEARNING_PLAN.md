@@ -8,7 +8,7 @@ App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, 
 
 - **Auth**: đăng nhập/đăng xuất, session, JWT access token + refresh token
 - **Phân quyền (RBAC)**: 3 role — `STUDENT`, `TEACHER`, `ADMIN`, có phê duyệt theo 1-2 cấp
-- **Nghiệp vụ** (mục tiêu chính): Teacher / Admin soạn bộ đề trắc nghiệm, mọi người làm bài để ôn tập, xem kết quả; phụ: học phần + thẻ ghi nhớ
+- **Nghiệp vụ** (mục tiêu chính): Teacher / Admin soạn bộ đề trắc nghiệm, mọi người làm bài để ôn tập, xem kết quả
 - **Backend**: Java Spring Boot, PostgreSQL
 
 ## Môi trường Frontend
@@ -36,7 +36,7 @@ App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, 
 
 Mỗi giai đoạn là một nhóm chức năng thật, làm lần lượt từ 1 đến 7. Dòng **Angular** ghi kiến thức luyện được khi làm giai đoạn đó.
 
-Mục tiêu chính: **bộ đề trắc nghiệm để ôn tập** (giai đoạn 4–5). Học phần + thẻ ghi nhớ (giai đoạn 2–3) là phần phụ đã xong.
+Mục tiêu duy nhất: **bộ đề trắc nghiệm để ôn tập** (giai đoạn 4–5). Học phần + thẻ ghi nhớ (giai đoạn 2–3) đã gỡ.
 
 ### Giai đoạn 1 — Hoàn thiện nền tảng
 - [x] Refresh token + thu hồi khi đăng xuất: access token hết hạn thì tự làm mới rồi gửi lại request
@@ -46,19 +46,9 @@ Mục tiêu chính: **bộ đề trắc nghiệm để ôn tập** (giai đoạn
 
 **Angular:** RxJS trong interceptor (`switchMap`, `catchError`, `share`), functional guard.
 
-### Giai đoạn 2 — Học phần (lõi kiểu Quizlet)
-- [x] Tạo / sửa / xoá học phần: tiêu đề, mô tả, công khai / riêng tư, danh sách thẻ (thuật ngữ – định nghĩa)
-- [x] Trình soạn thẻ: thêm / xoá / sắp xếp dòng (kéo-thả cần cài `@angular/cdk`), nhấn Tab ở dòng cuối tự thêm dòng mới, cảnh báo khi rời trang chưa lưu
-- [x] Import nhanh: dán văn bản `thuật ngữ<Tab>định nghĩa` mỗi dòng (copy thẳng từ Excel / Google Sheets) → xem trước → lưu
-- [x] Học phần của tôi: tìm kiếm, lọc, sắp xếp, phân trang
-
-**Angular:** `FormArray`, custom validator (tối thiểu 2 thẻ, trùng thuật ngữ), `CanDeactivate`, tìm kiếm bằng `debounceTime` / `switchMap` so với `httpResource` (Signals vs RxJS).
-
-### Giai đoạn 3 — Chế độ học trên học phần
-- [x] Thẻ ghi nhớ: lật thẻ (CSS 3D), phím tắt (Space lật, ←/→ chuyển thẻ), trộn thẻ, đánh dấu đã nhớ / chưa nhớ → vòng sau chỉ còn thẻ chưa nhớ
-- ~~Ôn tập ngắt quãng (lưu tiến độ từng thẻ)~~ — bỏ: mục tiêu của app là bộ đề để ôn tập, không lưu tiến độ học thẻ.
-
-**Angular:** custom directive (phím tắt), animation, state bằng signal.
+### ~~Giai đoạn 2–3 — Học phần, thẻ ghi nhớ~~ (đã gỡ)
+Đã làm rồi gỡ bỏ (2026-09-27): app chỉ tập trung vào bài trắc nghiệm. Code cũ còn trong lịch sử git. Giữ lại phần dùng chung:
+`ConfirmDialogService`, `unsavedChangesGuard`, directive `appShortcut`, `app-pagination`, validator cho FormArray, `@angular/cdk` (kéo thả).
 
 ### Giai đoạn 4 — Bộ đề trắc nghiệm (Teacher / Admin soạn)
 Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` / `ADMIN` tạo và sửa đề; mọi người đăng nhập làm được đề đã xuất bản.
@@ -67,7 +57,7 @@ Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` 
 - [ ] Import câu hỏi nhanh từ Excel / văn bản dán vào, xem trước và báo lỗi từng dòng
 - [ ] Danh sách bộ đề: Teacher thấy đề của mình (cả nháp), mọi người thấy đề đã xuất bản; tìm kiếm, phân trang
 
-**Angular:** `roleGuard` cho route Teacher / Admin, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), dùng lại pattern của trình soạn thẻ.
+**Angular:** `roleGuard` cho route Teacher / Admin, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), kéo thả bằng `@angular/cdk`.
 
 ### Giai đoạn 5 — Làm bài + kết quả
 - [ ] Hai chế độ: Luyện tập (hiện đúng / sai + giải thích ngay sau mỗi câu) và Thi thử (đếm ngược bằng `app-countdown`, trộn câu và đáp án, đánh dấu câu để xem lại, bảng số câu để nhảy nhanh, hết giờ tự nộp)
@@ -80,20 +70,20 @@ Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` 
 
 ### Giai đoạn 6 — Lớp học & giao bài
 - [ ] Teacher tạo lớp, học sinh vào lớp bằng mã / link mời
-- [ ] Giao học phần hoặc đề thi cho lớp, kèm hạn chót
+- [ ] Giao bộ đề cho lớp, kèm hạn chót
 - [ ] Bảng điểm theo học sinh + thống kê theo câu (câu sai nhiều → câu khó hoặc đáp án sai), xuất CSV
 
 **Angular:** route lồng nhau + tham số route (`withComponentInputBinding`).
 
 ### Giai đoạn 7 — Dashboard & tiến độ
-- [ ] Student: học phần đang học, thẻ cần ôn hôm nay, bài sắp hết hạn, streak, biểu đồ điểm theo thời gian, chủ đề yếu
+- [ ] Student: bộ đề đã làm, bài sắp hết hạn, streak, biểu đồ điểm theo thời gian, chủ đề yếu
 - [ ] Teacher: câu hỏi / đề chờ duyệt, thống kê lớp
 - [ ] Admin: user, tài khoản Teacher chờ duyệt, thống kê nội dung
 
 **Angular:** `@defer` để chỉ tải thư viện biểu đồ khi cần; `ChangeDetectorRef` khi tích hợp thư viện ngoài không dùng signal.
 
 ### Để sau
-- [ ] Khám phá học phần công khai, sao chép về thư viện của mình, thư mục, yêu thích
+- [ ] Khám phá bộ đề theo chủ đề, yêu thích
 - [ ] Chế độ khách: làm bài công khai không cần đăng nhập
 - [ ] Gửi email thật (SMTP) + thông báo trong app (được duyệt, có bài mới được giao)
 - [ ] Thi đấu realtime kiểu Kahoot (WebSocket)
@@ -108,9 +98,9 @@ Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` 
 | Reactive Forms, custom validator, custom pipe | Đã dùng (auth, `AppValidators`, pipe `translate`) |
 | Interceptor + RxJS (`switchMap`, `catchError`, `share`) | Giai đoạn 1 — refresh token |
 | Route guard theo role | Giai đoạn 1 — `roleGuard` |
-| `FormArray`, `CanDeactivate` | Giai đoạn 2 — trình soạn thẻ |
-| `debounceTime` / `combineLatest`, so sánh Signals vs RxJS | Giai đoạn 2 — tìm kiếm, lọc |
-| Custom directive | Giai đoạn 3 — phím tắt thẻ ghi nhớ |
+| `CanDeactivate` | Giai đoạn 4 — trình soạn đề |
+| `debounceTime` / `combineLatest`, so sánh Signals vs RxJS | Giai đoạn 4 — tìm kiếm, lọc bộ đề |
+| Custom directive | Giai đoạn 5 — phím tắt khi làm bài (`appShortcut`) |
 | `FormArray` lồng nhau (câu hỏi → đáp án) | Giai đoạn 4 — trình soạn đề |
 | NgRx Signal Store | Giai đoạn 5 — trình làm bài |
 | `@defer`, `ChangeDetectorRef` | Giai đoạn 7 — biểu đồ |

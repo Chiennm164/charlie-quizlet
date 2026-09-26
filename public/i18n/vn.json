@@ -114,7 +114,7 @@
     "loginLink": "Đăng nhập",
     "backToLogin": "Quay lại đăng nhập",
     "registerTitle": "Đăng ký",
-    "registerSubtitle": "Tạo tài khoản Charlie Quizlet để bắt đầu học",
+    "registerSubtitle": "Tạo tài khoản Charlie Quizlet để bắt đầu ôn tập",
     "fullName": "Họ tên",
     "fullNamePlaceholder": "Nguyễn Văn A",
     "confirmPassword": "Xác nhận mật khẩu",
@@ -147,19 +147,13 @@
     "goodMorning": "Chào buổi sáng, {name}!",
     "goodAfternoon": "Chào buổi chiều, {name}!",
     "goodEvening": "Chào buổi tối, {name}!",
-    "subtitle": "Hôm nay bạn muốn học gì?",
+    "subtitle": "Hôm nay bạn muốn ôn đề nào?",
     "quickActions": "Bắt đầu",
     "comingSoon": "Sắp ra mắt",
-    "actionCreateSet": "Tạo học phần",
-    "actionCreateSetDesc": "Thêm thuật ngữ và định nghĩa để bắt đầu học",
-    "actionMySets": "Học phần của tôi",
-    "actionMySetsDesc": "Xem và chỉnh sửa các học phần bạn đã tạo",
-    "actionFlashcards": "Thẻ ghi nhớ",
-    "actionFlashcardsDesc": "Ôn tập thuật ngữ bằng cách lật thẻ",
-    "actionQuiz": "Kiểm tra",
-    "actionQuizDesc": "Tự kiểm tra kiến thức với câu hỏi tạo tự động",
+    "actionQuiz": "Bộ đề trắc nghiệm",
+    "actionQuizDesc": "Làm các bộ đề trắc nghiệm để ôn tập kiến thức",
     "actionClasses": "Quản lý lớp học",
-    "actionClassesDesc": "Tạo lớp và giao học phần cho học sinh",
+    "actionClassesDesc": "Tạo lớp và giao bộ đề cho học sinh",
     "roles": {
       "STUDENT": "Học sinh",
       "TEACHER": "Giáo viên",
@@ -178,16 +172,16 @@
   "authLayout": {
     "login": {
       "title": "Chào mừng bạn quay lại!",
-      "subtitle": "Đăng nhập để tiếp tục các học phần đang dở và xem tiến độ của bạn.",
-      "feature1": "Tiếp tục ôn tập đúng chỗ bạn đã dừng",
-      "feature2": "Đồng bộ học phần trên mọi thiết bị",
-      "feature3": "Xem kết quả các bài kiểm tra gần đây"
+      "subtitle": "Đăng nhập để làm tiếp các bộ đề và xem kết quả của bạn.",
+      "feature1": "Làm bộ đề trắc nghiệm do giáo viên soạn",
+      "feature2": "Xem điểm và lời giải thích từng câu",
+      "feature3": "Xem kết quả các bài đã làm gần đây"
     },
     "register": {
       "title": "Bắt đầu hành trình học tập",
-      "subtitle": "Tạo tài khoản miễn phí chỉ trong một phút và bắt đầu học ngay.",
-      "feature1": "Tạo học phần không giới hạn",
-      "feature2": "Ôn tập bằng thẻ ghi nhớ và bài kiểm tra",
+      "subtitle": "Tạo tài khoản miễn phí chỉ trong một phút và bắt đầu ôn tập ngay.",
+      "feature1": "Ôn tập với các bộ đề trắc nghiệm",
+      "feature2": "Luyện tập hoặc thi thử có đếm giờ",
       "feature3": "Hoàn toàn miễn phí cho học sinh"
     },
     "forgotPassword": {
@@ -195,7 +189,7 @@
       "subtitle": "Chỉ cần email đã đăng ký, chúng tôi sẽ gửi link để bạn đặt lại mật khẩu.",
       "feature1": "Link được gửi tới email của bạn",
       "feature2": "Link có hiệu lực trong 30 phút",
-      "feature3": "Dữ liệu học tập của bạn được giữ nguyên"
+      "feature3": "Kết quả làm bài của bạn được giữ nguyên"
     },
     "resetPassword": {
       "title": "Tạo mật khẩu mới",
@@ -234,107 +228,5 @@
     "changePasswordButton": "Đổi mật khẩu",
     "passwordChanged": "Đã đổi mật khẩu. Các thiết bị khác đã bị đăng xuất",
     "currentPasswordIncorrect": "Mật khẩu hiện tại không đúng"
-  },
-  "studySet": {
-    "pageTitle": "Học phần",
-    "createTitle": "Tạo học phần",
-    "editTitle": "Sửa học phần",
-    "editorDescription": "Mỗi thẻ gồm một thuật ngữ và định nghĩa của nó",
-    "title": "Tiêu đề",
-    "titlePlaceholder": "Vd. Từ vựng tiếng Anh — Bài 1",
-    "description": "Mô tả",
-    "descriptionPlaceholder": "Thêm mô tả (không bắt buộc)",
-    "visibilityLabel": "Ai xem được",
-    "visibility": {
-      "PRIVATE": "Chỉ mình tôi",
-      "PUBLIC": "Mọi người có link"
-    },
-    "cardsTitle": "Thẻ ({n})",
-    "tabHint": "Nhấn Tab ở ô định nghĩa cuối cùng để thêm thẻ",
-    "term": "Thuật ngữ",
-    "definition": "Định nghĩa",
-    "addCard": "Thêm thẻ",
-    "removeCard": "Xoá thẻ {n}",
-    "dragCard": "Kéo để đổi vị trí",
-    "minCards": "Học phần cần ít nhất {n} thẻ",
-    "create": "Tạo học phần",
-    "saved": "Đã lưu học phần",
-    "cardCount": "{n} thẻ",
-    "by": "Tạo bởi {name}",
-    "edit": "Sửa",
-    "delete": "Xoá",
-    "deleteTitle": "Xoá học phần",
-    "deleteConfirm": "Học phần \"{title}\" và toàn bộ thẻ sẽ bị xoá vĩnh viễn.",
-    "deleted": "Đã xoá học phần \"{title}\"",
-    "notFoundTitle": "Không tìm thấy học phần",
-    "notFoundDescription": "Học phần có thể đã bị xoá hoặc đang ở chế độ riêng tư.",
-    "import": {
-      "open": "Nhập nhanh",
-      "title": "Nhập nhanh thẻ",
-      "textLabel": "Dán dữ liệu",
-      "placeholder": "cat\tcon mèo\ndog\tcon chó\n\nCopy 2 cột (thuật ngữ, định nghĩa) từ Excel / Google Sheets rồi dán vào đây",
-      "termSeparatorLabel": "Giữa thuật ngữ và định nghĩa",
-      "termSeparator": {
-        "tab": "Tab",
-        "comma": "Dấu phẩy"
-      },
-      "cardSeparatorLabel": "Giữa các thẻ",
-      "cardSeparator": {
-        "newline": "Xuống dòng",
-        "semicolon": "Dấu chấm phẩy"
-      },
-      "line": "Dòng",
-      "status": "Trạng thái",
-      "errors": {
-        "missingTerm": "Thiếu thuật ngữ",
-        "missingDefinition": "Thiếu định nghĩa",
-        "termTooLong": "Thuật ngữ quá dài",
-        "definitionTooLong": "Định nghĩa quá dài"
-      },
-      "summary": "{n} thẻ hợp lệ",
-      "errorSummary": "{n} dòng lỗi sẽ bị bỏ qua",
-      "overCapacity": "Chỉ thêm được tối đa {n} thẻ nữa",
-      "submit": "Thêm {n} thẻ",
-      "done": "Đã thêm {n} thẻ"
-    },
-    "myTitle": "Học phần của tôi",
-    "myDescription": "Các học phần bạn đã tạo",
-    "searchLabel": "Tìm kiếm",
-    "searchPlaceholder": "Nhập tiêu đề học phần...",
-    "sortLabel": "Sắp xếp",
-    "sort": {
-      "RECENT": "Mới sửa gần đây",
-      "NEWEST": "Mới tạo gần đây",
-      "TITLE": "Tên A → Z"
-    },
-    "resultCount": "{n} học phần",
-    "noMatch": "Không có học phần nào khớp \"{q}\"",
-    "noMatchHint": "Thử từ khoá khác xem sao nhé.",
-    "emptyTitle": "Bạn chưa có học phần nào",
-    "emptyHint": "Tạo học phần đầu tiên để bắt đầu học thôi!",
-    "backToList": "Về danh sách học phần"
-  },
-  "flashcards": {
-    "pageTitle": "Thẻ ghi nhớ",
-    "modeDescription": "Lật thẻ, tự kiểm tra xem bạn đã nhớ từ nào",
-    "round": "Vòng {n}",
-    "known": "Đã nhớ",
-    "unknown": "Chưa nhớ",
-    "progress": "Tiến độ vòng học",
-    "flip": "Lật thẻ (Space)",
-    "prev": "Thẻ trước (←)",
-    "next": "Thẻ sau (→)",
-    "markKnown": "Đã nhớ",
-    "markUnknown": "Chưa nhớ",
-    "shuffle": "Trộn thẻ",
-    "definitionFirst": "Hiện định nghĩa trước",
-    "shortcutsHint": "Space: lật · ←/→: chuyển thẻ · 1: chưa nhớ · 2: đã nhớ",
-    "roundEndTitle": "Hết vòng rồi!",
-    "roundEndSummary": "Bạn đã nhớ {known} thẻ, còn {unknown} thẻ cần ôn thêm.",
-    "continueUnknown": "Ôn tiếp {n} thẻ chưa nhớ",
-    "restart": "Học lại từ đầu",
-    "doneTitle": "Tuyệt vời!",
-    "doneSummary": "Bạn đã nhớ hết {n} thẻ của học phần này.",
-    "backToSet": "Về học phần"
   }
 }

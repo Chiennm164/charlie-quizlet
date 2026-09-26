@@ -102,16 +102,16 @@ Mỗi nhóm API một service trong `core/` hoặc cạnh feature; URL lấy t�
 // core/config/api-endpoints.ts — thêm URL trước
 export const API_ENDPOINTS = {
   auth: { ... },
-  studySets: { list: `${environment.apiUrl}/study-sets` },
+  quizzes: { base: `${environment.apiUrl}/quizzes` },
 } as const;
 
-// features/study-set/study-set.service.ts
+// features/quizzes/quizzes.service.ts
 @Injectable({ providedIn: 'root' })
-export class StudySetService {
+export class QuizzesService {
   private http = inject(HttpClient);
 
-  list(): Observable<StudySet[]> {
-    return this.http.get<StudySet[]>(API_ENDPOINTS.studySets.list);
+  list(): Observable<Page<QuizSummary>> {
+    return this.http.get<Page<QuizSummary>>(API_ENDPOINTS.quizzes.base);
   }
 }
 ```
@@ -123,7 +123,7 @@ Không cần tự gắn token, header ngôn ngữ, bật loading hay bắt lỗi
 **Đọc dữ liệu để hiển thị** — ưu tiên `toSignal`, không cần `subscribe`:
 
 ```ts
-studySets = toSignal(this.studySetService.list(), { initialValue: [] });
+quizzes = toSignal(this.quizzesService.list(), { initialValue: null });
 ```
 
 **Gửi dữ liệu (submit form, bấm nút)** — mẫu chuẩn:
@@ -144,7 +144,7 @@ submit(): void {
       takeUntilDestroyed(this.destroyRef),                 // tự huỷ khi rời trang
     )
     .subscribe({
-      next: () => this.toast.success(this.translate.t('studySet.created')),
+      next: () => this.toast.success(this.translate.t('quiz.created')),
       // Không viết error: → lỗi tự hiện dialog chung (mục 4)
     });
 }
@@ -159,7 +159,7 @@ submit(): void {
 
 ### 3.3 Danh sách có tìm kiếm / lọc / phân trang — RxJS và Signals
 
-Mẫu thật: [my-study-sets.ts](src/app/features/study-sets/my-study-sets/my-study-sets.ts). Bộ lọc nằm trên **URL** (query param) để F5 / Back / chia sẻ link giữ đúng trang đang xem.
+Áp dụng cho danh sách bộ đề (giai đoạn 4). Bộ lọc nằm trên **URL** (query param) để F5 / Back / chia sẻ link giữ đúng trang đang xem.
 
 **Cách đang dùng — RxJS:**
 
@@ -174,7 +174,7 @@ result = toSignal(
   this.route.queryParamMap.pipe(
     map(paramsFrom),
     distinctUntilChanged(sameParams),
-    switchMap((params) => this.service.listMine(params).pipe(catchError(() => of(null)))),
+    switchMap((params) => this.quizzesService.listMine(params).pipe(catchError(() => of(null)))),
   ),
   { initialValue: null },
 );
@@ -185,8 +185,8 @@ result = toSignal(
 ```ts
 params = toSignal(this.route.queryParamMap.pipe(map(paramsFrom)), { initialValue: DEFAULT });
 
-list = httpResource<Page<StudySetSummary>>(() => ({
-  url: API_ENDPOINTS.studySets.mine,
+list = httpResource<Page<QuizSummary>>(() => ({
+  url: API_ENDPOINTS.quizzes.mine,
   params: { ...this.params() },   // params() đổi -> tự gọi lại, request cũ tự bị huỷ
 }));
 // template: list.value(), list.isLoading(), list.error()
@@ -305,15 +305,15 @@ confirmOpen = signal(false);
 ```
 
 ```html
-<app-button variant="danger" (clicked)="confirmOpen.set(true)">{{ 'studySet.delete' | translate }}</app-button>
+<app-button variant="danger" (clicked)="confirmOpen.set(true)">{{ 'quiz.delete' | translate }}</app-button>
 
 <app-dialog
   [open]="confirmOpen()"
-  [title]="'studySet.deleteTitle' | translate"
+  [title]="'quiz.deleteTitle' | translate"
   size="sm"
   (closed)="confirmOpen.set(false)"
 >
-  <p class="typo-body-sm">{{ 'studySet.deleteConfirm' | translate }}</p>
+  <p class="typo-body-sm">{{ 'quiz.deleteConfirm' | translate }}</p>
   <div dialog-footer>
     <app-button variant="secondary" (clicked)="confirmOpen.set(false)">{{ 'common.cancel' | translate }}</app-button>
     <app-button variant="danger" [loading]="deleting()" (clicked)="delete()">{{ 'common.confirm' | translate }}</app-button>
@@ -480,16 +480,17 @@ Con trỏ đã có quy tắc chung trong [styles.css](src/styles.css): nút/ph�
 
 ## 12. Thêm một trang mới
 
-Ví dụ trang "Học phần của tôi" (cần đăng nhập):
+Ví dụ trang "Đề của tôi" (cần đăng nhập, chỉ Teacher / Admin):
 
-1. **Đường dẫn** — thêm vào `ROUTE_SEGMENTS` trong [routes.ts](src/app/core/config/routes.ts): `studySets: 'study-sets'`.
-2. **Component** — `src/app/features/study-set/study-set-list/study-set-list.ts` (+ `.html` nếu template ≥ 30 dòng).
+1. **Đường dẫn** — thêm vào `ROUTE_SEGMENTS` trong [routes.ts](src/app/core/config/routes.ts): `myQuizzes: 'quizzes/mine'`.
+2. **Component** — `src/app/features/quizzes/my-quizzes/my-quizzes.ts` (+ `.html` nếu template ≥ 30 dòng).
 3. **Route** — trong [app.routes.ts](src/app/app.routes.ts), thêm làm **route con của `MainLayoutComponent`** (tự có header + `authGuard`):
    ```ts
    {
-     path: ROUTE_SEGMENTS.studySets,
-     title: 'studySet.pageTitle',
-     loadComponent: () => import('./features/study-set/study-set-list/study-set-list').then((m) => m.StudySetListComponent),
+     path: ROUTE_SEGMENTS.myQuizzes,
+     title: 'quiz.myTitle',
+     canActivate: [roleGuard('TEACHER', 'ADMIN')],
+     loadComponent: () => import('./features/quizzes/my-quizzes/my-quizzes').then((m) => m.MyQuizzesComponent),
    },
    ```
    Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('TEACHER', 'ADMIN')]` — user không đủ quyền được đưa tới trang 403 (`/forbidden`).

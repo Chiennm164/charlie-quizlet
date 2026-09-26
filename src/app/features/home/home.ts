@@ -27,25 +27,6 @@ const QUICK_ACTIONS: QuickAction[] = [
     roles: ['ADMIN'],
     route: ROUTES.adminPendingUsers,
   },
-  {
-    icon: 'plus',
-    titleKey: 'home.actionCreateSet',
-    descriptionKey: 'home.actionCreateSetDesc',
-    route: ROUTES.studySetNew,
-  },
-  {
-    icon: 'book-open',
-    titleKey: 'home.actionMySets',
-    descriptionKey: 'home.actionMySetsDesc',
-    route: ROUTES.studySets,
-  },
-  {
-    icon: 'layers',
-    titleKey: 'home.actionFlashcards',
-    descriptionKey: 'home.actionFlashcardsDesc',
-    // Chọn học phần trước rồi mới học thẻ.
-    route: ROUTES.studySets,
-  },
   { icon: 'clipboard-check', titleKey: 'home.actionQuiz', descriptionKey: 'home.actionQuizDesc' },
   {
     icon: 'users',

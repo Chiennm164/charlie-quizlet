@@ -34,19 +34,6 @@ export const APP_SETTINGS = {
     passwordMaxLength: 72,
     emailMaxLength: 255,
     fullNameMaxLength: 255,
-    studySetTitleMaxLength: 255,
-    studySetDescriptionMaxLength: 2000,
-    cardTermMaxLength: 500,
-    cardDefinitionMaxLength: 2000,
-    studySetMinCards: 2,
-    studySetMaxCards: 500,
-  },
-
-  studySets: {
-    /** Số học phần mỗi trang ở "Học phần của tôi" (BE cho tối đa 50). */
-    pageSize: 12,
-    /** Chờ người dùng ngừng gõ bao lâu (ms) mới tìm kiếm. */
-    searchDebounceMs: 300,
   },
 
   ui: {
