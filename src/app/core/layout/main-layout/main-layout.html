@@ -12,7 +12,11 @@
         <app-language-switcher />
 
         @if (auth.currentUser(); as user) {
-          <div class="flex items-center gap-2">
+          <a
+            [routerLink]="profileRoute"
+            class="flex items-center gap-2 rounded-md px-1 py-0.5 transition-colors hover:bg-bg-muted"
+            [attr.aria-label]="'profile.pageTitle' | translate"
+          >
             <span
               class="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-body-sm font-semibold"
               aria-hidden="true"
@@ -20,7 +24,7 @@
               {{ initials() }}
             </span>
             <span class="hidden md:inline typo-body-sm font-medium">{{ user.fullName }}</span>
-          </div>
+          </a>
         }
 
         <button

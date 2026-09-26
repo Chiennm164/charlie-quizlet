@@ -18,6 +18,7 @@ import { markErrorHandled } from '../error/error-handling';
 import { SKIP_GLOBAL_LOADING } from '../interceptors/loading.interceptor';
 import {
   AuthResponse,
+  ChangePasswordRequest,
   ForgotPasswordRequest,
   LoginRequest,
   RefreshTokenRequest,
@@ -25,6 +26,7 @@ import {
   RegisterResponse,
   ResetPasswordRequest,
   Role,
+  UpdateProfileRequest,
   User,
 } from '../models';
 
@@ -84,6 +86,24 @@ export class AuthService {
     return this.http
       .get<User>(API_ENDPOINTS.auth.me)
       .pipe(tap((user) => this.currentUser.set(user)));
+  }
+
+  updateProfile(request: UpdateProfileRequest): Observable<User> {
+    return this.http
+      .patch<User>(API_ENDPOINTS.auth.me, request)
+      .pipe(tap((user) => this.currentUser.set(user)));
+  }
+
+  /**
+   * BE đăng xuất mọi thiết bị khác và trả phiên mới cho thiết bị này — lưu vào đúng nơi đang giữ phiên
+   * (giữ nguyên lựa chọn "ghi nhớ đăng nhập").
+   */
+  changePassword(request: ChangePasswordRequest): Observable<void> {
+    const storage = this.sessionStore();
+    return this.http.post<AuthResponse>(API_ENDPOINTS.auth.changePassword, request).pipe(
+      tap((res) => this.setSession(res, storage)),
+      map(() => undefined),
+    );
   }
 
   /**

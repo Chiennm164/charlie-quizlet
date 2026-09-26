@@ -12,7 +12,9 @@ export const API_ENDPOINTS = {
     resetPassword: `${AUTH_BASE}/reset-password`,
     refresh: `${AUTH_BASE}/refresh`,
     logout: `${AUTH_BASE}/logout`,
+    /** GET: user hiện tại; PATCH: sửa hồ sơ. */
     me: `${AUTH_BASE}/me`,
+    changePassword: `${AUTH_BASE}/change-password`,
   },
   admin: {
     pendingUsers: `${ADMIN_BASE}/users/pending`,

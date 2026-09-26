@@ -31,6 +31,7 @@ export class MainLayoutComponent {
   private translate = inject(TranslateService);
 
   readonly homeRoute = DEFAULT_AUTHENTICATED_ROUTE;
+  readonly profileRoute = ROUTES.profile;
   readonly appName = APP_SETTINGS.appName;
 
   initials = computed(() => getInitials(this.auth.currentUser()?.fullName));

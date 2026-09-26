@@ -86,6 +86,28 @@ describe('AuthService', () => {
     expect(service.hasRefreshToken()).toBe(false);
   });
 
+  it('sửa hồ sơ cập nhật currentUser', () => {
+    login(true);
+    service.updateProfile({ fullName: 'Alice Nguyen' }).subscribe();
+    const req = http.expectOne(`${API}/auth/me`);
+    expect(req.request.method).toBe('PATCH');
+    req.flush({ ...RESPONSE.user, fullName: 'Alice Nguyen' });
+
+    expect(service.currentUser()?.fullName).toBe('Alice Nguyen');
+  });
+
+  it('đổi mật khẩu: lưu phiên mới vào đúng nơi đang giữ phiên', () => {
+    login(false);
+    service
+      .changePassword({ currentPassword: 'secret123', newPassword: 'newsecret123' })
+      .subscribe();
+    http.expectOne(`${API}/auth/change-password`).flush(authResponse('token-new', 'refresh-new'));
+
+    expect(sessionStorage.getItem(STORAGE_KEYS.accessToken)).toBe('token-new');
+    expect(sessionStorage.getItem(STORAGE_KEYS.refreshToken)).toBe('refresh-new');
+    expect(localStorage.getItem(STORAGE_KEYS.accessToken)).toBeNull();
+  });
+
   it('lưu token vào localStorage khi "ghi nhớ đăng nhập"', () => {
     login(true);
 

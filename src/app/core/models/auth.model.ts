@@ -37,6 +37,16 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+export interface UpdateProfileRequest {
+  fullName: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  /** 8–72 characters (BCrypt limit). */
+  newPassword: string;
+}
+
 export interface ForgotPasswordRequest {
   email: string;
 }

@@ -21,6 +21,7 @@ export const ERROR_CODES = {
   AUTH_RESET_TOKEN_INVALID: 'AUTH_RESET_TOKEN_INVALID',
   /** Refresh token hết hạn / đã thu hồi: phiên đã kết thúc, phải đăng nhập lại. */
   AUTH_REFRESH_TOKEN_INVALID: 'AUTH_REFRESH_TOKEN_INVALID',
+  AUTH_CURRENT_PASSWORD_INCORRECT: 'AUTH_CURRENT_PASSWORD_INCORRECT',
   /** Duyệt / từ chối tài khoản không còn chờ duyệt (vd. Admin khác vừa xử lý). */
   ADMIN_USER_NOT_PENDING: 'ADMIN_USER_NOT_PENDING',
 } as const;

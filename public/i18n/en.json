@@ -215,5 +215,18 @@
       "rejectTitle": "Reject account",
       "rejectConfirm": "{name}'s account will be deleted. They can register again with the same e-mail."
     }
+  },
+  "profile": {
+    "pageTitle": "Profile",
+    "title": "My profile",
+    "description": "Update your personal details and login password",
+    "infoTitle": "Personal details",
+    "profileSaved": "Profile saved",
+    "passwordTitle": "Change password",
+    "passwordHint": "Other devices will be logged out after the change.",
+    "currentPassword": "Current password",
+    "changePasswordButton": "Change password",
+    "passwordChanged": "Password changed. Other devices have been logged out",
+    "currentPasswordIncorrect": "Current password is incorrect"
   }
 }

@@ -215,5 +215,18 @@
       "rejectTitle": "Từ chối tài khoản",
       "rejectConfirm": "Tài khoản của {name} sẽ bị xoá. Người này có thể đăng ký lại bằng email đó."
     }
+  },
+  "profile": {
+    "pageTitle": "Hồ sơ",
+    "title": "Hồ sơ của tôi",
+    "description": "Cập nhật thông tin cá nhân và mật khẩu đăng nhập",
+    "infoTitle": "Thông tin cá nhân",
+    "profileSaved": "Đã lưu thông tin",
+    "passwordTitle": "Đổi mật khẩu",
+    "passwordHint": "Sau khi đổi, các thiết bị khác sẽ bị đăng xuất.",
+    "currentPassword": "Mật khẩu hiện tại",
+    "changePasswordButton": "Đổi mật khẩu",
+    "passwordChanged": "Đã đổi mật khẩu. Các thiết bị khác đã bị đăng xuất",
+    "currentPasswordIncorrect": "Mật khẩu hiện tại không đúng"
   }
 }
