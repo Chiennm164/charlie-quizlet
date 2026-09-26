@@ -140,7 +140,7 @@ src/app/
 │   ├── interceptors/        # locale → auth → error → loading
 │   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register/...)
 │   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
-├── features/                # màn hình theo nghiệp vụ: auth, home, quizzes (danh sách + trang bộ đề), forbidden (trang 403)
+├── features/                # màn hình theo nghiệp vụ: auth, home, quizzes (danh sách + trang bộ đề), admin (chủ đề, quản lý + soạn bộ đề), forbidden (trang 403)
 │   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
 └── shared/                  # tái sử dụng, không logic nghiệp vụ
     ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
@@ -161,6 +161,7 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 - **Auth**: đăng ký (luôn là học sinh), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
 - **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403.
 - **Bộ đề (phía học sinh)**: Home hiện bộ đề đã xuất bản nhóm theo chủ đề (tối đa 8 đề / chủ đề + "Xem tất cả"); trang `/quizzes` lọc chủ đề, tìm tên, sắp xếp, phân trang (bộ lọc trên URL); trang bộ đề `/quizzes/:id` (nút làm bài: giai đoạn 5).
+- **Admin** (thanh "Quản trị" dưới header): `/admin/topics` quản lý chủ đề (thêm, đổi tên tại chỗ, xoá chủ đề trống); `/admin/quizzes` mọi bộ đề kể cả nháp (lọc trạng thái / chủ đề, tìm kiếm); trình soạn đề `/admin/quizzes/new`, `/admin/quizzes/:id/edit` (câu hỏi + 2–6 đáp án, chọn đáp án đúng, giải thích, kéo thả sắp xếp câu, lưu nháp / xuất bản / chuyển về nháp, xoá; cảnh báo rời trang khi chưa lưu).
 - **Dùng chung cho trình soạn / làm đề**: hộp thoại xác nhận (`ConfirmDialogService`), `unsavedChangesGuard`, directive phím tắt `appShortcut`, component phân trang, validator `minItemsValidator` / `uniqueValuesValidator` cho FormArray.
 - **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
@@ -170,5 +171,5 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
 
 - Dashboard riêng theo vai trò (mục 3).
-- Admin: quản lý chủ đề, trình soạn bộ đề (BE đã có API). Làm bài, kết quả (mục 3b).
+- Import câu hỏi từ Excel. Làm bài, kết quả (mục 3b).
 - Gửi email thật (SMTP) cho quên mật khẩu.

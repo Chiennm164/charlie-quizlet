@@ -21,6 +21,12 @@
       @if (quiz.status === 'DRAFT') {
         <span class="quiz-chip typo-caption">{{ 'quiz.status.DRAFT' | translate }}</span>
       }
+      @if (quiz.canEdit) {
+        <a class="btn btn--secondary btn--sm ml-auto" [routerLink]="editUrl(quiz.id)">
+          <app-icon name="pencil" />
+          {{ 'adminQuiz.edit' | translate }}
+        </a>
+      }
     </div>
 
     <h1 class="typo-page-title break-words">{{ quiz.title }}</h1>

@@ -42,6 +42,22 @@
     </div>
   </header>
 
+  @if (auth.hasRole('ADMIN')) {
+    <nav class="admin-bar" [attr.aria-label]="'adminNav.label' | translate">
+      <div class="max-w-6xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
+        <span class="admin-bar__title">{{ 'adminNav.title' | translate }}</span>
+        <a class="admin-bar__link" [routerLink]="adminQuizzesRoute" routerLinkActive="is-active">
+          <app-icon name="clipboard-check" />
+          {{ 'adminNav.quizzes' | translate }}
+        </a>
+        <a class="admin-bar__link" [routerLink]="adminTopicsRoute" routerLinkActive="is-active">
+          <app-icon name="layers" />
+          {{ 'adminNav.topics' | translate }}
+        </a>
+      </div>
+    </nav>
+  }
+
   <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-6">
     <router-outlet />
   </main>

@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 /** Mọi URL gọi BE — service dùng hằng số này, không tự ghép chuỗi URL. */
 const AUTH_BASE = `${environment.apiUrl}/auth`;
 const QUIZZES_BASE = `${environment.apiUrl}/quizzes`;
+const ADMIN_BASE = `${environment.apiUrl}/admin`;
 
 export const API_ENDPOINTS = {
   auth: {
@@ -23,6 +24,12 @@ export const API_ENDPOINTS = {
     /** Home: đề đã xuất bản nhóm theo chủ đề. */
     byTopic: `${QUIZZES_BASE}/by-topic`,
     detail: (id: number) => `${QUIZZES_BASE}/${id}`,
+  },
+  /** Chỉ ADMIN. Tạo / sửa / xoá bộ đề dùng `quizzes.base` / `quizzes.detail` (BE chặn theo role). */
+  admin: {
+    quizzes: `${ADMIN_BASE}/quizzes`,
+    topics: `${ADMIN_BASE}/topics`,
+    topic: (id: number) => `${ADMIN_BASE}/topics/${id}`,
   },
 } as const;
 

@@ -1,0 +1,86 @@
+<app-page-header
+  [title]="'adminTopic.title' | translate"
+  [description]="'adminTopic.description' | translate"
+/>
+
+<form
+  class="card-surface p-4 mb-4 flex flex-col gap-2 sm:flex-row sm:items-start"
+  [formGroup]="newForm"
+  [attr.aria-busy]="saving()"
+  (ngSubmit)="create()"
+  novalidate
+>
+  <app-input-text
+    class="flex-1"
+    name="topic"
+    [label]="'adminTopic.newLabel' | translate"
+    [placeholder]="'adminTopic.newPlaceholder' | translate"
+    formControlName="name"
+    [errorMessage]="errorFor(newName)"
+  />
+  <app-button type="submit" class="sm:mt-6" [loading]="saving() && !editingId()">
+    <app-icon name="plus" />
+    {{ 'adminTopic.add' | translate }}
+  </app-button>
+</form>
+
+@let list = topics();
+@if (list === null) {
+  <app-loading />
+} @else if (list.length === 0) {
+  <p class="card-surface p-6 text-center typo-muted">{{ 'adminTopic.empty' | translate }}</p>
+} @else {
+  <ul class="flex flex-col gap-2">
+    @for (topic of list; track topic.id) {
+      <li class="card-surface p-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        @if (editingId() === topic.id) {
+          <form
+            class="flex-1 flex flex-col gap-2 sm:flex-row sm:items-start"
+            [formGroup]="editForm"
+            (ngSubmit)="rename(topic)"
+            novalidate
+          >
+            <app-input-text
+              class="flex-1"
+              name="topic-name"
+              [label]="'adminTopic.nameLabel' | translate"
+              formControlName="name"
+              [errorMessage]="errorFor(editName)"
+            />
+            <div class="flex gap-2 sm:mt-6">
+              <app-button type="button" variant="secondary" (clicked)="cancelRename()">
+                {{ 'common.cancel' | translate }}
+              </app-button>
+              <app-button type="submit" [loading]="saving()">{{
+                'common.save' | translate
+              }}</app-button>
+            </div>
+          </form>
+        } @else {
+          <div class="flex-1 min-w-0">
+            <p class="typo-card-title break-words">{{ topic.name }}</p>
+            <p class="typo-caption">
+              {{ 'adminTopic.quizCount' | translate: { n: topic.quizCount } }}
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <app-button variant="secondary" size="sm" (clicked)="startRename(topic)">
+              <app-icon name="pencil" />
+              {{ 'adminTopic.rename' | translate }}
+            </app-button>
+            <app-button
+              variant="secondary"
+              size="sm"
+              [disabled]="topic.quizCount > 0 || saving()"
+              [attr.title]="topic.quizCount > 0 ? ('adminTopic.inUseHint' | translate) : null"
+              (clicked)="delete(topic)"
+            >
+              <app-icon name="trash" />
+              {{ 'common.delete' | translate }}
+            </app-button>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+}

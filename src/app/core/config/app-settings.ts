@@ -34,6 +34,16 @@ export const APP_SETTINGS = {
     passwordMaxLength: 72,
     emailMaxLength: 255,
     fullNameMaxLength: 255,
+    topicNameMaxLength: 100,
+    quizTitleMaxLength: 255,
+    quizDescriptionMaxLength: 2000,
+    quizTimeLimitMaxMinutes: 300,
+    quizMaxQuestions: 200,
+    questionContentMaxLength: 2000,
+    questionExplanationMaxLength: 2000,
+    questionMinOptions: 2,
+    questionMaxOptions: 6,
+    optionContentMaxLength: 1000,
   },
 
   quizzes: {

@@ -23,6 +23,14 @@ export const ERROR_CODES = {
   AUTH_CURRENT_PASSWORD_INCORRECT: 'AUTH_CURRENT_PASSWORD_INCORRECT',
   /** Bộ đề không tồn tại, hoặc là nháp mà người xem không phải Admin. */
   QUIZ_NOT_FOUND: 'QUIZ_NOT_FOUND',
+  QUIZ_CORRECT_OPTION_REQUIRED: 'QUIZ_CORRECT_OPTION_REQUIRED',
+  QUIZ_DUPLICATE_OPTION: 'QUIZ_DUPLICATE_OPTION',
+  QUIZ_EMPTY: 'QUIZ_EMPTY',
+  QUIZ_ITEM_NOT_FOUND: 'QUIZ_ITEM_NOT_FOUND',
+  TOPIC_NOT_FOUND: 'TOPIC_NOT_FOUND',
+  /** Tên chủ đề trùng (không phân biệt hoa thường) -> báo dưới ô tên. */
+  TOPIC_NAME_TAKEN: 'TOPIC_NAME_TAKEN',
+  TOPIC_IN_USE: 'TOPIC_IN_USE',
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

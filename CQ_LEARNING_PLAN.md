@@ -54,8 +54,8 @@ Mục tiêu duy nhất: **bộ đề trắc nghiệm để ôn tập** (giai đo
 Chỉ `ADMIN` tạo / sửa đề và chủ đề; xuất bản = đã duyệt, học sinh thấy.
 - [x] BE: chủ đề (danh sách phẳng) + bộ đề (thời gian, nháp / xuất bản) + câu hỏi trắc nghiệm (2–6 đáp án, 1 đáp án đúng, giải thích)
 - [x] Home học sinh: bộ đề đã xuất bản nhóm theo chủ đề; trang tìm bộ đề (lọc chủ đề, tìm kiếm, phân trang); trang bộ đề
-- [ ] Admin: quản lý chủ đề (thêm / đổi tên / xoá chủ đề trống)
-- [ ] Admin: danh sách mọi bộ đề (cả nháp) + trình soạn đề (form lồng nhau câu hỏi → đáp án, chọn đáp án đúng, kéo thả sắp xếp câu, cảnh báo rời trang khi chưa lưu)
+- [x] Admin: quản lý chủ đề (thêm / đổi tên / xoá chủ đề trống)
+- [x] Admin: danh sách mọi bộ đề (cả nháp) + trình soạn đề (form lồng nhau câu hỏi → đáp án, chọn đáp án đúng, kéo thả sắp xếp câu, cảnh báo rời trang khi chưa lưu)
 - [ ] Import câu hỏi nhanh từ Excel / văn bản dán vào, xem trước và báo lỗi từng dòng
 
 **Angular:** `roleGuard('ADMIN')`, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), kéo thả bằng `@angular/cdk`.

@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
@@ -17,6 +17,7 @@ import { APP_SETTINGS, DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from '../../config'
   standalone: true,
   imports: [
     RouterLink,
+    RouterLinkActive,
     BrandComponent,
     RouterOutlet,
     IconComponent,
@@ -33,6 +34,8 @@ export class MainLayoutComponent {
   private translate = inject(TranslateService);
 
   readonly homeRoute = DEFAULT_AUTHENTICATED_ROUTE;
+  readonly adminQuizzesRoute = ROUTES.adminQuizzes;
+  readonly adminTopicsRoute = ROUTES.adminTopics;
   accountOpen = signal(false);
   readonly appName = APP_SETTINGS.appName;
 

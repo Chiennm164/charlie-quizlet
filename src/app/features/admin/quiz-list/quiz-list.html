@@ -1,0 +1,81 @@
+<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+  <app-page-header
+    [title]="'adminQuiz.listTitle' | translate"
+    [description]="'adminQuiz.listDescription' | translate"
+  />
+  <a class="btn btn--primary btn--md shrink-0 mb-4 sm:mb-0" [routerLink]="newUrl">
+    <app-icon name="plus" />
+    {{ 'adminQuiz.create' | translate }}
+  </a>
+</div>
+
+<div class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-[1fr_12rem_14rem] mb-2">
+  <app-input-text
+    name="search"
+    [label]="'quiz.searchLabel' | translate"
+    [placeholder]="'quiz.searchPlaceholder' | translate"
+    [formControl]="searchControl"
+  />
+  <app-select
+    [label]="'adminQuiz.statusLabel' | translate"
+    [options]="statusOptions()"
+    [formControl]="statusControl"
+  />
+  <app-select
+    [label]="'quiz.topicLabel' | translate"
+    [options]="topicOptions()"
+    [formControl]="topicControl"
+  />
+</div>
+
+@let page = result();
+<section [attr.aria-busy]="loading()">
+  @if (!page) {
+    <app-loading />
+  } @else if (page.content.length === 0) {
+    <p class="card-surface p-6 text-center typo-muted">{{ 'adminQuiz.empty' | translate }}</p>
+  } @else {
+    <p class="typo-caption mb-2">
+      {{ 'quiz.resultCount' | translate: { n: page.totalElements } }}
+    </p>
+    <ul class="flex flex-col gap-2 transition-opacity" [class.opacity-60]="loading()">
+      @for (quiz of page.content; track quiz.id) {
+        <li class="card-surface p-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                class="quiz-chip typo-caption"
+                [class.quiz-chip--primary]="quiz.status === 'PUBLISHED'"
+                >{{ 'quiz.status.' + quiz.status | translate }}</span
+              >
+              <span class="typo-caption">{{ quiz.topicName }}</span>
+            </div>
+            <p class="typo-card-title mt-1 break-words">{{ quiz.title }}</p>
+            <p class="typo-caption">
+              {{ 'quiz.questionCount' | translate: { n: quiz.questionCount } }} ·
+              {{ 'adminQuiz.updatedAt' | translate: { date: formatDate(quiz.updatedAt) } }}
+            </p>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            @if (quiz.status === 'PUBLISHED') {
+              <a class="btn btn--ghost btn--sm" [routerLink]="viewUrl(quiz.id)">
+                {{ 'adminQuiz.view' | translate }}
+              </a>
+            }
+            <a class="btn btn--secondary btn--sm" [routerLink]="editUrl(quiz.id)">
+              <app-icon name="pencil" />
+              {{ 'adminQuiz.edit' | translate }}
+            </a>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <app-pagination
+      class="block mt-6"
+      [page]="page.page"
+      [totalPages]="page.totalPages"
+      (pageChange)="goToPage($event)"
+    />
+  }
+</section>

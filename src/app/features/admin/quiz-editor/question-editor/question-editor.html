@@ -1,0 +1,83 @@
+<div class="quiz-question" [formGroup]="form()">
+  <div class="quiz-question__toolbar">
+    <span class="typo-card-title">{{ 'adminQuiz.questionN' | translate: { n: index() + 1 } }}</span>
+    <div class="flex items-center gap-1">
+      <button
+        type="button"
+        class="btn btn--ghost btn--sm quiz-question__handle"
+        cdkDragHandle
+        [attr.aria-label]="'adminQuiz.dragQuestion' | translate"
+      >
+        <app-icon name="grip-vertical" class="text-text-muted" />
+      </button>
+      <button
+        type="button"
+        class="btn btn--ghost btn--sm"
+        [attr.aria-label]="'adminQuiz.removeQuestion' | translate: { n: index() + 1 }"
+        (click)="removed.emit()"
+      >
+        <app-icon name="trash" class="text-text-muted" />
+      </button>
+    </div>
+  </div>
+
+  <app-textarea
+    [label]="'adminQuiz.questionContent' | translate"
+    [required]="true"
+    [rows]="2"
+    formControlName="content"
+    [errorMessage]="errorFor(form().controls.content)"
+  />
+
+  <fieldset class="flex flex-col gap-1">
+    <legend class="field__label mb-1">{{ 'adminQuiz.optionsLegend' | translate }}</legend>
+    @for (option of form().controls.options.controls; track option; let i = $index) {
+      <div class="quiz-option" [class.is-correct]="form().controls.correctIndex.value === i">
+        <label class="quiz-option__correct">
+          <input
+            type="radio"
+            class="radio__input"
+            [name]="radioName"
+            [checked]="form().controls.correctIndex.value === i"
+            (change)="selectCorrect(i)"
+            [attr.aria-label]="'adminQuiz.markCorrect' | translate: { letter: letter(i) }"
+          />
+          <span class="quiz-option__letter">{{ letter(i) }}</span>
+        </label>
+        <app-input-text
+          class="flex-1"
+          [placeholder]="'adminQuiz.optionPlaceholder' | translate: { letter: letter(i) }"
+          [formControl]="option.controls.content"
+          [errorMessage]="errorFor(option.controls.content)"
+        />
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm self-start mt-1"
+          [disabled]="form().controls.options.length <= minOptions"
+          [attr.aria-label]="'adminQuiz.removeOption' | translate: { letter: letter(i) }"
+          (click)="removeOption(i)"
+        >
+          <app-icon name="close" class="text-text-muted" />
+        </button>
+      </div>
+    }
+    <app-text-error [message]="correctError()" [reserveSpace]="false" />
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <p class="typo-caption">{{ 'adminQuiz.correctHint' | translate }}</p>
+      @if (form().controls.options.length < maxOptions) {
+        <button type="button" class="btn btn--ghost btn--sm" (click)="addOption()">
+          <app-icon name="plus" />
+          {{ 'adminQuiz.addOption' | translate }}
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <app-textarea
+    [label]="'adminQuiz.explanation' | translate"
+    [placeholder]="'adminQuiz.explanationPlaceholder' | translate"
+    [rows]="2"
+    formControlName="explanation"
+    [errorMessage]="errorFor(form().controls.explanation)"
+  />
+</div>

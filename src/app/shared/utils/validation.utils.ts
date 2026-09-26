@@ -86,6 +86,7 @@ export const AppValidators: {
   readonly currentPassword: ValidatorFn[];
   readonly newPassword: ValidatorFn[];
   readonly passwordMatch: typeof passwordMatchValidator;
+  readonly topicName: ValidatorFn[];
 } = {
   required: [Validators.required],
   email: [Validators.required, Validators.email, Validators.maxLength(validation.emailMaxLength)],
@@ -99,22 +100,26 @@ export const AppValidators: {
     Validators.maxLength(validation.passwordMaxLength),
   ],
   passwordMatch: passwordMatchValidator,
+  topicName: [notBlankValidator, Validators.maxLength(validation.topicNameMaxLength)],
 };
 
 /**
  * Map mã lỗi validator → key i18n. Thứ tự khai báo = thứ tự ưu tiên khi control có nhiều lỗi cùng lúc.
  * Thêm validator mới (kể cả lỗi do BE trả về, vd. emailTaken) thì khai báo thêm ở đây.
- * Chuỗi dịch có thể chứa `{n}` — được thay bằng requiredLength của minlength/maxlength.
+ * Chuỗi dịch có thể chứa `{n}` — được thay bằng requiredLength của minlength/maxlength, giới hạn của min/max.
  */
 export const FORM_ERROR_MESSAGE_KEYS: Record<string, string> = {
   required: 'common.required',
   email: 'common.emailInvalid',
   minlength: 'common.minLength',
   maxlength: 'common.maxLength',
+  min: 'common.min',
+  max: 'common.max',
   passwordMismatch: 'auth.passwordMismatch',
   emailTaken: 'auth.emailTaken',
   currentPasswordIncorrect: 'account.currentPasswordIncorrect',
   duplicate: 'common.duplicate',
+  topicNameTaken: 'adminTopic.nameTaken',
 };
 
 /** Thông báo lỗi (đã dịch) cần hiển thị cho control, hoặc null nếu chưa touched / không có lỗi. */
@@ -128,6 +133,8 @@ export function controlErrorMessage(
   const code = Object.keys(FORM_ERROR_MESSAGE_KEYS).find((c) => errors[c]);
   if (!code) return translate.t('common.invalid');
 
-  const requiredLength = errors[code]?.requiredLength;
-  return translate.t(FORM_ERROR_MESSAGE_KEYS[code], { n: requiredLength ?? '' });
+  // {n}: độ dài của minlength / maxlength, giới hạn của min / max.
+  const detail = errors[code];
+  const n = detail?.requiredLength ?? detail?.min ?? detail?.max ?? '';
+  return translate.t(FORM_ERROR_MESSAGE_KEYS[code], { n });
 }

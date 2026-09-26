@@ -1,0 +1,57 @@
+/* =========================================================
+   Trình soạn bộ đề (Admin): .quiz-question (1 câu hỏi), .quiz-question__toolbar, .quiz-question__handle (kéo thả),
+   .quiz-option (1 đáp án, .is-correct khi là đáp án đúng), .quiz-option__correct (radio + chữ cái), .quiz-option__letter.
+   Kéo thả bằng @angular/cdk/drag-drop: .cdk-drag-* do CDK tự gắn lên <app-question-editor cdkDrag>.
+   ========================================================= */
+
+.quiz-question {
+  @apply card-surface p-4 flex flex-col gap-2;
+}
+
+.quiz-question__toolbar {
+  @apply flex items-center justify-between pb-2 border-b border-border;
+}
+
+.quiz-question__handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.quiz-option {
+  @apply flex items-start gap-2 rounded-md px-2 pt-1 border-2 border-transparent transition-colors;
+
+  &.is-correct {
+    @apply border-success/40 bg-success/5;
+  }
+}
+
+.quiz-option__correct {
+  @apply flex items-center gap-2 mt-3 cursor-pointer shrink-0;
+}
+
+.quiz-option__letter {
+  @apply w-6 h-6 rounded-full bg-bg-muted border border-border flex items-center justify-center text-caption
+    font-bold text-text-muted;
+
+  .quiz-option.is-correct & {
+    @apply bg-success border-success text-text-inverse;
+  }
+}
+
+/* Bản sao đi theo con trỏ khi kéo (CDK gắn vào body) + chỗ trống ở vị trí sẽ thả. */
+app-question-editor.cdk-drag-preview .quiz-question {
+  @apply shadow-lg;
+}
+
+app-question-editor.cdk-drag-placeholder {
+  @apply opacity-40;
+}
+
+.cdk-drop-list-dragging app-question-editor:not(.cdk-drag-placeholder),
+app-question-editor.cdk-drag-animating {
+  transition: transform var(--cq-duration-base) var(--cq-ease-out);
+}
+
+app-question-editor {
+  @apply block;
+}

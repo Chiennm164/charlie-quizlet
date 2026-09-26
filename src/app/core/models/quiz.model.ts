@@ -78,3 +78,31 @@ export interface QuizListParams {
   page: number;
   size: number;
 }
+
+export interface QuizOptionRequest {
+  /** Đáp án đã có: gửi id để BE giữ nguyên; null = đáp án mới. */
+  id: number | null;
+  content: string;
+  correct: boolean;
+}
+
+export interface QuizQuestionRequest {
+  /** Câu đã có: gửi id để BE giữ nguyên (bài làm cũ vẫn trỏ đúng câu); null = câu mới. */
+  id: number | null;
+  content: string;
+  explanation: string | null;
+  /** 2–6 đáp án, đúng 1 đáp án `correct`. */
+  options: QuizOptionRequest[];
+}
+
+/** Tạo / sửa bộ đề. Khi sửa, `questions` là toàn bộ câu hỏi theo thứ tự mới (câu cũ không có trong đây bị xoá). */
+export interface QuizRequest {
+  topicId: number;
+  title: string;
+  description: string | null;
+  /** null = không giới hạn. */
+  timeLimitMinutes: number | null;
+  /** PUBLISHED cần ít nhất 1 câu hỏi. */
+  status: QuizStatus;
+  questions: QuizQuestionRequest[];
+}

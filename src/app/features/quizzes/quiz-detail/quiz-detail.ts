@@ -2,7 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
-import { APP_SETTINGS, ERROR_CODES, ROUTES } from '../../../core/config';
+import { APP_SETTINGS, ERROR_CODES, ROUTES, adminQuizEditUrl } from '../../../core/config';
 import { handleErrorCode } from '../../../core/error/error-handling';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
@@ -24,6 +24,7 @@ export class QuizDetailComponent {
   private translate = inject(TranslateService);
 
   readonly browseUrl = ROUTES.quizzes;
+  readonly editUrl = adminQuizEditUrl;
 
   quiz = signal<Quiz | null>(null);
   loading = signal(true);

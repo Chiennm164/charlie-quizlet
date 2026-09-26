@@ -10,6 +10,9 @@ export const ROUTE_SEGMENTS = {
   home: 'home',
   forbidden: 'forbidden',
   quizzes: 'quizzes',
+  adminQuizzes: 'admin/quizzes',
+  adminQuizNew: 'admin/quizzes/new',
+  adminTopics: 'admin/topics',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;
@@ -19,8 +22,9 @@ export const ROUTES = Object.fromEntries(
   Object.entries(ROUTE_SEGMENTS).map(([key, segment]) => [key, `/${segment}`]),
 ) as { readonly [K in RouteKey]: `/${(typeof ROUTE_SEGMENTS)[K]}` };
 
-/** Đường dẫn có tham số (route khai báo trong app.routes.ts: `quizzes/:id`). */
+/** Đường dẫn có tham số (route khai báo trong app.routes.ts: `quizzes/:id`, `admin/quizzes/:id/edit`). */
 export const quizUrl = (id: number) => `/${ROUTE_SEGMENTS.quizzes}/${id}`;
+export const adminQuizEditUrl = (id: number) => `/${ROUTE_SEGMENTS.adminQuizzes}/${id}/edit`;
 
 /** Trang mặc định sau khi đăng nhập / đăng ký thành công. */
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.home;
