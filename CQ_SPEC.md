@@ -4,12 +4,12 @@
 
 ## 1. Tổng quan hệ thống
 
-Ứng dụng học tập/thi trắc nghiệm kiểu Quizlet, gồm 2 repo:
+Ứng dụng ôn tập bằng **bộ đề trắc nghiệm**, gồm 2 repo:
 
 - **Frontend**: Angular 22 (zoneless, signal-based), repo hiện tại.
 - **Backend**: `charlie-quizlet-be` — Java Spring Boot + PostgreSQL (repo riêng).
 
-3 vai trò người dùng: `STUDENT`, `TEACHER`, `ADMIN`.
+2 vai trò người dùng: `STUDENT` (tự đăng ký, làm bài) và `ADMIN` (soạn bộ đề, quản lý chủ đề — tạo sẵn lúc BE khởi động, không ai tự đăng ký được).
 
 ## 2. Luồng Authentication & Authorization
 
@@ -25,42 +25,25 @@
         |                                                                 |
   [authInterceptor]                                             [Route Guard]
   - gắn access token (trừ API công khai)                         - authGuard: phải đăng nhập
-  - token hết hạn / 401 -> gọi /auth/refresh                     - roleGuard('TEACHER', ...): đúng role
+  - token hết hạn / 401 -> gọi /auth/refresh                     - roleGuard('ADMIN'): đúng role     
   - làm mới xong -> gửi (lại) request                            - không đủ quyền -> trang 403
   - phiên đã kết thúc -> logout, về trang login
 ```
 
 - **Làm mới phiên**: refresh token chỉ dùng 1 lần — BE thu hồi token cũ và cấp cặp token mới. Token đã thu hồi mà bị dùng lại (quá 10 giây sau khi bị thay) → nghi bị lộ, BE thu hồi cả phiên.
 - **Đăng xuất**: xoá token phía FE, gọi BE để thu hồi refresh token. Đặt lại mật khẩu → BE thu hồi mọi phiên của user.
-- **Phê duyệt tài khoản**: một số role (vd. `TEACHER`) có thể cần 1–2 cấp phê duyệt trước khi được kích hoạt (chi tiết theo BE).
 
 ## 3. Luồng theo vai trò
 
 ### 3.1 STUDENT
-1. Đăng nhập → vào **Dashboard Student** (tổng quan: bộ đề đã làm, điểm gần đây).
-2. **Làm bài**:
-   - Chọn đề thi được giao → làm bài (câu hỏi trắc nghiệm, đếm giờ) → nộp bài → xem kết quả/điểm.
+1. Đăng ký (vào app luôn, không chờ duyệt) / đăng nhập → **Home**: các bộ đề đã xuất bản, nhóm theo chủ đề.
+2. **Tìm đề**: "Tìm bộ đề" / "Xem tất cả" → danh sách bộ đề (lọc chủ đề, tìm theo tên, sắp xếp, phân trang).
+3. **Làm bài** (giai đoạn 5): mở bộ đề → Luyện tập hoặc Thi thử → nộp bài → xem kết quả, lời giải thích.
 
-### 3.2 TEACHER
-1. Đăng nhập → vào **Dashboard Teacher** (số câu hỏi/đề đang chờ duyệt, thống kê lớp).
-2. **Quản lý câu hỏi**:
-   - Tạo câu hỏi (nội dung, đáp án, độ khó, chủ đề) → gửi duyệt.
-3. **Quản lý đề thi**:
-   - Tạo đề từ ngân hàng câu hỏi đã duyệt → gửi duyệt → giao đề cho học sinh/lớp.
-4. **Luồng phê duyệt** (câu hỏi & đề thi):
-   ```
-   [Teacher tạo câu hỏi/đề] --> [PENDING]
-          |
-          v
-   [Admin/Teacher cấp cao review] --(approve)--> [APPROVED] --> dùng được trong đề thi/giao bài
-          |
-          +--(reject + lý do)--> [REJECTED] --> Teacher sửa lại --> gửi duyệt lại
-   ```
-
-### 3.3 ADMIN
-1. Đăng nhập → vào **Dashboard Admin** (thống kê toàn hệ thống: user, đề thi, câu hỏi chờ duyệt).
-2. Quản lý người dùng, phân quyền, phê duyệt tài khoản Teacher.
-3. Phê duyệt câu hỏi/đề thi (nếu cấu hình cần Admin duyệt).
+### 3.2 ADMIN
+1. Quản lý **chủ đề** (danh sách phẳng: Toán, Tiếng Anh...).
+2. Soạn **bộ đề** trong 1 chủ đề: câu hỏi trắc nghiệm, mỗi câu 2–6 đáp án, đúng 1 đáp án đúng, lời giải thích.
+3. **Xuất bản = đã duyệt**: đề `DRAFT` chỉ Admin thấy; `PUBLISHED` hiện cho học sinh. Không có bước duyệt riêng.
 
 ## 3b. Tham khảo & luồng chi tiết phía người dùng
 
@@ -74,19 +57,17 @@ Tham khảo từ các sản phẩm cùng loại:
 | ClassMarker / Testmoz | Chế độ thi nghiêm túc: giới hạn thời gian, trộn câu, chấm điểm |
 | Google Forms (Quiz) | Cách tạo câu hỏi đơn giản, dễ dùng cho người soạn đề |
 
-Chi tiết hoá các luồng ở mục 3, áp dụng chủ yếu cho STUDENT (làm bài/học) và TEACHER (soạn đề):
+Chi tiết hoá các luồng ở mục 3, áp dụng cho STUDENT (làm bài) và ADMIN (soạn đề):
 
 **Flow 1 — Xác thực (chi tiết hơn mục 2)**
-- Đăng ký (chọn vai trò Học sinh / Giáo viên) → Đăng nhập → Quên mật khẩu.
-- Học sinh đăng ký xong vào app luôn. Giáo viên đăng ký xong ở trạng thái `PENDING`, chưa đăng nhập được
-  (`AUTH_ACCOUNT_PENDING`) cho tới khi Admin duyệt ở `/admin/users/pending`; Admin từ chối thì tài khoản bị xoá.
+- Đăng ký (luôn là học sinh, vào app luôn) → Đăng nhập → Quên mật khẩu.
 - Không ai tự đăng ký được Admin: tài khoản Admin đầu tiên do BE tạo lúc khởi động (`ADMIN_EMAIL` / `ADMIN_PASSWORD`).
 - Cân nhắc cho phép làm bài ở chế độ **guest** (không cần đăng nhập), sau đó mới yêu cầu đăng nhập để lưu kết quả.
 
 **Flow 2 — Tìm và chọn bộ đề**
 ```
-Trang chủ → Danh mục / Tìm kiếm / Lọc (chủ đề, độ khó)
-          → Trang chi tiết bộ đề (số câu, thời gian, lượt làm)
+Home (bộ đề theo chủ đề) / Tìm bộ đề (lọc chủ đề, tìm tên)
+          → Trang bộ đề /quizzes/:id (chủ đề, số câu, thời gian)
           → Chọn chế độ (Luyện tập / Thi thử)
 ```
 
@@ -114,11 +95,11 @@ NOT_STARTED → IN_PROGRESS → (PAUSED) → SUBMITTED → REVIEWED
 - Lịch sử các lần làm, biểu đồ điểm theo thời gian.
 - Thống kê chủ đề yếu, streak học mỗi ngày.
 
-**Flow 6 — Tạo và quản lý câu hỏi** (Teacher/Admin, gắn với luồng phê duyệt ở mục 3.2)
+**Flow 6 — Soạn bộ đề** (Admin, mục 3.2)
 ```
-Tạo bộ đề → Thêm câu hỏi (một đáp án / nhiều đáp án / đúng-sai)
+Chọn chủ đề → Tạo bộ đề → Thêm câu hỏi (1 đáp án đúng)
           → Import từ Excel/CSV (ưu tiên làm, tiết kiệm thời gian nhập liệu)
-          → Xuất bản hoặc để riêng tư
+          → Xuất bản (= duyệt, học sinh thấy) hoặc để nháp
 ```
 
 ## 4. Luồng dữ liệu chung (FE ↔ BE)
@@ -159,7 +140,7 @@ src/app/
 │   ├── interceptors/        # locale → auth → error → loading
 │   ├── layout/              # main-layout (sau đăng nhập, kèm dialog tài khoản), auth-layout (login/register/...)
 │   └── models/              # interface request/response với BE (ProblemDetail, User, Auth...)
-├── features/                # màn hình theo nghiệp vụ: auth, home, forbidden (trang 403), admin (duyệt tài khoản)
+├── features/                # màn hình theo nghiệp vụ: auth, home, quizzes (danh sách + trang bộ đề), forbidden (trang 403)
 │   └── ui-showcase/         # trang xem UI kit (dev only); examples/ = mẫu form + mẫu gọi API
 └── shared/                  # tái sử dụng, không logic nghiệp vụ
     ├── ui/                  # UI kit: button, input-*, dialog, toast, table, tabs, icon, brand...
@@ -177,8 +158,9 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 
 **Đã có**
 
-- **Auth**: đăng ký (chọn Học sinh / Giáo viên; Giáo viên chờ Admin duyệt), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
-- **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403, trang Admin duyệt / từ chối tài khoản Giáo viên.
+- **Auth**: đăng ký (luôn là học sinh), đăng nhập, quên mật khẩu (link gửi qua log BE — chưa có SMTP), đặt lại mật khẩu, "ghi nhớ đăng nhập" (localStorage / sessionStorage), khôi phục phiên khi F5, guard cho trang cần đăng nhập / trang cho khách.
+- **Phiên & phân quyền**: refresh token (tự làm mới access token hết hạn, xoay vòng + phát hiện token bị dùng lại, thu hồi khi đăng xuất / đặt lại mật khẩu), `roleGuard` + trang 403.
+- **Bộ đề (phía học sinh)**: Home hiện bộ đề đã xuất bản nhóm theo chủ đề (tối đa 8 đề / chủ đề + "Xem tất cả"); trang `/quizzes` lọc chủ đề, tìm tên, sắp xếp, phân trang (bộ lọc trên URL); trang bộ đề `/quizzes/:id` (nút làm bài: giai đoạn 5).
 - **Dùng chung cho trình soạn / làm đề**: hộp thoại xác nhận (`ConfirmDialogService`), `unsavedChangesGuard`, directive phím tắt `appShortcut`, component phân trang, validator `minItemsValidator` / `uniqueValuesValidator` cho FormArray.
 - **Tài khoản** (bấm avatar / tên ở header → dialog): xem thông tin, sửa họ tên, đổi mật khẩu (đăng xuất các thiết bị khác).
 - **Xử lý lỗi**: BE trả model lỗi thống nhất (`errorCode`, `errorMessage`, `errorDescription`) lấy từ bảng `error_codes`, đa ngôn ngữ theo `Accept-Language`; FE mặc định hiện dialog lỗi chung, dev tự xử lý mã lỗi cụ thể khi cần.
@@ -188,5 +170,5 @@ Cách dùng từng phần (gọi API, xử lý lỗi, dialog, toast, loading, fo
 **Chưa có** (xem checklist trong [CQ_LEARNING_PLAN.md](CQ_LEARNING_PLAN.md))
 
 - Dashboard riêng theo vai trò (mục 3).
-- Nghiệp vụ chính: bộ đề trắc nghiệm (BE đã có API `/api/quizzes`), làm bài, kết quả (mục 3b).
+- Admin: quản lý chủ đề, trình soạn bộ đề (BE đã có API). Làm bài, kết quả (mục 3b).
 - Gửi email thật (SMTP) cho quên mật khẩu.

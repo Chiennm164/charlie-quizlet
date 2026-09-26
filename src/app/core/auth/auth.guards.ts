@@ -25,7 +25,7 @@ export const guestGuard: CanActivateFn = () => {
  * Chỉ cho vào khi user có 1 trong các role; không đủ quyền thì về trang 403. Dùng cho route con của
  * MainLayout (authGuard ở route cha chạy trước, tới đây user đã đăng nhập):
  *
- *   { path: ..., canActivate: [roleGuard('TEACHER', 'ADMIN')], loadComponent: ... }
+ *   { path: ..., canActivate: [roleGuard('ADMIN')], loadComponent: ... }
  */
 export const roleGuard =
   (...roles: Role[]): CanActivateFn =>

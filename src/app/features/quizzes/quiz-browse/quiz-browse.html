@@ -1,0 +1,63 @@
+<app-page-header
+  [title]="'quiz.browseTitle' | translate"
+  [description]="'quiz.browseDescription' | translate"
+/>
+
+<div class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-[1fr_14rem_14rem] mb-2">
+  <app-input-text
+    name="search"
+    [label]="'quiz.searchLabel' | translate"
+    [placeholder]="'quiz.searchPlaceholder' | translate"
+    [formControl]="searchControl"
+  />
+  <app-select
+    [label]="'quiz.topicLabel' | translate"
+    [options]="topicOptions()"
+    [formControl]="topicControl"
+  />
+  <app-select
+    [label]="'quiz.sortLabel' | translate"
+    [options]="sortOptions()"
+    [formControl]="sortControl"
+  />
+</div>
+
+@let page = result();
+<section [attr.aria-busy]="loading()">
+  @if (!page) {
+    <app-loading />
+  } @else if (page.content.length === 0) {
+    <div class="card-surface py-10 px-4 flex flex-col items-center text-center gap-3">
+      <app-mascot class="w-24 h-24" />
+      <p class="typo-card-title">
+        {{
+          params().q ? ('quiz.noMatch' | translate: { q: params().q }) : ('quiz.empty' | translate)
+        }}
+      </p>
+      @if (params().q || params().topicId) {
+        <p class="typo-muted">{{ 'quiz.noMatchHint' | translate }}</p>
+      }
+    </div>
+  } @else {
+    <p class="typo-caption mb-2">
+      {{ 'quiz.resultCount' | translate: { n: page.totalElements } }}
+    </p>
+    <ul
+      class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 transition-opacity"
+      [class.opacity-60]="loading()"
+    >
+      @for (quiz of page.content; track quiz.id) {
+        <li class="anim-slide-up-in" [style.--i]="$index">
+          <app-quiz-card class="h-full" [quiz]="quiz" />
+        </li>
+      }
+    </ul>
+
+    <app-pagination
+      class="block mt-6"
+      [page]="page.page"
+      [totalPages]="page.totalPages"
+      (pageChange)="goToPage($event)"
+    />
+  }
+</section>

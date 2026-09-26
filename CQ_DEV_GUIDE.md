@@ -159,7 +159,7 @@ submit(): void {
 
 ### 3.3 Danh sách có tìm kiếm / lọc / phân trang — RxJS và Signals
 
-Áp dụng cho danh sách bộ đề (giai đoạn 4). Bộ lọc nằm trên **URL** (query param) để F5 / Back / chia sẻ link giữ đúng trang đang xem.
+Mẫu thật: [quiz-browse.ts](src/app/features/quizzes/quiz-browse/quiz-browse.ts). Bộ lọc nằm trên **URL** (query param) để F5 / Back / chia sẻ link giữ đúng trang đang xem.
 
 **Cách đang dùng — RxJS:**
 
@@ -174,7 +174,7 @@ result = toSignal(
   this.route.queryParamMap.pipe(
     map(paramsFrom),
     distinctUntilChanged(sameParams),
-    switchMap((params) => this.quizzesService.listMine(params).pipe(catchError(() => of(null)))),
+    switchMap((params) => this.quizzesService.listPublished(params).pipe(catchError(() => of(null)))),
   ),
   { initialValue: null },
 );
@@ -186,7 +186,7 @@ result = toSignal(
 params = toSignal(this.route.queryParamMap.pipe(map(paramsFrom)), { initialValue: DEFAULT });
 
 list = httpResource<Page<QuizSummary>>(() => ({
-  url: API_ENDPOINTS.quizzes.mine,
+  url: API_ENDPOINTS.quizzes.base,
   params: { ...this.params() },   // params() đổi -> tự gọi lại, request cũ tự bị huỷ
 }));
 // template: list.value(), list.isLoading(), list.error()
@@ -480,20 +480,20 @@ Con trỏ đã có quy tắc chung trong [styles.css](src/styles.css): nút/ph�
 
 ## 12. Thêm một trang mới
 
-Ví dụ trang "Đề của tôi" (cần đăng nhập, chỉ Teacher / Admin):
+Ví dụ trang "Quản lý bộ đề" (cần đăng nhập, chỉ Admin):
 
-1. **Đường dẫn** — thêm vào `ROUTE_SEGMENTS` trong [routes.ts](src/app/core/config/routes.ts): `myQuizzes: 'quizzes/mine'`.
-2. **Component** — `src/app/features/quizzes/my-quizzes/my-quizzes.ts` (+ `.html` nếu template ≥ 30 dòng).
+1. **Đường dẫn** — thêm vào `ROUTE_SEGMENTS` trong [routes.ts](src/app/core/config/routes.ts): `adminQuizzes: 'admin/quizzes'`.
+2. **Component** — `src/app/features/admin/quiz-list/quiz-list.ts` (+ `.html` nếu template ≥ 30 dòng).
 3. **Route** — trong [app.routes.ts](src/app/app.routes.ts), thêm làm **route con của `MainLayoutComponent`** (tự có header + `authGuard`):
    ```ts
    {
-     path: ROUTE_SEGMENTS.myQuizzes,
-     title: 'quiz.myTitle',
-     canActivate: [roleGuard('TEACHER', 'ADMIN')],
-     loadComponent: () => import('./features/quizzes/my-quizzes/my-quizzes').then((m) => m.MyQuizzesComponent),
+     path: ROUTE_SEGMENTS.adminQuizzes,
+     title: 'adminQuiz.pageTitle',
+     canActivate: [roleGuard('ADMIN')],
+     loadComponent: () => import('./features/admin/quiz-list/quiz-list').then((m) => m.AdminQuizListComponent),
    },
    ```
-   Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('TEACHER', 'ADMIN')]` — user không đủ quyền được đưa tới trang 403 (`/forbidden`).
+   Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('ADMIN')]` — user không đủ quyền được đưa tới trang 403 (`/forbidden`).
    Trang cho khách (login/register...) đặt ở cấp ngoài cùng với `canActivate: [guestGuard]` và dùng `<app-auth-layout page="...">`.
 4. **API** — URL vào `API_ENDPOINTS`, model vào `models/`, service theo mục 3. API không cần đăng nhập thì thêm vào `PUBLIC_API_ENDPOINTS`.
 5. **Chuỗi** — thêm key vào cả `vn.json` và `en.json`.

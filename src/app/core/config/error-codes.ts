@@ -15,15 +15,14 @@ export const ERROR_CODES = {
   COMMON_NETWORK_ERROR: 'COMMON_NETWORK_ERROR',
   AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS',
   AUTH_ACCOUNT_LOCKED: 'AUTH_ACCOUNT_LOCKED',
-  AUTH_ACCOUNT_PENDING: 'AUTH_ACCOUNT_PENDING',
   AUTH_USER_NOT_FOUND: 'AUTH_USER_NOT_FOUND',
   AUTH_EMAIL_ALREADY_REGISTERED: 'AUTH_EMAIL_ALREADY_REGISTERED',
   AUTH_RESET_TOKEN_INVALID: 'AUTH_RESET_TOKEN_INVALID',
   /** Refresh token hết hạn / đã thu hồi: phiên đã kết thúc, phải đăng nhập lại. */
   AUTH_REFRESH_TOKEN_INVALID: 'AUTH_REFRESH_TOKEN_INVALID',
   AUTH_CURRENT_PASSWORD_INCORRECT: 'AUTH_CURRENT_PASSWORD_INCORRECT',
-  /** Duyệt / từ chối tài khoản không còn chờ duyệt (vd. Admin khác vừa xử lý). */
-  ADMIN_USER_NOT_PENDING: 'ADMIN_USER_NOT_PENDING',
+  /** Bộ đề không tồn tại, hoặc là nháp mà người xem không phải Admin. */
+  QUIZ_NOT_FOUND: 'QUIZ_NOT_FOUND',
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

@@ -135,11 +135,7 @@
     "resetPasswordSuccess": "Password updated, please log in again",
     "resetLinkInvalid": "This reset link is invalid, has expired or has already been used",
     "requestNewLink": "Request a new link",
-    "rememberMe": "Remember me",
-    "registerAs": "I am a",
-    "teacherNeedsApproval": "Teacher accounts must be approved by an administrator before you can log in.",
-    "registerPendingSubtitle": "Your account is waiting for approval",
-    "registerPendingMessage": "Your teacher account has been created. You can log in once an administrator approves it"
+    "rememberMe": "Remember me"
   },
   "home": {
     "logout": "Log out",
@@ -147,21 +143,17 @@
     "goodMorning": "Good morning, {name}!",
     "goodAfternoon": "Good afternoon, {name}!",
     "goodEvening": "Good evening, {name}!",
-    "subtitle": "Which quiz would you like to review today?",
-    "quickActions": "Get started",
-    "comingSoon": "Coming soon",
-    "actionQuiz": "Quizzes",
-    "actionQuizDesc": "Take multiple-choice quizzes to review what you learned",
-    "actionClasses": "Manage classes",
-    "actionClassesDesc": "Create classes and assign quizzes to students",
+    "subtitle": "Pick a quiz to review!",
     "roles": {
       "STUDENT": "Student",
-      "TEACHER": "Teacher",
       "ADMIN": "Admin"
     },
     "pageTitle": "Home",
-    "actionApproveUsers": "Approve accounts",
-    "actionApproveUsersDesc": "Approve or reject newly registered teacher accounts"
+    "browseAll": "Find quizzes",
+    "seeAll": "See all ({n})",
+    "emptyTitle": "No quizzes yet",
+    "emptyHint": "Quizzes will show up here once an administrator publishes them.",
+    "emptyHintAdmin": "Create topics and quizzes, then publish them so students see them here."
   },
   "forbidden": {
     "pageTitle": "Access denied",
@@ -201,21 +193,6 @@
     "rights": "All rights reserved.",
     "footerTagline": "Online study & testing platform"
   },
-  "admin": {
-    "pendingUsers": {
-      "pageTitle": "Approve accounts",
-      "title": "Accounts waiting for approval",
-      "description": "Self-registered teachers can log in only after approval. Rejecting deletes the account.",
-      "registeredAt": "Registered on",
-      "empty": "No accounts are waiting for approval",
-      "approve": "Approve",
-      "reject": "Reject",
-      "approved": "Approved {name}",
-      "rejected": "Rejected {name}",
-      "rejectTitle": "Reject account",
-      "rejectConfirm": "{name}'s account will be deleted. They can register again with the same e-mail."
-    }
-  },
   "account": {
     "title": "Account",
     "infoTab": "Details",
@@ -228,5 +205,39 @@
     "changePasswordButton": "Change password",
     "passwordChanged": "Password changed. Other devices have been logged out",
     "currentPasswordIncorrect": "Current password is incorrect"
+  },
+  "quiz": {
+    "pageTitle": "Quiz",
+    "browseTitle": "Quizzes",
+    "browseDescription": "All published quizzes",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Type a quiz title...",
+    "topicLabel": "Topic",
+    "allTopics": "All topics",
+    "sortLabel": "Sort by",
+    "sort": {
+      "RECENT": "Recently updated",
+      "NEWEST": "Recently created",
+      "TITLE": "Title A → Z"
+    },
+    "resultCount": "{n} quizzes",
+    "empty": "No quizzes yet",
+    "noMatch": "No quizzes match \"{q}\"",
+    "noMatchHint": "Try another keyword or topic.",
+    "questionCount": "{n} questions",
+    "minutes": "{n} min",
+    "noTimeLimit": "No time limit",
+    "questions": "Questions",
+    "timeLimit": "Time",
+    "publishedAt": "Published",
+    "status": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published"
+    },
+    "start": "Start quiz",
+    "startComingSoon": "Taking quizzes is coming soon",
+    "notFoundTitle": "Quiz not found",
+    "notFoundDescription": "The quiz may have been deleted or is not published yet.",
+    "backToBrowse": "See other quizzes"
   }
 }

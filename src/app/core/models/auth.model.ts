@@ -1,7 +1,4 @@
-import { Role, User } from './user.model';
-
-/** Vai trò được tự chọn khi đăng ký (không có ADMIN). */
-export type RegistrationRole = Exclude<Role, 'ADMIN'>;
+import { User } from './user.model';
 
 export interface LoginRequest {
   email: string;
@@ -13,13 +10,6 @@ export interface RegisterRequest {
   /** 8–72 characters (BCrypt limit). */
   password: string;
   fullName: string;
-  role: RegistrationRole;
-}
-
-export interface RegisterResponse {
-  user: User;
-  /** null khi tài khoản chờ Admin duyệt (Teacher): chưa đăng nhập được. */
-  session: AuthResponse | null;
 }
 
 export interface AuthResponse {

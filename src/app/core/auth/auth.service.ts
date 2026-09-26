@@ -23,7 +23,6 @@ import {
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
-  RegisterResponse,
   ResetPasswordRequest,
   Role,
   UpdateProfileRequest,
@@ -38,7 +37,6 @@ const REFRESH_TOKEN_KEY = STORAGE_KEYS.refreshToken;
 const SESSION_ENDED_CODES = [
   ERROR_CODES.AUTH_REFRESH_TOKEN_INVALID,
   ERROR_CODES.AUTH_ACCOUNT_LOCKED,
-  ERROR_CODES.AUTH_ACCOUNT_PENDING,
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -64,13 +62,11 @@ export class AuthService {
       .pipe(tap((res) => this.setSession(res, remember ? localStorage : sessionStorage)));
   }
 
-  /** Student đăng nhập luôn; Teacher chờ Admin duyệt nên không có phiên (`session: null`). */
-  register(request: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(API_ENDPOINTS.auth.register, request).pipe(
-      tap((res) => {
-        if (res.session) this.setSession(res.session, localStorage);
-      }),
-    );
+  /** Đăng ký luôn là STUDENT và đăng nhập luôn. */
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(API_ENDPOINTS.auth.register, request)
+      .pipe(tap((res) => this.setSession(res, localStorage)));
   }
 
   /** Luôn trả 204 dù email có tồn tại hay không (tránh dò email). */

@@ -55,12 +55,12 @@ describe('auth guards', () => {
   });
 
   it('roleGuard: có 1 trong các role yêu cầu -> cho vào', () => {
-    role.set('TEACHER');
-    expect(run(roleGuard('TEACHER', 'ADMIN'))).toBe(true);
+    role.set('ADMIN');
+    expect(run(roleGuard('ADMIN'))).toBe(true);
   });
 
   it('roleGuard: không đủ quyền -> trang 403', () => {
     role.set('STUDENT');
-    expect(serialize(run(roleGuard('TEACHER', 'ADMIN')))).toBe('/forbidden');
+    expect(serialize(run(roleGuard('ADMIN')))).toBe('/forbidden');
   });
 });

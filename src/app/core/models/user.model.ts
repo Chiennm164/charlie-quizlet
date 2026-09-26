@@ -1,6 +1,7 @@
-export type Role = 'STUDENT' | 'TEACHER' | 'ADMIN';
+/** STUDENT: làm bài · ADMIN: soạn bộ đề, quản lý chủ đề. */
+export type Role = 'STUDENT' | 'ADMIN';
 
-export type UserStatus = 'PENDING' | 'ACTIVE' | 'LOCKED';
+export type UserStatus = 'ACTIVE' | 'LOCKED';
 
 export interface User {
   id: number;

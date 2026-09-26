@@ -1,14 +1,14 @@
 # Charlie Quizlet — Frontend (Angular) Roadmap
 
-App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, phân quyền theo vai trò (Học sinh / Giáo viên / Admin), dùng để vừa ôn lại kiến thức Angular cũ vừa học tính năng mới — đi từng bước qua tính năng thực tế, không phải bài tập demo rời rạc.
+App quản lý học tập/thi trắc nghiệm kiểu Quizlet, có auth thật, phân quyền theo vai trò (Học sinh / Admin), dùng để vừa ôn lại kiến thức Angular cũ vừa học tính năng mới — đi từng bước qua tính năng thực tế, không phải bài tập demo rời rạc.
 
 Đây là repo **frontend**. Backend là repo riêng: `charlie-quizlet-be` (Java Spring Boot + PostgreSQL) — xem roadmap BE trong repo đó.
 
 ## Hệ thống tổng quan
 
 - **Auth**: đăng nhập/đăng xuất, session, JWT access token + refresh token
-- **Phân quyền (RBAC)**: 3 role — `STUDENT`, `TEACHER`, `ADMIN`, có phê duyệt theo 1-2 cấp
-- **Nghiệp vụ** (mục tiêu chính): Teacher / Admin soạn bộ đề trắc nghiệm, mọi người làm bài để ôn tập, xem kết quả
+- **Phân quyền (RBAC)**: 2 role — `STUDENT` (làm bài), `ADMIN` (soạn đề, chủ đề). Xuất bản đề = đã duyệt
+- **Nghiệp vụ** (mục tiêu chính): Admin soạn bộ đề trắc nghiệm theo chủ đề, mọi người làm bài để ôn tập, xem kết quả
 - **Backend**: Java Spring Boot, PostgreSQL
 
 ## Môi trường Frontend
@@ -41,7 +41,7 @@ Mục tiêu duy nhất: **bộ đề trắc nghiệm để ôn tập** (giai đo
 ### Giai đoạn 1 — Hoàn thiện nền tảng
 - [x] Refresh token + thu hồi khi đăng xuất: access token hết hạn thì tự làm mới rồi gửi lại request
 - [x] `roleGuard` + trang 403
-- [x] Đăng ký có chọn vai trò; tài khoản Teacher chờ Admin duyệt (trang `/admin/users/pending`, Admin tạo sẵn lúc BE khởi động)
+- [x] ~~Đăng ký chọn vai trò, Teacher chờ duyệt~~ — đã bỏ role Teacher (2026-09-27): đăng ký luôn là học sinh, Admin tạo sẵn lúc BE khởi động
 - [x] Dialog tài khoản ở header: sửa họ tên, đổi mật khẩu (đổi xong đăng xuất các thiết bị khác, thiết bị hiện tại nhận phiên mới)
 
 **Angular:** RxJS trong interceptor (`switchMap`, `catchError`, `share`), functional guard.
@@ -50,26 +50,27 @@ Mục tiêu duy nhất: **bộ đề trắc nghiệm để ôn tập** (giai đo
 Đã làm rồi gỡ bỏ (2026-09-27): app chỉ tập trung vào bài trắc nghiệm. Code cũ còn trong lịch sử git. Giữ lại phần dùng chung:
 `ConfirmDialogService`, `unsavedChangesGuard`, directive `appShortcut`, `app-pagination`, validator cho FormArray, `@angular/cdk` (kéo thả).
 
-### Giai đoạn 4 — Bộ đề trắc nghiệm (Teacher / Admin soạn)
-Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` / `ADMIN` tạo và sửa đề; mọi người đăng nhập làm được đề đã xuất bản.
-- [ ] BE: bộ đề (tiêu đề, mô tả, thời gian làm bài, nháp / đã xuất bản) + câu hỏi trắc nghiệm (nội dung, 2–6 đáp án, 1 đáp án đúng, lời giải thích), phân quyền theo role
-- [ ] Trình soạn đề: form lồng nhau (danh sách câu hỏi, mỗi câu có danh sách đáp án), chọn đáp án đúng, kéo thả sắp xếp câu, cảnh báo rời trang khi chưa lưu
+### Giai đoạn 4 — Bộ đề trắc nghiệm theo chủ đề (Admin soạn)
+Chỉ `ADMIN` tạo / sửa đề và chủ đề; xuất bản = đã duyệt, học sinh thấy.
+- [x] BE: chủ đề (danh sách phẳng) + bộ đề (thời gian, nháp / xuất bản) + câu hỏi trắc nghiệm (2–6 đáp án, 1 đáp án đúng, giải thích)
+- [x] Home học sinh: bộ đề đã xuất bản nhóm theo chủ đề; trang tìm bộ đề (lọc chủ đề, tìm kiếm, phân trang); trang bộ đề
+- [ ] Admin: quản lý chủ đề (thêm / đổi tên / xoá chủ đề trống)
+- [ ] Admin: danh sách mọi bộ đề (cả nháp) + trình soạn đề (form lồng nhau câu hỏi → đáp án, chọn đáp án đúng, kéo thả sắp xếp câu, cảnh báo rời trang khi chưa lưu)
 - [ ] Import câu hỏi nhanh từ Excel / văn bản dán vào, xem trước và báo lỗi từng dòng
-- [ ] Danh sách bộ đề: Teacher thấy đề của mình (cả nháp), mọi người thấy đề đã xuất bản; tìm kiếm, phân trang
 
-**Angular:** `roleGuard` cho route Teacher / Admin, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), kéo thả bằng `@angular/cdk`.
+**Angular:** `roleGuard('ADMIN')`, `FormArray` lồng nhau, custom validator (đúng 1 đáp án đúng), kéo thả bằng `@angular/cdk`.
 
 ### Giai đoạn 5 — Làm bài + kết quả
 - [ ] Hai chế độ: Luyện tập (hiện đúng / sai + giải thích ngay sau mỗi câu) và Thi thử (đếm ngược bằng `app-countdown`, trộn câu và đáp án, đánh dấu câu để xem lại, bảng số câu để nhảy nhanh, hết giờ tự nộp)
 - [ ] BE chấm điểm: không gửi đáp án đúng xuống FE trước khi nộp; giờ làm bài do server quản lý (`started_at` + `deadline`), countdown ở FE chỉ để hiển thị
 - [ ] Tự lưu câu trả lời lên BE (F5 hay mất mạng vẫn làm tiếp)
 - [ ] Trang kết quả: điểm, thời gian, tỉ lệ đúng, xem lại từng câu kèm giải thích, nút "Làm lại các câu sai"; lịch sử các lần làm
-- [ ] Teacher xem thống kê đề: số lượt làm, điểm trung bình, câu sai nhiều nhất
+- [ ] Admin xem thống kê đề: số lượt làm, điểm trung bình, câu sai nhiều nhất
 
 **Angular:** NgRx Signal Store cho state phức tạp của bài làm, `CanDeactivate` + `beforeunload` khi đang làm bài.
 
 ### Giai đoạn 6 — Lớp học & giao bài
-- [ ] Teacher tạo lớp, học sinh vào lớp bằng mã / link mời
+- [ ] Admin tạo lớp, học sinh vào lớp bằng mã / link mời
 - [ ] Giao bộ đề cho lớp, kèm hạn chót
 - [ ] Bảng điểm theo học sinh + thống kê theo câu (câu sai nhiều → câu khó hoặc đáp án sai), xuất CSV
 
@@ -77,15 +78,14 @@ Mục tiêu chính của app: tạo bộ đề để ôn tập. Chỉ `TEACHER` 
 
 ### Giai đoạn 7 — Dashboard & tiến độ
 - [ ] Student: bộ đề đã làm, bài sắp hết hạn, streak, biểu đồ điểm theo thời gian, chủ đề yếu
-- [ ] Teacher: câu hỏi / đề chờ duyệt, thống kê lớp
-- [ ] Admin: user, tài khoản Teacher chờ duyệt, thống kê nội dung
+- [ ] Admin: user, thống kê nội dung
 
 **Angular:** `@defer` để chỉ tải thư viện biểu đồ khi cần; `ChangeDetectorRef` khi tích hợp thư viện ngoài không dùng signal.
 
 ### Để sau
 - [ ] Khám phá bộ đề theo chủ đề, yêu thích
 - [ ] Chế độ khách: làm bài công khai không cần đăng nhập
-- [ ] Gửi email thật (SMTP) + thông báo trong app (được duyệt, có bài mới được giao)
+- [ ] Gửi email thật (SMTP) + thông báo trong app (có bài mới được giao)
 - [ ] Thi đấu realtime kiểu Kahoot (WebSocket)
 - [ ] AI tạo thẻ / câu hỏi từ một đoạn văn bản
 - [ ] BE: dọn bảng `refresh_tokens` định kỳ (xoá token đã hết hạn — mỗi lần làm mới thêm 1 dòng)

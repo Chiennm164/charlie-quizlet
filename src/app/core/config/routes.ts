@@ -9,7 +9,7 @@ export const ROUTE_SEGMENTS = {
   resetPassword: 'reset-password',
   home: 'home',
   forbidden: 'forbidden',
-  adminPendingUsers: 'admin/users/pending',
+  quizzes: 'quizzes',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;
@@ -18,6 +18,9 @@ type RouteKey = keyof typeof ROUTE_SEGMENTS;
 export const ROUTES = Object.fromEntries(
   Object.entries(ROUTE_SEGMENTS).map(([key, segment]) => [key, `/${segment}`]),
 ) as { readonly [K in RouteKey]: `/${(typeof ROUTE_SEGMENTS)[K]}` };
+
+/** Đường dẫn có tham số (route khai báo trong app.routes.ts: `quizzes/:id`). */
+export const quizUrl = (id: number) => `/${ROUTE_SEGMENTS.quizzes}/${id}`;
 
 /** Trang mặc định sau khi đăng nhập / đăng ký thành công. */
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.home;

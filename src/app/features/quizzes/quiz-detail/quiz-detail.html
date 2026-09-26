@@ -1,0 +1,60 @@
+@if (loading()) {
+  <app-loading />
+} @else if (notFound()) {
+  <section class="max-w-md mx-auto py-12 flex flex-col items-center text-center gap-3">
+    <app-mascot mood="sad" class="w-28 h-28" />
+    <h1 class="typo-page-title">{{ 'quiz.notFoundTitle' | translate }}</h1>
+    <p class="typo-muted">{{ 'quiz.notFoundDescription' | translate }}</p>
+    <a class="btn btn--primary btn--md mt-3" [routerLink]="browseUrl">
+      {{ 'quiz.backToBrowse' | translate }}
+    </a>
+  </section>
+} @else if (quiz(); as quiz) {
+  <article class="max-w-2xl mx-auto card-surface p-6 sm:p-8 flex flex-col gap-4 anim-slide-up-in">
+    <div class="flex flex-wrap items-center gap-2">
+      <a
+        class="quiz-chip quiz-chip--primary"
+        [routerLink]="browseUrl"
+        [queryParams]="{ topicId: quiz.topic.id }"
+        >{{ quiz.topic.name }}</a
+      >
+      @if (quiz.status === 'DRAFT') {
+        <span class="quiz-chip typo-caption">{{ 'quiz.status.DRAFT' | translate }}</span>
+      }
+    </div>
+
+    <h1 class="typo-page-title break-words">{{ quiz.title }}</h1>
+    @if (quiz.description) {
+      <p class="typo-body whitespace-pre-line break-words">{{ quiz.description }}</p>
+    }
+
+    <dl class="grid gap-3 sm:grid-cols-3 text-body-sm">
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'quiz.questions' | translate }}</dt>
+        <dd class="typo-section-title">{{ quiz.questionCount }}</dd>
+      </div>
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'quiz.timeLimit' | translate }}</dt>
+        <dd class="typo-section-title">
+          {{
+            quiz.timeLimitMinutes
+              ? ('quiz.minutes' | translate: { n: quiz.timeLimitMinutes })
+              : ('quiz.noTimeLimit' | translate)
+          }}
+        </dd>
+      </div>
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'quiz.publishedAt' | translate }}</dt>
+        <dd class="typo-section-title">{{ publishedAt() || '—' }}</dd>
+      </div>
+    </dl>
+
+    <div class="flex flex-col items-center gap-2 pt-2">
+      <button type="button" class="btn btn--primary btn--lg" disabled>
+        <app-icon name="clipboard-check" />
+        {{ 'quiz.start' | translate }}
+      </button>
+      <p class="typo-caption">{{ 'quiz.startComingSoon' | translate }}</p>
+    </div>
+  </article>
+}

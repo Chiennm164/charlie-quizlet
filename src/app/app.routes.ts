@@ -52,16 +52,19 @@ export const routes: Routes = [
         title: 'home.pageTitle',
         loadComponent: () => import('./features/home/home').then((m) => m.HomeComponent),
       },
-      // Trang cho 1 số role: thêm canActivate: [roleGuard('TEACHER', 'ADMIN')] — không đủ quyền về trang 403.
       {
-        path: ROUTE_SEGMENTS.adminPendingUsers,
-        title: 'admin.pendingUsers.pageTitle',
-        canActivate: [roleGuard('ADMIN')],
+        path: ROUTE_SEGMENTS.quizzes,
+        title: 'quiz.browseTitle',
         loadComponent: () =>
-          import('./features/admin/pending-users/pending-users').then(
-            (m) => m.PendingUsersComponent,
-          ),
+          import('./features/quizzes/quiz-browse/quiz-browse').then((m) => m.QuizBrowseComponent),
       },
+      {
+        path: `${ROUTE_SEGMENTS.quizzes}/:id`,
+        title: 'quiz.pageTitle',
+        loadComponent: () =>
+          import('./features/quizzes/quiz-detail/quiz-detail').then((m) => m.QuizDetailComponent),
+      },
+      // Trang cho 1 số role: thêm canActivate: [roleGuard('ADMIN')] — không đủ quyền về trang 403.
       {
         path: ROUTE_SEGMENTS.forbidden,
         title: 'forbidden.pageTitle',

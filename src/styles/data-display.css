@@ -114,3 +114,17 @@
 .pagination__status {
   @apply typo-body-sm text-text-muted;
 }
+
+/* ---- Nhãn nhỏ trên thẻ bộ đề: .quiz-chip (+ --primary) ---- */
+.quiz-chip {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-muted border border-border;
+}
+
+.quiz-chip--primary {
+  @apply bg-primary-soft border-transparent text-primary font-semibold;
+}
+
+/* Ô số liệu trên trang bộ đề (số câu, thời gian...). */
+.quiz-stat {
+  @apply rounded-md bg-bg-muted px-4 py-3 flex flex-col gap-1;
+}

@@ -36,6 +36,15 @@ export const APP_SETTINGS = {
     fullNameMaxLength: 255,
   },
 
+  quizzes: {
+    /** Số bộ đề mỗi chủ đề trên Home (BE cho tối đa 20). */
+    homePerTopic: 8,
+    /** Số bộ đề mỗi trang ở trang danh sách (BE cho tối đa 50). */
+    pageSize: 12,
+    /** Chờ người dùng ngừng gõ bao lâu (ms) mới tìm kiếm. */
+    searchDebounceMs: 300,
+  },
+
   ui: {
     /** Thời gian hiển thị mặc định của toast (ms). */
     toastDurationMs: 3000,

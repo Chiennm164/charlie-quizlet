@@ -1,52 +1,45 @@
 import { Component, computed, inject } from '@angular/core';
-import { AuthService } from '../../core/auth/auth.service';
-import { NgTemplateOutlet } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import { AuthService } from '../../core/auth/auth.service';
 import { APP_SETTINGS, ROUTES } from '../../core/config';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslateService } from '../../core/i18n/translate.service';
-import { Role } from '../../core/models';
+import { TopicQuizzes } from '../../core/models';
 import { IconComponent } from '../../shared/ui/icon/icon';
-import { IconName } from '../../shared/ui/icon/icon-registry';
+import { LoadingComponent } from '../../shared/ui/loading/loading';
+import { MascotComponent } from '../../shared/ui/mascot/mascot';
+import { QuizCardComponent } from '../quizzes/quiz-card/quiz-card';
+import { QuizzesService } from '../quizzes/quizzes.service';
 
-interface QuickAction {
-  icon: IconName;
-  titleKey: string;
-  descriptionKey: string;
-  /** Không khai báo = mọi role đều thấy. */
-  roles?: Role[];
-  /** Chưa có trang thì bỏ trống — thẻ hiện nhãn "Sắp ra mắt". */
-  route?: string;
-}
-
-const QUICK_ACTIONS: QuickAction[] = [
-  {
-    icon: 'check-circle',
-    titleKey: 'home.actionApproveUsers',
-    descriptionKey: 'home.actionApproveUsersDesc',
-    roles: ['ADMIN'],
-    route: ROUTES.adminPendingUsers,
-  },
-  { icon: 'clipboard-check', titleKey: 'home.actionQuiz', descriptionKey: 'home.actionQuizDesc' },
-  {
-    icon: 'users',
-    titleKey: 'home.actionClasses',
-    descriptionKey: 'home.actionClassesDesc',
-    roles: ['TEACHER', 'ADMIN'],
-  },
-];
-
+/** Home: lời chào + bộ đề đã xuất bản (= đã duyệt) nhóm theo chủ đề. */
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgTemplateOutlet, RouterLink, IconComponent, TranslatePipe],
+  imports: [
+    RouterLink,
+    IconComponent,
+    LoadingComponent,
+    MascotComponent,
+    QuizCardComponent,
+    TranslatePipe,
+  ],
   templateUrl: './home.html',
 })
 export class HomeComponent {
   auth = inject(AuthService);
   private translate = inject(TranslateService);
 
-  actions = computed(() => QUICK_ACTIONS.filter((a) => !a.roles || this.auth.hasRole(...a.roles)));
+  readonly browseUrl = ROUTES.quizzes;
+
+  /** null = đang tải. Lỗi đã hiện ở dialog chung -> coi như chưa có đề. */
+  topics = toSignal<TopicQuizzes[] | null>(
+    inject(QuizzesService)
+      .listByTopic(APP_SETTINGS.quizzes.homePerTopic)
+      .pipe(catchError(() => of([]))),
+    { initialValue: null },
+  );
 
   greeting = computed(() => {
     this.translate.ready();

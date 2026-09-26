@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 
 /** Mọi URL gọi BE — service dùng hằng số này, không tự ghép chuỗi URL. */
 const AUTH_BASE = `${environment.apiUrl}/auth`;
-const ADMIN_BASE = `${environment.apiUrl}/admin`;
+const QUIZZES_BASE = `${environment.apiUrl}/quizzes`;
 
 export const API_ENDPOINTS = {
   auth: {
@@ -16,10 +16,13 @@ export const API_ENDPOINTS = {
     me: `${AUTH_BASE}/me`,
     changePassword: `${AUTH_BASE}/change-password`,
   },
-  admin: {
-    pendingUsers: `${ADMIN_BASE}/users/pending`,
-    approveUser: (id: number) => `${ADMIN_BASE}/users/${id}/approve`,
-    rejectUser: (id: number) => `${ADMIN_BASE}/users/${id}/reject`,
+  topics: `${environment.apiUrl}/topics`,
+  quizzes: {
+    /** GET: đề đã xuất bản (lọc topicId, q, sort, page, size). */
+    base: QUIZZES_BASE,
+    /** Home: đề đã xuất bản nhóm theo chủ đề. */
+    byTopic: `${QUIZZES_BASE}/by-topic`,
+    detail: (id: number) => `${QUIZZES_BASE}/${id}`,
   },
 } as const;
 
