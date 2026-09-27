@@ -6,11 +6,12 @@ import { ActivatedRoute, ParamMap, Router, convertToParamMap } from '@angular/ro
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { TranslateService } from '../../../core/i18n/translate.service';
-import { ScrollRestoreService } from '../../../core/navigation/scroll-restore.service';
+import { QuizMarksStore } from '../../me/quiz-marks.store';
 import { QuizBrowseComponent } from './quiz-browse';
 
 const API = environment.apiUrl;
 const LIST = `${API}/quizzes`;
+const BY_TOPIC = `${API}/quizzes/by-topic`;
 const EMPTY_PAGE = { content: [], page: 0, size: 12, totalElements: 0, totalPages: 0 };
 
 describe('QuizBrowseComponent', () => {
@@ -30,7 +31,7 @@ describe('QuizBrowseComponent', () => {
           useValue: { queryParamMap, snapshot: { queryParamMap: queryParamMap.value } },
         },
         { provide: Router, useValue: { navigate } },
-        { provide: ScrollRestoreService, useValue: { restore: jest.fn() } },
+        { provide: QuizMarksStore, useValue: { refresh: jest.fn() } },
         { provide: TranslateService, useValue: { t: (key: string) => key, locale: signal('vn') } },
       ],
     });
@@ -42,7 +43,7 @@ describe('QuizBrowseComponent', () => {
 
   afterEach(() => {
     http.verify();
-    jest.useRealTimers();
+    localStorage.clear();
   });
 
   it('đọc chủ đề từ URL (giá trị lạ -> tất cả) và điền sẵn ô chọn chủ đề', () => {
@@ -53,12 +54,13 @@ describe('QuizBrowseComponent', () => {
     expect(component.topicControl.value).toBe('5');
     expect(component.topicOptions().map((o) => o.label)).toEqual(['quiz.allTopics', 'Toán']);
 
+    // Bỏ lọc chủ đề -> về cách xem mặc định: theo nhóm.
     queryParamMap.next(convertToParamMap({ topicId: 'abc' }));
-    expect(http.expectOne((r) => r.url === LIST).request.params.has('topicId')).toBe(false);
+    http.expectOne((r) => r.url === BY_TOPIC).flush([]);
   });
 
   it('đổi chủ đề -> ghi vào URL, về trang đầu; chọn "tất cả" -> bỏ khỏi URL', () => {
-    const component = create({ page: '2' });
+    const component = create({ page: '2', view: 'list' });
     http.expectOne((r) => r.url === LIST).flush(EMPTY_PAGE);
 
     component.topicControl.setValue('5');
@@ -67,16 +69,38 @@ describe('QuizBrowseComponent', () => {
     expect(navigate.mock.calls[1][1]).toMatchObject({ queryParams: { topicId: null, page: null } });
   });
 
-  it('gõ tìm kiếm: chờ ngừng gõ rồi mới ghi vào URL', () => {
-    jest.useFakeTimers();
-    const component = create();
-    http.expectOne((r) => r.url === LIST).flush(EMPTY_PAGE);
+  it('mặc định xem theo nhóm: gửi từ khoá + cách sắp xếp, đếm tổng số đề các chủ đề', () => {
+    const component = create({ q: 'đại', sort: 'TITLE' });
+    const req = http.expectOne((r) => r.url === BY_TOPIC);
+    expect(req.request.params.get('q')).toBe('đại');
+    expect(req.request.params.get('sort')).toBe('TITLE');
+    req.flush([
+      { topic: { id: 5, name: 'Toán' }, totalQuizzes: 9, quizzes: [] },
+      { topic: { id: 6, name: 'Lý' }, totalQuizzes: 2, quizzes: [] },
+    ]);
+    expect(component.result()?.kind).toBe('groups');
+    expect(component.total()).toBe(11);
+  });
 
-    component.searchControl.setValue('đại');
-    component.searchControl.setValue('đại số ');
-    jest.advanceTimersByTime(299);
-    expect(navigate).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
-    expect(navigate.mock.calls[0][1]).toMatchObject({ queryParams: { q: 'đại số', page: null } });
+  it('đổi cách xem: ghi vào URL và nhớ cho lần sau; URL không có thì dùng lựa chọn đã nhớ', () => {
+    const component = create();
+    http.expectOne((r) => r.url === BY_TOPIC).flush([]);
+
+    component.setView('list');
+    expect(navigate.mock.calls[0][1]).toMatchObject({ queryParams: { view: 'list', page: null } });
+    expect(localStorage.getItem('cq_quiz_view')).toBe('list');
+
+    TestBed.resetTestingModule();
+    create();
+    http.expectOne((r) => r.url === LIST).flush(EMPTY_PAGE);
+  });
+
+  it('lọc "chưa làm" / "yêu thích": ghi vào URL và gửi kèm khi tải danh sách', () => {
+    const component = create({ mark: 'FAVORITE', view: 'list' });
+    expect(http.expectOne((r) => r.url === LIST).request.params.get('mark')).toBe('FAVORITE');
+    expect(component.markControl.value).toBe('FAVORITE');
+
+    component.markControl.setValue('ALL');
+    expect(navigate.mock.calls[0][1]).toMatchObject({ queryParams: { mark: null, page: null } });
   });
 });

@@ -20,10 +20,16 @@ describe('QuizzesService', () => {
 
   afterEach(() => http.verify());
 
-  it('Home: lấy đề theo chủ đề kèm giới hạn mỗi chủ đề', () => {
+  it('theo chủ đề: gửi giới hạn mỗi chủ đề, từ khoá, cách sắp xếp (mặc định mới cập nhật)', () => {
     service.listByTopic(8).subscribe();
-    const req = http.expectOne((r) => r.url === `${API}/quizzes/by-topic`);
-    expect(req.request.params.get('limit')).toBe('8');
+    const home = http.expectOne((r) => r.url === `${API}/quizzes/by-topic`);
+    expect(home.request.params.get('limit')).toBe('8');
+    expect(home.request.params.get('sort')).toBe('RECENT');
+
+    service.listByTopic(8, { q: 'toán', sort: 'TITLE' }).subscribe();
+    const filtered = http.expectOne((r) => r.url === `${API}/quizzes/by-topic`);
+    expect(filtered.request.params.get('q')).toBe('toán');
+    expect(filtered.request.params.get('sort')).toBe('TITLE');
   });
 
   it('danh sách đề: chỉ gửi topicId khi có lọc theo chủ đề', () => {

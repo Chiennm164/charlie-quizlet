@@ -1,0 +1,200 @@
+@let attempt = store.attempt()!;
+@let question = store.current();
+
+<div class="attempt-toolbar">
+  <div class="min-w-0 flex-1">
+    <a
+      class="block truncate typo-body-sm font-semibold hover:underline"
+      [routerLink]="quizUrl(attempt.quiz.id)"
+    >
+      {{ attempt.quiz.title }}
+    </a>
+    <p class="typo-caption">
+      {{ 'attempt.mode.' + attempt.mode | translate }} ·
+      @if (store.pending() > 0) {
+        {{ 'attempt.saving' | translate }}
+      } @else {
+        {{ 'attempt.saved' | translate }}
+      }
+    </p>
+  </div>
+  @if (store.deadlineMs(); as deadline) {
+    <span
+      class="inline-flex items-center gap-1 rounded-full bg-bg-muted px-3 py-1 typo-body font-bold"
+      role="timer"
+      [attr.aria-label]="'attempt.timeLeft' | translate"
+    >
+      <app-icon name="clock" [size]="18" class="text-text-muted" />
+      <app-countdown [targetDate]="deadline" (finished)="onTimeUp()" />
+    </span>
+  }
+  <app-button size="sm" class="shrink-0" [loading]="store.submitting()" (clicked)="confirmSubmit()">
+    {{ submitKey() | translate }}
+  </app-button>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-[1fr_16rem] lg:items-start">
+  @if (question) {
+    <section class="flex flex-col gap-4 min-w-0">
+      <div class="progress" aria-hidden="true">
+        <div class="progress__bar" [style.width.%]="progress()"></div>
+      </div>
+
+      @for (q of [question]; track q.questionId) {
+        <article class="card-surface p-4 sm:p-6 flex flex-col gap-4" animate.enter="anim-fade-in">
+          <div class="flex items-center justify-between gap-3">
+            <h1 class="typo-section-title">
+              {{
+                'attempt.questionOf'
+                  | translate: { n: store.index() + 1, total: store.questions().length }
+              }}
+            </h1>
+            @if (!store.isPractice()) {
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                [class.text-warning]="q.flagged"
+                appShortcut="m"
+                [attr.aria-pressed]="q.flagged"
+                (shortcut)="store.toggleFlag()"
+                (click)="store.toggleFlag()"
+              >
+                <app-icon name="flag" />
+                {{ (q.flagged ? 'attempt.unflag' : 'attempt.flag') | translate }}
+                <kbd class="kbd hidden sm:inline">M</kbd>
+              </button>
+            }
+          </div>
+
+          <p class="typo-body whitespace-pre-line break-words">{{ q.content }}</p>
+
+          <div
+            class="flex flex-col gap-2"
+            role="group"
+            [attr.aria-label]="'attempt.options' | translate"
+          >
+            @for (option of q.options; track option.id; let i = $index) {
+              @let state = optionState(q, option.id);
+              <button
+                type="button"
+                class="attempt-option"
+                [class.is-selected]="state === 'selected'"
+                [class.is-correct]="state === 'correct'"
+                [class.is-wrong]="state === 'wrong'"
+                [attr.aria-pressed]="q.selectedOptionId === option.id"
+                [disabled]="store.isPractice() && (isRevealed(q) || store.checkingId() !== null)"
+                [appShortcut]="letters[i]"
+                (shortcut)="store.select(option.id)"
+                (click)="store.select(option.id)"
+              >
+                <span class="option-letter mt-0.5">{{ letters[i] }}</span>
+                <span class="flex-1 whitespace-pre-line break-words">{{ option.content }}</span>
+                @if (state === 'correct') {
+                  <app-icon name="check-circle" class="text-success shrink-0" />
+                } @else if (state === 'wrong') {
+                  <app-icon name="alert-circle" class="text-danger shrink-0" />
+                }
+              </button>
+            }
+          </div>
+
+          @if (isRevealed(q)) {
+            <div
+              class="rounded-md p-3 flex flex-col gap-1 typo-body-sm"
+              [class]="q.correct ? 'bg-success/10' : 'bg-danger/10'"
+              animate.enter="anim-fade-in"
+              aria-live="polite"
+            >
+              <p
+                class="font-bold"
+                [class.text-success]="q.correct"
+                [class.text-danger]="!q.correct"
+              >
+                {{ (q.correct ? 'attempt.correct' : 'attempt.wrong') | translate }}
+              </p>
+              @if (q.explanation) {
+                <p class="whitespace-pre-line break-words">
+                  <span class="font-semibold">{{ 'attempt.explanation' | translate }}:</span>
+                  {{ q.explanation }}
+                </p>
+              }
+            </div>
+          }
+        </article>
+      }
+
+      <div class="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          class="btn btn--secondary btn--md"
+          [disabled]="store.index() === 0"
+          appShortcut="ArrowLeft"
+          (shortcut)="prev()"
+          (click)="prev()"
+        >
+          <app-icon name="chevron-left" />
+          {{ 'attempt.prev' | translate }}
+        </button>
+        <p class="hidden sm:block typo-caption text-center">
+          {{ 'attempt.keyboardHint' | translate }}
+        </p>
+        @if (isLast()) {
+          <app-button [loading]="store.submitting()" (clicked)="confirmSubmit()">
+            {{ submitKey() | translate }}
+          </app-button>
+        } @else {
+          <button
+            type="button"
+            class="btn btn--secondary btn--md"
+            appShortcut="ArrowRight"
+            (shortcut)="next()"
+            (click)="next()"
+          >
+            {{ 'attempt.next' | translate }}
+            <app-icon name="chevron-right" />
+          </button>
+        }
+      </div>
+    </section>
+  }
+
+  <aside class="card-surface p-4 flex flex-col gap-3 lg:sticky lg:top-20">
+    <div class="flex items-baseline justify-between gap-2">
+      <h2 class="typo-card-title">{{ 'attempt.navTitle' | translate }}</h2>
+      <span class="typo-caption">
+        {{
+          'attempt.answeredCount'
+            | translate: { n: store.answeredCount(), total: store.questions().length }
+        }}
+      </span>
+    </div>
+    <nav class="attempt-nav" [attr.aria-label]="'attempt.navTitle' | translate">
+      @for (q of store.questions(); track q.questionId; let i = $index) {
+        <button
+          type="button"
+          class="attempt-nav__item"
+          [class]="navState(q)"
+          [class.is-current]="i === store.index()"
+          [class.is-flagged]="q.flagged"
+          [attr.aria-current]="i === store.index() ? 'step' : null"
+          (click)="store.go(i)"
+        >
+          {{ i + 1 }}
+        </button>
+      }
+    </nav>
+    @if (store.isPractice()) {
+      <p class="typo-caption">
+        {{
+          'attempt.correctSoFar'
+            | translate: { n: store.correctSoFar(), total: store.answeredCount() }
+        }}
+      </p>
+    } @else if (store.flaggedCount()) {
+      <p class="typo-caption inline-flex items-center gap-1">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-warning" aria-hidden="true"></span>
+        {{ 'attempt.flaggedCount' | translate: { n: store.flaggedCount() } }}
+      </p>
+    }
+  </aside>
+</div>

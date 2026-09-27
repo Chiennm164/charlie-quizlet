@@ -103,6 +103,17 @@
             </div>
           </form>
         }
+        @case ('settings') {
+          <div class="flex flex-col gap-1" animate.enter="anim-fade-in">
+            <app-radio-group
+              [label]="'account.language' | translate"
+              [options]="localeOptions"
+              [value]="translate.locale()"
+              (valueChange)="changeLocale($event)"
+            />
+            <p class="typo-caption">{{ 'account.languageHint' | translate }}</p>
+          </div>
+        }
       }
     </div>
   }

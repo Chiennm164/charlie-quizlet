@@ -65,6 +65,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/quizzes/quiz-detail/quiz-detail').then((m) => m.QuizDetailComponent),
       },
+      {
+        path: ROUTE_SEGMENTS.history,
+        title: 'me.historyTitle',
+        loadComponent: () =>
+          import('./features/me/history/history').then((m) => m.HistoryComponent),
+      },
+      {
+        path: `${ROUTE_SEGMENTS.attempts}/:id`,
+        title: 'attempt.pageTitle',
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () =>
+          import('./features/attempts/attempt-page/attempt-page').then(
+            (m) => m.AttemptPageComponent,
+          ),
+      },
       // ---- Admin ----
       {
         path: ROUTE_SEGMENTS.adminQuizzes,
@@ -88,6 +103,13 @@ export const routes: Routes = [
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
           import('./features/admin/quiz-editor/quiz-editor').then((m) => m.QuizEditorComponent),
+      },
+      {
+        path: `${ROUTE_SEGMENTS.adminQuizzes}/:id/stats`,
+        title: 'quizStats.title',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/admin/quiz-stats/quiz-stats').then((m) => m.QuizStatsComponent),
       },
       {
         path: ROUTE_SEGMENTS.adminTopics,

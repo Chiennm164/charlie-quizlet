@@ -1,0 +1,178 @@
+<app-breadcrumb [items]="breadcrumb()" />
+
+@let s = stats();
+@if (s === undefined) {
+  <app-loading />
+} @else if (s) {
+  <header class="mb-5 flex flex-wrap items-start justify-between gap-3">
+    <div class="min-w-0">
+      <h1 class="typo-page-title break-words">{{ s.title }}</h1>
+      <p class="typo-muted">{{ 'quizStats.description' | translate }}</p>
+    </div>
+    @if (s.attemptCount > 0) {
+      <app-button variant="secondary" size="sm" (clicked)="downloadCsv(s)">
+        <app-icon name="download" />
+        {{ 'quizStats.downloadCsv' | translate }}
+      </app-button>
+    }
+  </header>
+
+  @if (s.attemptCount === 0) {
+    <div class="card-surface py-10 px-4 flex flex-col items-center text-center gap-3">
+      <app-mascot class="w-24 h-24" />
+      <p class="typo-card-title">{{ 'quizStats.emptyTitle' | translate }}</p>
+      <p class="typo-muted">{{ 'quizStats.emptyHint' | translate }}</p>
+    </div>
+  } @else {
+    <dl class="grid gap-3 grid-cols-2 lg:grid-cols-4 mb-8">
+      <div class="card-surface p-4 flex flex-col gap-1">
+        <dt class="typo-body-sm text-text-muted">{{ 'quizStats.attempts' | translate }}</dt>
+        <dd class="typo-page-title">{{ s.attemptCount }}</dd>
+        <dd class="typo-caption">
+          {{ 'quizStats.byMode' | translate: { practice: s.practiceCount, exam: s.examCount } }}
+        </dd>
+      </div>
+      <div class="card-surface p-4 flex flex-col gap-1">
+        <dt class="typo-body-sm text-text-muted">{{ 'quizStats.takers' | translate }}</dt>
+        <dd class="typo-page-title">{{ s.takerCount }}</dd>
+      </div>
+      <div class="card-surface p-4 flex flex-col gap-1">
+        <dt class="typo-body-sm text-text-muted">{{ 'quizStats.average' | translate }}</dt>
+        <dd class="typo-page-title">
+          {{
+            average() === null ? '—' : ('quiz.mark.points' | translate: { n: average()! | score })
+          }}
+        </dd>
+      </div>
+      <div class="card-surface p-4 flex flex-col gap-1">
+        <dt class="typo-body-sm text-text-muted">{{ 'quizStats.hardest' | translate }}</dt>
+        @if (hardest(); as h) {
+          <dd class="typo-page-title">
+            {{ 'adminQuiz.questionN' | translate: { n: h.position + 1 } }}
+          </dd>
+          <dd class="typo-caption">
+            {{ 'quizStats.correctRate' | translate: { n: correctRate(h) ?? 0 } }}
+          </dd>
+        } @else {
+          <dd class="typo-page-title">—</dd>
+        }
+      </div>
+    </dl>
+
+    <section class="flex flex-col gap-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 class="typo-section-title">{{ 'quizStats.questionsTitle' | translate }}</h2>
+        <app-segmented
+          [label]="'quizStats.orderLabel' | translate"
+          [options]="orderOptions()"
+          [value]="order()"
+          (valueChange)="selectOrder($event)"
+        />
+      </div>
+
+      <ul class="flex flex-col gap-2">
+        @for (q of questions(); track q.questionId) {
+          @let rate = correctRate(q);
+          @let open = expanded().has(q.questionId);
+          <li class="card-surface p-4 flex flex-col gap-3">
+            <button
+              type="button"
+              class="flex flex-col gap-2 text-left sm:flex-row sm:items-center sm:gap-4"
+              [attr.aria-expanded]="open"
+              (click)="toggle(q.questionId)"
+            >
+              <span class="flex-1 min-w-0">
+                <span class="typo-card-title">{{
+                  'adminQuiz.questionN' | translate: { n: q.position + 1 }
+                }}</span>
+                @if (!open) {
+                  <span class="block typo-body-sm text-text-muted line-clamp-2 break-words">{{
+                    q.content
+                  }}</span>
+                }
+              </span>
+              <span class="flex items-center gap-3 sm:w-72 shrink-0">
+                @if (rate === null) {
+                  <span class="typo-caption">{{ 'quizStats.noAnswers' | translate }}</span>
+                } @else {
+                  <span
+                    class="progress h-2.5 flex-1"
+                    role="meter"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [attr.aria-valuenow]="rate"
+                    [attr.aria-label]="'quizStats.correctRate' | translate: { n: rate }"
+                    [attr.title]="
+                      'quizStats.correctOf' | translate: { c: q.correctCount, n: q.answeredCount }
+                    "
+                  >
+                    <span class="progress__bar" [style.width.%]="rate"></span>
+                  </span>
+                  <span class="w-24 text-right typo-body-sm">
+                    <span class="font-bold">{{ rate }}%</span>
+                    <span class="text-text-muted"> {{ 'quizStats.correct' | translate }}</span>
+                  </span>
+                }
+                <app-icon
+                  name="chevron-down"
+                  class="text-text-muted transition-transform"
+                  [class.rotate-180]="open"
+                />
+              </span>
+            </button>
+
+            @if (open) {
+              <div
+                class="flex flex-col gap-2 border-t border-border pt-3"
+                animate.enter="anim-fade-in"
+              >
+                <p class="typo-body whitespace-pre-line break-words">{{ q.content }}</p>
+                <p class="typo-caption">
+                  {{
+                    'quizStats.answeredSummary'
+                      | translate: { n: q.answeredCount, c: q.correctCount, s: q.skippedCount }
+                  }}
+                </p>
+                <ul class="flex flex-col gap-1.5">
+                  @for (option of q.options; track option.optionId; let i = $index) {
+                    @let pick = percent(option.pickCount, q.answeredCount) ?? 0;
+                    <li
+                      class="grid grid-cols-[1.5rem_1fr] sm:grid-cols-[1.5rem_1fr_12rem] items-center gap-x-3 gap-y-1"
+                    >
+                      <span class="option-letter" [class.is-correct]="option.correct">{{
+                        letters[i]
+                      }}</span>
+                      <span class="typo-body-sm break-words">
+                        {{ option.content }}
+                        @if (option.correct) {
+                          <span
+                            class="inline-flex items-center gap-1 text-success font-semibold ml-1"
+                          >
+                            <app-icon name="check-circle" [size]="14" />{{
+                              'quizStats.correctAnswer' | translate
+                            }}
+                          </span>
+                        }
+                      </span>
+                      <span class="col-start-2 sm:col-start-3 flex items-center gap-2">
+                        <span
+                          class="progress flex-1"
+                          [attr.title]="'quizStats.picks' | translate: { n: option.pickCount }"
+                        >
+                          <span class="progress__bar bg-secondary" [style.width.%]="pick"></span>
+                        </span>
+                        <span class="w-16 text-right typo-caption"
+                          >{{ option.pickCount }} · {{ pick }}%</span
+                        >
+                      </span>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+}

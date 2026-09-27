@@ -5,17 +5,29 @@
     [description]="'adminQuiz.editorDescription' | translate"
   />
   @if (editingId && !loading()) {
-    <div class="flex items-center gap-2 self-start shrink-0">
+    <div
+      class="flex flex-wrap items-center gap-x-1 gap-y-2 self-start sm:shrink-0 [&_.btn]:whitespace-nowrap"
+    >
       <span
-        class="quiz-chip typo-caption"
+        class="quiz-chip text-caption"
         [class.quiz-chip--primary]="savedStatus() === 'PUBLISHED'"
         >{{ 'quiz.status.' + savedStatus() | translate }}</span
       >
-      @if (savedStatus() === 'PUBLISHED' && viewUrl) {
+      @if (viewUrl) {
         <a class="btn btn--ghost btn--sm" [routerLink]="viewUrl">
           {{ 'adminQuiz.viewAsStudent' | translate }}
         </a>
       }
+      @if (savedStatus() === 'PUBLISHED') {
+        <a class="btn btn--ghost btn--sm" [routerLink]="statsUrl">
+          <app-icon name="chart" />
+          {{ 'quizStats.open' | translate }}
+        </a>
+      }
+      <app-button variant="ghost" size="sm" [disabled]="saving()" (clicked)="delete()">
+        <app-icon name="trash" />
+        {{ 'common.delete' | translate }}
+      </app-button>
     </div>
   }
 </div>
@@ -56,15 +68,41 @@
         formControlName="description"
         [errorMessage]="errorFor(form.controls.description)"
       />
-      <app-input-number
-        class="sm:max-w-xs"
-        [label]="'adminQuiz.timeLimit' | translate"
-        [placeholder]="'quiz.noTimeLimit' | translate"
-        [min]="1"
-        [max]="maxTimeLimit"
-        formControlName="timeLimitMinutes"
-        [errorMessage]="errorFor(form.controls.timeLimitMinutes)"
-      />
+      <div class="grid gap-x-4 sm:grid-cols-2">
+        <app-input-number
+          [label]="'adminQuiz.timeLimit' | translate"
+          [placeholder]="'quiz.noTimeLimit' | translate"
+          [min]="1"
+          [max]="maxTimeLimit"
+          formControlName="timeLimitMinutes"
+          [errorMessage]="errorFor(form.controls.timeLimitMinutes)"
+        />
+        <div class="flex flex-col">
+          <app-input-number
+            [label]="'adminQuiz.examQuestionCount' | translate"
+            [placeholder]="
+              'adminQuiz.examQuestionCountDefault' | translate: { n: defaultExamQuestionCount }
+            "
+            [min]="1"
+            [max]="maxQuestions"
+            formControlName="examQuestionCount"
+            [errorMessage]="errorFor(form.controls.examQuestionCount)"
+          />
+          <p class="typo-caption -mt-3 mb-2">
+            @let hint = examHint();
+            @if (hint.draws) {
+              {{
+                (hint.isDefault
+                  ? 'adminQuiz.examQuestionCountDefaultHint'
+                  : 'adminQuiz.examQuestionCountHint'
+                ) | translate: { n: hint.count, total: hint.total }
+              }}
+            } @else {
+              {{ 'adminQuiz.examQuestionCountAllHint' | translate: { total: hint.total } }}
+            }
+          </p>
+        </div>
+      </div>
     </section>
 
     <section class="flex flex-col gap-3">
@@ -72,9 +110,22 @@
         <h2 class="typo-section-title">
           {{ 'adminQuiz.questionsTitle' | translate: { n: questionCount() } }}
         </h2>
-        <app-button variant="secondary" size="sm" (clicked)="importOpen.set(true)">
-          {{ 'adminQuiz.import.open' | translate }}
-        </app-button>
+        <div class="flex flex-wrap justify-end gap-2">
+          <app-button variant="secondary" size="sm" (clicked)="importOpen.set(true)">
+            <app-icon name="upload" />
+            {{ 'adminQuiz.import.open' | translate }}
+          </app-button>
+          <app-button
+            variant="secondary"
+            size="sm"
+            [disabled]="questionCount() === 0"
+            [loading]="exporting()"
+            (clicked)="exportExcel()"
+          >
+            <app-icon name="download" />
+            {{ 'adminQuiz.exportExcel' | translate }}
+          </app-button>
+        </div>
       </div>
 
       <div cdkDropList (cdkDropListDropped)="drop($event)" class="flex flex-col gap-3">
@@ -110,24 +161,28 @@
       </app-button>
     </section>
 
-    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
-      @if (editingId) {
-        <app-button variant="ghost" [disabled]="saving()" (clicked)="delete()">
-          <app-icon name="trash" />
-          {{ 'common.delete' | translate }}
-        </app-button>
-      }
-      <div class="flex flex-col gap-2 sm:flex-row sm:ml-auto">
-        <a class="btn btn--secondary btn--md" [routerLink]="listUrl">
+    <!-- Dính đáy màn hình: lưu / xuất bản được ngay khi đang soạn giữa chừng, không phải cuộn hết danh sách câu. -->
+    <div class="quiz-editor__actions">
+      <p class="hidden sm:block typo-body-sm text-text-muted">
+        {{ 'adminQuiz.questionsTitle' | translate: { n: questionCount() } }}
+      </p>
+      <div class="quiz-editor__buttons">
+        <!-- Màn nhỏ bỏ Huỷ cho đủ chỗ (đã có breadcrumb). -->
+        <a class="btn btn--secondary btn--md hidden sm:inline-flex" [routerLink]="listUrl">
           {{ 'common.cancel' | translate }}
         </a>
-        <app-button variant="secondary" [loading]="saving()" (clicked)="save('DRAFT')">
+        <app-button
+          variant="secondary"
+          [block]="true"
+          [loading]="saving()"
+          (clicked)="save('DRAFT')"
+        >
           {{
             (savedStatus() === 'PUBLISHED' ? 'adminQuiz.unpublish' : 'adminQuiz.saveDraft')
               | translate
           }}
         </app-button>
-        <app-button [loading]="saving()" (clicked)="save('PUBLISHED')">
+        <app-button [block]="true" [loading]="saving()" (clicked)="save('PUBLISHED')">
           <app-icon name="check" />
           {{
             (savedStatus() === 'PUBLISHED' ? 'adminQuiz.saveChanges' : 'adminQuiz.publish')

@@ -7,7 +7,7 @@
 /* =========================================================*/
 
 :root {
-  /* ---- Phong cách "chibi": pastel hồng tím, bo tròn, nút nổi như nhãn dán, chuyển động nảy nhẹ. ----
+  /* ---- Phong cách "chibi": nền kem cam (màu lông hổ), điểm nhấn hồng tím pastel, bo tròn, nút nổi như nhãn dán, chuyển động nảy nhẹ. ----
      Mọi màu chữ / nền đã kiểm tra độ tương phản AA (chữ trắng trên primary 5.1:1, chữ nhạt >= 4.6:1). */
 
   /* ---- Màu thương hiệu: hồng dâu ----*/
@@ -27,16 +27,16 @@
   --cq-info: #17729f;
 
   /* ---- Nền / bề mặt ----*/
-  --cq-bg: #fff9f4; /* kem */
+  --cq-bg: #fff1e0; /* kem cam — màu lông hổ nhạt */
   --cq-bg-muted: #fdf0f6; /* hồng phấn: nền trang, hover, header bảng */
   --cq-surface: #ffffff;
   --cq-overlay: rgba(61, 44, 82, 0.45); /* nền mờ phía sau dialog (tím than) */
-  --cq-dot: rgba(201, 48, 107, 0.09); /* chấm bi trên nền trang (.app-backdrop) */
-  /* Mảng màu loang trên nền trang (.app-backdrop). Đậm nhất ở tâm mảng mà chữ nhạt vẫn >= 4.5:1. */
-  --cq-backdrop-pink: #ffe4ee;
-  --cq-backdrop-lavender: #eee8ff;
-  --cq-backdrop-peach: #ffead8; /* cam đào — hợp màu lông hổ */
-  --cq-backdrop-sky: #e2f3ff;
+  --cq-dot: rgba(234, 122, 38, 0.14); /* chấm bi cam trên nền trang (.app-backdrop) */
+  /* Mảng màu loang tông cam trên nền trang (.app-backdrop). Đậm nhất ở tâm mảng mà chữ nhạt vẫn >= 4.5:1. */
+  --cq-backdrop-orange: #ffe6c9;
+  --cq-backdrop-apricot: #ffe9cf;
+  --cq-backdrop-coral: #ffe7d9; /* cam hồng — nối với màu chủ đạo hồng dâu */
+  --cq-backdrop-butter: #fff0c8; /* vàng bơ */
 
   /* ---- Chữ (tím than thay cho đen) ----*/
   --cq-text-strong: #2a1d3a;
@@ -128,10 +128,10 @@
   --cq-surface: #2f2547;
   --cq-overlay: rgba(0, 0, 0, 0.6);
   --cq-dot: rgba(255, 179, 205, 0.06);
-  --cq-backdrop-pink: #33223f;
-  --cq-backdrop-lavender: #2b2548;
-  --cq-backdrop-peach: #35263a;
-  --cq-backdrop-sky: #22284a;
+  --cq-backdrop-orange: #33223f;
+  --cq-backdrop-apricot: #2b2548;
+  --cq-backdrop-coral: #35263a;
+  --cq-backdrop-butter: #22284a;
   --cq-primary-soft: #4a2a45;
 
   --cq-text-strong: #ffffff;

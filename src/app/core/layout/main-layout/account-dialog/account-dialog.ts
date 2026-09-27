@@ -12,22 +12,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
-import { APP_SETTINGS, ERROR_CODES } from '../../../config';
+import { APP_SETTINGS, ERROR_CODES, Locale } from '../../../config';
 import { handleErrorCode } from '../../../error/error-handling';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { TranslateService } from '../../../i18n/translate.service';
 import { ButtonComponent } from '../../../../shared/ui/button/button';
 import { DialogComponent } from '../../../../shared/ui/dialog/dialog';
 import { InputTextComponent } from '../../../../shared/ui/input-text/input-text';
+import { RadioGroupComponent, RadioOption } from '../../../../shared/ui/radio-group/radio-group';
 import { TabItem, TabsComponent } from '../../../../shared/ui/tabs/tabs';
 import { ToastService } from '../../../../shared/ui/toast/toast.service';
 import { formatDate } from '../../../../shared/utils/common.utils';
 import { AppValidators, controlErrorMessage } from '../../../../shared/utils/validation.utils';
 
-type AccountTab = 'info' | 'password';
+type AccountTab = 'info' | 'password' | 'settings';
 type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
 
-/** Dialog tài khoản mở từ header: xem thông tin, sửa họ tên, đổi mật khẩu. */
+/** Dialog tài khoản mở từ header: xem thông tin, sửa họ tên, đổi mật khẩu, cài đặt (ngôn ngữ). */
 @Component({
   selector: 'app-account-dialog',
   standalone: true,
@@ -36,6 +37,7 @@ type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
     ButtonComponent,
     DialogComponent,
     InputTextComponent,
+    RadioGroupComponent,
     TabsComponent,
     TranslatePipe,
   ],
@@ -44,7 +46,7 @@ type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
 export class AccountDialogComponent {
   private fb = inject(FormBuilder);
   private toast = inject(ToastService);
-  private translate = inject(TranslateService);
+  translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
   auth = inject(AuthService);
 
@@ -60,8 +62,13 @@ export class AccountDialogComponent {
     return [
       { id: 'info', label: this.translate.t('account.infoTab') },
       { id: 'password', label: this.translate.t('account.passwordTab') },
+      { id: 'settings', label: this.translate.t('account.settingsTab') },
     ];
   });
+
+  readonly localeOptions: RadioOption[] = this.translate
+    .supportedLocales()
+    .map((locale) => ({ value: locale, label: APP_SETTINGS.i18n.localeNames[locale] }));
 
   memberSince = computed(() =>
     formatDate(
@@ -95,6 +102,11 @@ export class AccountDialogComponent {
 
   selectTab(id: string): void {
     this.activeTab.set(id as AccountTab);
+  }
+
+  /** Đổi ngay khi chọn (không cần bấm Lưu); TranslateService tự nhớ lựa chọn trên trình duyệt này. */
+  changeLocale(locale: string): void {
+    this.translate.setLocale(locale as Locale);
   }
 
   fullNameError(): string | null {

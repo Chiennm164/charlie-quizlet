@@ -3,50 +3,78 @@
   [description]="'quiz.browseDescription' | translate"
 />
 
-<div class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-[1fr_14rem_14rem] mb-2">
-  <app-input-text
-    name="search"
-    [label]="'quiz.searchLabel' | translate"
-    [placeholder]="'quiz.searchPlaceholder' | translate"
-    [formControl]="searchControl"
-  />
-  <app-select
-    [label]="'quiz.topicLabel' | translate"
-    [options]="topicOptions()"
-    [formControl]="topicControl"
-  />
-  <app-select
-    [label]="'quiz.sortLabel' | translate"
-    [options]="sortOptions()"
-    [formControl]="sortControl"
-  />
+<div class="flex flex-wrap items-start gap-x-4 mb-2">
+  <div
+    class="grid w-full grid-cols-2 gap-x-3 sm:w-auto sm:gap-x-4 sm:grid-cols-[12rem_12rem_12rem]"
+  >
+    <app-select
+      [label]="'quiz.topicLabel' | translate"
+      [options]="topicOptions()"
+      [formControl]="topicControl"
+    />
+    <app-select
+      [label]="'quiz.sortLabel' | translate"
+      [options]="sortOptions()"
+      [formControl]="sortControl"
+    />
+    <app-select
+      [label]="'quiz.markLabel' | translate"
+      [options]="markOptions()"
+      [formControl]="markControl"
+    />
+  </div>
+  <div class="flex flex-col gap-1 mb-4 md:ml-auto">
+    <span class="field__label" aria-hidden="true">{{ 'quiz.viewLabel' | translate }}</span>
+    <app-segmented
+      [label]="'quiz.viewLabel' | translate"
+      [options]="viewOptions()"
+      [value]="params().view"
+      (valueChange)="setView($event)"
+    />
+  </div>
 </div>
 
-@let page = result();
+@let res = result();
 <section [attr.aria-busy]="loading()">
-  @if (!page) {
+  @if (!res) {
     <app-loading />
-  } @else if (page.content.length === 0) {
+  } @else if (total() === 0) {
     <div class="card-surface py-10 px-4 flex flex-col items-center text-center gap-3">
       <app-mascot class="w-24 h-24" />
       <p class="typo-card-title">
         {{
-          params().q ? ('quiz.noMatch' | translate: { q: params().q }) : ('quiz.empty' | translate)
+          params().q
+            ? ('quiz.noMatch' | translate: { q: params().q })
+            : ('quiz.emptyMark.' + params().mark | translate)
         }}
       </p>
-      @if (params().q || params().topicId) {
+      @if (params().q || params().topicId || params().mark !== 'ALL') {
         <p class="typo-muted">{{ 'quiz.noMatchHint' | translate }}</p>
+      }
+    </div>
+  } @else if (res.kind === 'groups') {
+    <p class="typo-caption mb-3">
+      {{ 'quiz.groupCount' | translate: { n: total(), topics: res.groups.length } }}
+    </p>
+    <div class="flex flex-col gap-8 transition-opacity" [class.opacity-60]="loading()">
+      @for (group of res.groups; track group.topic.id) {
+        <app-quiz-group
+          class="anim-slide-up-in"
+          [style.--i]="$index"
+          [group]="group"
+          [keepFilters]="true"
+        />
       }
     </div>
   } @else {
     <p class="typo-caption mb-2">
-      {{ 'quiz.resultCount' | translate: { n: page.totalElements } }}
+      {{ 'quiz.resultCount' | translate: { n: total() } }}
     </p>
     <ul
       class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 transition-opacity"
       [class.opacity-60]="loading()"
     >
-      @for (quiz of page.content; track quiz.id) {
+      @for (quiz of res.page.content; track quiz.id) {
         <li class="anim-slide-up-in" [style.--i]="$index">
           <app-quiz-card class="h-full" [quiz]="quiz" />
         </li>
@@ -55,8 +83,8 @@
 
     <app-pagination
       class="block mt-6"
-      [page]="page.page"
-      [totalPages]="page.totalPages"
+      [page]="res.page.page"
+      [totalPages]="res.page.totalPages"
       (pageChange)="goToPage($event)"
     />
   }

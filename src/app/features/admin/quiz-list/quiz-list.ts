@@ -1,19 +1,35 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Params, Router, RouterLink } from '@angular/router';
-import { catchError, debounceTime, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
-import { APP_SETTINGS, ROUTES, adminQuizEditUrl, quizUrl } from '../../../core/config';
-import { ScrollRestoreService } from '../../../core/navigation/scroll-restore.service';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  finalize,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
+import {
+  APP_SETTINGS,
+  ROUTES,
+  adminQuizEditUrl,
+  adminQuizStatsUrl,
+  quizUrl,
+} from '../../../core/config';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
 import { QuizStatus } from '../../../core/models';
+import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { InputTextComponent } from '../../../shared/ui/input-text/input-text';
 import { LoadingComponent } from '../../../shared/ui/loading/loading';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header';
 import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 import { SelectComponent, SelectOption } from '../../../shared/ui/select/select';
+import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { formatDate } from '../../../shared/utils/common.utils';
 import { QuizzesService } from '../../quizzes/quizzes.service';
 import { AdminQuizListParams, AdminQuizzesService } from '../admin-quizzes.service';
@@ -22,6 +38,7 @@ const STATUSES: QuizStatus[] = ['DRAFT', 'PUBLISHED'];
 /** Giá trị "tất cả" trong ô chọn (select chỉ nhận chuỗi). */
 const ALL = '';
 const { pageSize, searchDebounceMs } = APP_SETTINGS.quizzes;
+const titleMaxLength = APP_SETTINGS.validation.quizTitleMaxLength;
 
 function paramsFrom(query: ParamMap): AdminQuizListParams {
   const topicId = Number(query.get('topicId'));
@@ -48,6 +65,7 @@ const sameParams = (a: AdminQuizListParams, b: AdminQuizListParams) =>
   selector: 'app-admin-quiz-list',
   standalone: true,
   imports: [
+    ButtonComponent,
     ReactiveFormsModule,
     RouterLink,
     IconComponent,
@@ -62,6 +80,9 @@ const sameParams = (a: AdminQuizListParams, b: AdminQuizListParams) =>
 })
 export class AdminQuizListComponent {
   private adminQuizzes = inject(AdminQuizzesService);
+  private quizzes = inject(QuizzesService);
+  private toast = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
   private translate = inject(TranslateService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -69,6 +90,9 @@ export class AdminQuizListComponent {
   readonly newUrl = ROUTES.adminQuizNew;
   readonly editUrl = adminQuizEditUrl;
   readonly viewUrl = quizUrl;
+  readonly statsUrl = adminQuizStatsUrl;
+  /** Đề đang được nhân bản (chặn bấm tiếp tới khi xong). */
+  duplicatingId = signal<number | null>(null);
 
   private initial = paramsFrom(this.route.snapshot.queryParamMap);
   statusControl = new FormControl(this.initial.status ?? ALL, { nonNullable: true });
@@ -91,12 +115,9 @@ export class AdminQuizListComponent {
     { initialValue: null },
   );
 
-  private topics = toSignal(
-    inject(QuizzesService)
-      .listTopics()
-      .pipe(catchError(() => of([]))),
-    { initialValue: [] },
-  );
+  private topics = toSignal(this.quizzes.listTopics().pipe(catchError(() => of([]))), {
+    initialValue: [],
+  });
 
   statusOptions = computed<SelectOption[]>(() => {
     this.translate.locale();
@@ -117,12 +138,6 @@ export class AdminQuizListComponent {
   private dateLocale = computed(() => APP_SETTINGS.i18n.formatLocale[this.translate.locale()]);
 
   constructor() {
-    // Back về trang này: cuộn lại chỗ đang xem khi danh sách đã hiện.
-    const scrollRestore = inject(ScrollRestoreService);
-    effect(() => {
-      if (this.result()) scrollRestore.restore();
-    });
-
     this.searchControl.valueChanges
       .pipe(
         debounceTime(searchDebounceMs),
@@ -167,5 +182,27 @@ export class AdminQuizListComponent {
       queryParamsHandling: 'merge',
       replaceUrl,
     });
+  }
+
+  /** Chép đề thành bản nháp mới (tên "Bản sao – …") rồi mở trình soạn của bản sao. */
+  duplicate(id: number): void {
+    if (this.duplicatingId() !== null) return;
+    this.duplicatingId.set(id);
+    this.quizzes
+      .get(id)
+      .pipe(
+        switchMap((quiz) =>
+          this.adminQuizzes.duplicate(
+            quiz,
+            this.translate.t('adminQuiz.copyTitle', { title: quiz.title }).slice(0, titleMaxLength),
+          ),
+        ),
+        finalize(() => this.duplicatingId.set(null)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((copy) => {
+        this.toast.success(this.translate.t('adminQuiz.duplicated'));
+        this.router.navigateByUrl(adminQuizEditUrl(copy.id));
+      });
   }
 }

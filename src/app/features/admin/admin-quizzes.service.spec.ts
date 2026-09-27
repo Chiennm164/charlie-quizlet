@@ -48,4 +48,9 @@ describe('Admin services', () => {
     service.delete(5).subscribe();
     expect(http.expectOne(`${API}/admin/topics/5`).request.method).toBe('DELETE');
   });
+
+  it('thống kê: gọi API admin của đúng bộ đề', () => {
+    TestBed.inject(AdminQuizzesService).stats(37).subscribe();
+    http.expectOne(`${API}/admin/quizzes/37/stats`).flush({});
+  });
 });

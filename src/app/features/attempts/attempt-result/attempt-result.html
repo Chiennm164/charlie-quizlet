@@ -1,0 +1,96 @@
+@let attempt = store.attempt()!;
+
+<div class="max-w-3xl mx-auto flex flex-col gap-6">
+  <section
+    class="card-surface p-6 sm:p-8 flex flex-col items-center text-center gap-3 anim-slide-up-in"
+  >
+    <app-mascot [mood]="verdict() === 'keepTrying' ? 'sad' : 'happy'" class="w-24 h-24" />
+    <p class="typo-caption">
+      <a class="link" [routerLink]="quizUrl(attempt.quiz.id)">{{ attempt.quiz.title }}</a>
+      · {{ 'attempt.mode.' + attempt.mode | translate }}
+    </p>
+    <h1 class="typo-page-title">{{ 'attempt.verdict.' + verdict() | translate }}</h1>
+    <p class="typo-page-title flex items-baseline gap-2" aria-live="polite">
+      <span class="text-primary">{{ correct() | score: total() }}</span>
+      <span class="typo-body">{{ 'attempt.pointsOf' | translate: { scale: scoreScale } }}</span>
+    </p>
+
+    <dl class="grid w-full gap-3 grid-cols-3 text-body-sm">
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'attempt.correctLabel' | translate }}</dt>
+        <dd class="typo-section-title">{{ correct() }}/{{ total() }}</dd>
+      </div>
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'attempt.duration' | translate }}</dt>
+        <dd class="typo-section-title">{{ duration() }}</dd>
+      </div>
+      <div class="quiz-stat">
+        <dt class="text-text-muted">{{ 'attempt.submittedAt' | translate }}</dt>
+        <dd class="typo-body font-bold">{{ submittedAt() }}</dd>
+      </div>
+    </dl>
+
+    <div class="flex flex-wrap justify-center gap-2 pt-2" [attr.aria-busy]="starting()">
+      @if (wrongCount()) {
+        <app-button [loading]="starting()" (clicked)="retry(true)">
+          <app-icon name="refresh" />
+          {{ 'attempt.retryWrong' | translate: { n: wrongCount() } }}
+        </app-button>
+      }
+      <app-button variant="secondary" [disabled]="starting()" (clicked)="retry(false)">
+        {{ 'attempt.retryAll' | translate }}
+      </app-button>
+      <a class="btn btn--ghost btn--md" [routerLink]="quizUrl(attempt.quiz.id)">
+        {{ 'attempt.backToQuiz' | translate }}
+      </a>
+    </div>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h2 class="typo-section-title">{{ 'attempt.reviewTitle' | translate }}</h2>
+    <app-tabs [tabs]="tabs()" [activeId]="filter()" (activeIdChange)="selectFilter($event)" />
+
+    @for (item of reviewed(); track item.question.questionId) {
+      @let q = item.question;
+      <article class="card-surface p-4 sm:p-5 flex flex-col gap-3">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="typo-card-title">
+            {{ 'attempt.questionOf' | translate: { n: item.index + 1, total: total() } }}
+          </h3>
+          <span
+            class="quiz-chip text-caption"
+            [class.text-success]="item.status === 'correct'"
+            [class.text-danger]="item.status !== 'correct'"
+          >
+            {{ 'attempt.status.' + item.status | translate }}
+          </span>
+        </div>
+        <p class="typo-body whitespace-pre-line break-words">{{ q.content }}</p>
+        <ul class="flex flex-col gap-2">
+          @for (option of q.options; track option.id; let i = $index) {
+            @let state = optionState(q, option.id);
+            <li
+              class="attempt-option"
+              [class.is-correct]="state === 'correct'"
+              [class.is-wrong]="state === 'wrong'"
+            >
+              <span class="option-letter mt-0.5">{{ letters[i] }}</span>
+              <span class="flex-1 whitespace-pre-line break-words">{{ option.content }}</span>
+              @if (q.selectedOptionId === option.id) {
+                <span class="typo-caption shrink-0">{{ 'attempt.yourAnswer' | translate }}</span>
+              }
+            </li>
+          }
+        </ul>
+        @if (q.explanation) {
+          <p class="rounded-md bg-bg-muted p-3 typo-body-sm whitespace-pre-line break-words">
+            <span class="font-semibold">{{ 'attempt.explanation' | translate }}:</span>
+            {{ q.explanation }}
+          </p>
+        }
+      </article>
+    } @empty {
+      <p class="card-surface p-6 text-center typo-muted">{{ 'attempt.reviewEmpty' | translate }}</p>
+    }
+  </section>
+</div>

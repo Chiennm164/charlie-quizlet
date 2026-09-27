@@ -10,60 +10,167 @@
     </a>
   </section>
 } @else if (quiz(); as quiz) {
-  <div class="max-w-2xl mx-auto">
-    <app-breadcrumb [items]="breadcrumb()" />
+  <app-breadcrumb [items]="breadcrumb()" />
+
+  <div class="grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
+    <div class="flex flex-col gap-6 min-w-0">
+      <article class="card-surface p-5 sm:p-6 flex flex-col gap-3 anim-slide-up-in">
+        <div class="flex flex-wrap items-center gap-2">
+          <a
+            class="quiz-chip quiz-chip--primary"
+            [routerLink]="browseUrl"
+            [queryParams]="{ topicId: quiz.topic.id }"
+            >{{ quiz.topic.name }}</a
+          >
+          @if (quiz.status === 'DRAFT') {
+            <span class="quiz-chip text-caption">{{ 'quiz.status.DRAFT' | translate }}</span>
+          }
+          <app-favorite-button class="ml-auto" [quizId]="quiz.id" />
+          @if (quiz.canEdit) {
+            <a class="btn btn--secondary btn--sm" [routerLink]="editUrl(quiz.id)">
+              <app-icon name="pencil" />
+              {{ 'adminQuiz.edit' | translate }}
+            </a>
+          }
+        </div>
+
+        <h1 class="typo-page-title break-words">{{ quiz.title }}</h1>
+        @if (quiz.description) {
+          <p class="typo-body text-text-muted whitespace-pre-line break-words">
+            {{ quiz.description }}
+          </p>
+        }
+
+        <ul class="flex flex-wrap gap-x-5 gap-y-2 pt-1 typo-body-sm">
+          <li class="inline-flex items-center gap-1.5">
+            <app-icon name="clipboard-check" class="text-primary" />
+            <span class="font-bold">{{ quiz.questionCount }}</span>
+            <span class="text-text-muted">{{ 'quiz.questionsUnit' | translate }}</span>
+          </li>
+          <li class="inline-flex items-center gap-1.5">
+            <app-icon name="clock" class="text-primary" />
+            <span class="font-bold">
+              {{
+                quiz.timeLimitMinutes
+                  ? ('quiz.minutes' | translate: { n: quiz.timeLimitMinutes })
+                  : ('quiz.noTimeLimit' | translate)
+              }}
+            </span>
+          </li>
+          @if (publishedAt()) {
+            <li class="inline-flex items-center gap-1.5 text-text-muted">
+              <app-icon name="check-circle" />
+              {{ 'quiz.publishedOn' | translate: { date: publishedAt() } }}
+            </li>
+          }
+        </ul>
+      </article>
+
+      @if (unfinished(); as unfinished) {
+        <div
+          class="rounded-lg border-2 border-primary/40 bg-primary-soft p-4 flex flex-wrap items-center gap-3"
+          animate.enter="anim-fade-in"
+        >
+          <p class="flex-1 min-w-48 typo-body-sm">
+            <span class="font-semibold">{{ 'attempt.unfinishedTitle' | translate }}</span>
+            · {{ 'attempt.mode.' + unfinished.mode | translate }} ·
+            {{ formatDateTime(unfinished.startedAt) }}
+          </p>
+          <a class="btn btn--primary btn--sm" [routerLink]="attemptUrl(unfinished.id)">
+            {{ 'attempt.resume' | translate }}
+          </a>
+        </div>
+      }
+
+      <section class="flex flex-col gap-3" [attr.aria-busy]="starting()">
+        <h2 class="typo-section-title">{{ 'attempt.chooseMode' | translate }}</h2>
+        @if (quiz.canEdit) {
+          <p class="typo-caption -mt-2">{{ 'attempt.previewHint' | translate }}</p>
+        }
+        <div class="grid gap-4 sm:grid-cols-2">
+          @for (mode of modes; track mode) {
+            <button
+              type="button"
+              class="group card-surface p-5 flex flex-col items-start gap-3 text-left transition-all hover:-translate-y-0.5 hover:border-primary disabled:opacity-60 disabled:hover:translate-y-0"
+              [disabled]="starting() || quiz.questionCount === 0"
+              (click)="start(mode)"
+            >
+              <span
+                class="flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-primary"
+                aria-hidden="true"
+              >
+                <app-icon [name]="mode === 'EXAM' ? 'clock' : 'book-open'" [size]="22" />
+              </span>
+              <span class="flex flex-col gap-1">
+                <span class="typo-card-title">{{ 'attempt.mode.' + mode | translate }}</span>
+                <span class="typo-body-sm text-text-muted">
+                  {{
+                    'attempt.modeHint.' +
+                      (mode === 'EXAM' && quiz.timeLimitMinutes ? 'EXAM_TIMED' : mode)
+                      | translate: { n: quiz.timeLimitMinutes ?? 0 }
+                  }}
+                </span>
+                @if (mode === 'EXAM' && quiz.examDrawCount < quiz.questionCount) {
+                  <span class="typo-body-sm font-semibold text-primary">
+                    {{
+                      'attempt.examDraw'
+                        | translate: { n: quiz.examDrawCount, total: quiz.questionCount }
+                    }}
+                  </span>
+                }
+              </span>
+              <span
+                class="mt-auto inline-flex items-center gap-1 typo-body-sm font-bold text-primary"
+              >
+                {{ 'attempt.startMode' | translate }}
+                <app-icon
+                  name="chevron-right"
+                  class="transition-transform group-hover:translate-x-0.5"
+                />
+              </span>
+            </button>
+          }
+        </div>
+      </section>
+    </div>
+
+    <aside class="card-surface p-4 flex flex-col gap-3 lg:sticky lg:top-4">
+      <h2 class="typo-card-title">{{ 'attempt.historyTitle' | translate }}</h2>
+      @if (history() === null) {
+        <p class="typo-caption">{{ 'common.loading' | translate }}</p>
+      } @else if (submitted().length) {
+        @if (bestPercent() !== null) {
+          <p class="rounded-md bg-bg-muted px-3 py-2 typo-body-sm">
+            {{ 'attempt.best' | translate }}:
+            <span class="font-bold text-primary">{{
+              'quiz.mark.points' | translate: { n: bestPercent() | score }
+            }}</span>
+          </p>
+        }
+        <ul class="flex flex-col divide-y divide-border -mx-1">
+          @for (attempt of submitted(); track attempt.id) {
+            <li>
+              <a
+                class="flex items-center gap-3 rounded-md px-1 py-2 hover:bg-bg-muted transition-colors"
+                [routerLink]="attemptUrl(attempt.id)"
+              >
+                <span class="typo-body font-bold text-primary w-14 shrink-0">
+                  {{ attempt.correctCount }}/{{ attempt.questionCount }}
+                </span>
+                <span class="flex flex-col min-w-0 flex-1">
+                  <span class="typo-body-sm font-semibold">
+                    {{ 'attempt.mode.' + attempt.mode | translate }}
+                  </span>
+                  <span class="typo-caption">{{ formatDateTime(attempt.submittedAt!) }}</span>
+                </span>
+                <app-icon name="chevron-right" class="text-text-muted shrink-0" />
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="typo-body-sm text-text-muted">{{ 'attempt.historyEmpty' | translate }}</p>
+      }
+    </aside>
   </div>
-  <article class="max-w-2xl mx-auto card-surface p-6 sm:p-8 flex flex-col gap-4 anim-slide-up-in">
-    <div class="flex flex-wrap items-center gap-2">
-      <a
-        class="quiz-chip quiz-chip--primary"
-        [routerLink]="browseUrl"
-        [queryParams]="{ topicId: quiz.topic.id }"
-        >{{ quiz.topic.name }}</a
-      >
-      @if (quiz.status === 'DRAFT') {
-        <span class="quiz-chip typo-caption">{{ 'quiz.status.DRAFT' | translate }}</span>
-      }
-      @if (quiz.canEdit) {
-        <a class="btn btn--secondary btn--sm ml-auto" [routerLink]="editUrl(quiz.id)">
-          <app-icon name="pencil" />
-          {{ 'adminQuiz.edit' | translate }}
-        </a>
-      }
-    </div>
-
-    <h1 class="typo-page-title break-words">{{ quiz.title }}</h1>
-    @if (quiz.description) {
-      <p class="typo-body whitespace-pre-line break-words">{{ quiz.description }}</p>
-    }
-
-    <dl class="grid gap-3 sm:grid-cols-3 text-body-sm">
-      <div class="quiz-stat">
-        <dt class="text-text-muted">{{ 'quiz.questions' | translate }}</dt>
-        <dd class="typo-section-title">{{ quiz.questionCount }}</dd>
-      </div>
-      <div class="quiz-stat">
-        <dt class="text-text-muted">{{ 'quiz.timeLimit' | translate }}</dt>
-        <dd class="typo-section-title">
-          {{
-            quiz.timeLimitMinutes
-              ? ('quiz.minutes' | translate: { n: quiz.timeLimitMinutes })
-              : ('quiz.noTimeLimit' | translate)
-          }}
-        </dd>
-      </div>
-      <div class="quiz-stat">
-        <dt class="text-text-muted">{{ 'quiz.publishedAt' | translate }}</dt>
-        <dd class="typo-section-title">{{ publishedAt() || '—' }}</dd>
-      </div>
-    </dl>
-
-    <div class="flex flex-col items-center gap-2 pt-2">
-      <button type="button" class="btn btn--primary btn--lg" disabled>
-        <app-icon name="clipboard-check" />
-        {{ 'quiz.start' | translate }}
-      </button>
-      <p class="typo-caption">{{ 'quiz.startComingSoon' | translate }}</p>
-    </div>
-  </article>
 }

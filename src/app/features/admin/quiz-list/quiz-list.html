@@ -58,7 +58,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center gap-2">
               <span
-                class="quiz-chip typo-caption"
+                class="quiz-chip text-caption"
                 [class.quiz-chip--primary]="quiz.status === 'PUBLISHED'"
                 >{{ 'quiz.status.' + quiz.status | translate }}</span
               >
@@ -70,12 +70,25 @@
               {{ 'adminQuiz.updatedAt' | translate: { date: formatDate(quiz.updatedAt) } }}
             </p>
           </div>
-          <div class="flex gap-2 shrink-0">
+          <div class="flex flex-wrap gap-2 shrink-0 [&_.btn]:whitespace-nowrap">
+            <a class="btn btn--ghost btn--sm" [routerLink]="viewUrl(quiz.id)">
+              {{ 'adminQuiz.view' | translate }}
+            </a>
             @if (quiz.status === 'PUBLISHED') {
-              <a class="btn btn--ghost btn--sm" [routerLink]="viewUrl(quiz.id)">
-                {{ 'adminQuiz.view' | translate }}
+              <a class="btn btn--ghost btn--sm" [routerLink]="statsUrl(quiz.id)">
+                <app-icon name="chart" />
+                {{ 'quizStats.open' | translate }}
               </a>
             }
+            <app-button
+              variant="ghost"
+              size="sm"
+              [loading]="duplicatingId() === quiz.id"
+              [disabled]="duplicatingId() !== null"
+              (clicked)="duplicate(quiz.id)"
+            >
+              {{ 'adminQuiz.duplicate' | translate }}
+            </app-button>
             <a class="btn btn--secondary btn--sm" [routerLink]="editUrl(quiz.id)">
               <app-icon name="pencil" />
               {{ 'adminQuiz.edit' | translate }}

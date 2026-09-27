@@ -4,4 +4,6 @@ export const STORAGE_KEYS = {
   tokenExpiresAt: 'cq_token_expires_at',
   refreshToken: 'cq_refresh_token',
   locale: 'cq_locale',
+  /** Cách xem trang Bộ đề người dùng chọn lần trước: 'group' | 'list'. */
+  quizView: 'cq_quiz_view',
 } as const;

@@ -4,6 +4,9 @@ export type QuizStatus = 'DRAFT' | 'PUBLISHED';
 /** RECENT: mới sửa trước (mặc định) · NEWEST: mới tạo trước · TITLE: A → Z. Khớp enum QuizSort ở BE. */
 export type QuizSort = 'RECENT' | 'NEWEST' | 'TITLE';
 
+/** Lọc theo quan hệ với người xem: mọi đề · chưa nộp lần nào · yêu thích. Khớp enum QuizMark ở BE. */
+export type QuizMark = 'ALL' | 'NOT_TAKEN' | 'FAVORITE';
+
 export interface TopicRef {
   id: number;
   name: string;
@@ -58,6 +61,10 @@ export interface Quiz {
   title: string;
   description: string | null;
   timeLimitMinutes: number | null;
+  /** Cấu hình riêng của đề: số câu mỗi lượt thi thử; null = dùng mặc định của hệ thống. */
+  examQuestionCount: number | null;
+  /** Số câu thực tế mỗi lượt thi thử (cấu hình hoặc mặc định, không quá số câu đang có) — BE tính. */
+  examDrawCount: number;
   status: QuizStatus;
   owner: { id: number; fullName: string };
   questionCount: number;
@@ -74,6 +81,8 @@ export interface QuizListParams {
   topicId: number | null;
   q: string;
   sort: QuizSort;
+  /** Chỉ trang học sinh; bỏ trống = ALL. */
+  mark?: QuizMark;
   /** Bắt đầu từ 0. */
   page: number;
   size: number;
@@ -102,6 +111,8 @@ export interface QuizRequest {
   description: string | null;
   /** null = không giới hạn. */
   timeLimitMinutes: number | null;
+  /** Thi thử rút ngẫu nhiên chừng này câu mỗi lượt; null = dùng mặc định của hệ thống. */
+  examQuestionCount: number | null;
   /** PUBLISHED cần ít nhất 1 câu hỏi. */
   status: QuizStatus;
   questions: QuizQuestionRequest[];

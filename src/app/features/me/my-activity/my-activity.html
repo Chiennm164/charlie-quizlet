@@ -1,0 +1,85 @@
+@if (unfinished().length || recent().length) {
+  <div class="grid gap-4 mb-8" [class.lg:grid-cols-2]="bothPanels()" animate.enter="anim-fade-in">
+    @if (unfinished().length) {
+      <section class="card-surface p-4 flex flex-col gap-2 border-primary/40">
+        <h2 class="typo-card-title inline-flex items-center gap-2">
+          <app-icon name="clock" class="text-primary" />
+          {{ 'me.unfinishedTitle' | translate }}
+        </h2>
+        <ul class="flex flex-col divide-y divide-border">
+          @for (a of unfinished(); track a.id) {
+            <li class="flex items-center gap-3 py-2">
+              <span class="flex flex-col min-w-0 flex-1">
+                <span class="typo-body font-semibold truncate">{{ a.quizTitle }}</span>
+                <span class="typo-caption">
+                  {{ 'attempt.mode.' + a.mode | translate }} · {{ timeAgo(a.startedAt) }}
+                </span>
+              </span>
+              <a class="btn btn--primary btn--sm shrink-0" [routerLink]="attemptUrl(a.id)">
+                {{ 'attempt.resume' | translate }}
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (recent().length) {
+      <section class="card-surface p-4 flex flex-col gap-2">
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 class="typo-card-title">{{ 'me.recentTitle' | translate }}</h2>
+          <a class="link text-body-sm shrink-0" [routerLink]="historyUrl">
+            {{ 'me.seeHistory' | translate }}
+          </a>
+        </div>
+        <ul class="flex flex-col divide-y divide-border">
+          @for (a of recent(); track a.id) {
+            <li class="flex items-center gap-3 py-2">
+              <a
+                class="flex items-center gap-3 min-w-0 flex-1 rounded-md -mx-1 px-1 hover:bg-bg-muted transition-colors"
+                [routerLink]="attemptUrl(a.id)"
+                [attr.aria-label]="'me.reviewAttempt' | translate: { title: a.quizTitle }"
+              >
+                <span class="score-badge" [class]="'is-' + a.level">
+                  <span class="text-body">{{ a.correctCount | score: a.questionCount }}</span>
+                  <span class="text-caption font-semibold">
+                    {{ a.correctCount }}/{{ a.questionCount }}
+                  </span>
+                </span>
+                <span class="flex flex-col min-w-0">
+                  <span class="typo-body font-semibold truncate">{{ a.quizTitle }}</span>
+                  <span class="typo-caption">
+                    {{ 'attempt.mode.' + a.mode | translate }} · {{ timeAgo(a.submittedAt!) }}
+                  </span>
+                </span>
+              </a>
+              <a class="btn btn--ghost btn--sm shrink-0" [routerLink]="quizUrl(a.quizId)">
+                <app-icon name="refresh" />
+                <span class="hidden sm:inline">{{ 'me.retake' | translate }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+}
+
+@if (favorites().length) {
+  <section class="mb-8" animate.enter="anim-fade-in">
+    <div class="flex items-baseline justify-between gap-3 mb-3">
+      <h2 class="typo-section-title">{{ 'me.favoritesTitle' | translate }}</h2>
+      <a
+        class="link text-body-sm shrink-0"
+        [routerLink]="favoritesUrl"
+        [queryParams]="{ mark: 'FAVORITE', view: 'list' }"
+        >{{ 'me.seeAllFavorites' | translate }}</a
+      >
+    </div>
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      @for (quiz of favorites(); track quiz.id) {
+        <li><app-quiz-card class="h-full" [quiz]="quiz" /></li>
+      }
+    </ul>
+  </section>
+}

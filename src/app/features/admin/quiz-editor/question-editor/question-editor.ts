@@ -10,9 +10,9 @@ import { TextErrorComponent } from '../../../../shared/ui/text-error/text-error'
 import { TextareaComponent } from '../../../../shared/ui/textarea/textarea';
 import { controlErrorMessage } from '../../../../shared/utils/validation.utils';
 import { QuestionForm, createOption, removeOption } from '../quiz-form';
+import { OPTION_LETTERS } from '../../../../shared/utils/common.utils';
 
 const { questionMinOptions, questionMaxOptions } = APP_SETTINGS.validation;
-const LETTERS = 'ABCDEF';
 let nextId = 0;
 
 /**
@@ -48,7 +48,7 @@ export class QuestionEditorComponent {
   readonly maxOptions = questionMaxOptions;
 
   letter(i: number): string {
-    return LETTERS[i] ?? String(i + 1);
+    return OPTION_LETTERS[i] ?? String(i + 1);
   }
 
   errorFor(control: FormControl<string>): string | null {

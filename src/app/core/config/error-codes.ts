@@ -27,6 +27,14 @@ export const ERROR_CODES = {
   QUIZ_DUPLICATE_OPTION: 'QUIZ_DUPLICATE_OPTION',
   QUIZ_EMPTY: 'QUIZ_EMPTY',
   QUIZ_ITEM_NOT_FOUND: 'QUIZ_ITEM_NOT_FOUND',
+  /** Lượt làm không tồn tại / không phải của mình / đã bị huỷ khi bắt đầu lượt mới. */
+  ATTEMPT_NOT_FOUND: 'ATTEMPT_NOT_FOUND',
+  ATTEMPT_ALREADY_SUBMITTED: 'ATTEMPT_ALREADY_SUBMITTED',
+  /** Quá giờ: BE đã tự nộp bài -> tải lại để xem kết quả. */
+  ATTEMPT_TIME_UP: 'ATTEMPT_TIME_UP',
+  ATTEMPT_ANSWER_LOCKED: 'ATTEMPT_ANSWER_LOCKED',
+  ATTEMPT_INVALID_ANSWER: 'ATTEMPT_INVALID_ANSWER',
+  ATTEMPT_NOTHING_TO_RETRY: 'ATTEMPT_NOTHING_TO_RETRY',
   TOPIC_NOT_FOUND: 'TOPIC_NOT_FOUND',
   /** Tên chủ đề trùng (không phân biệt hoa thường) -> báo dưới ô tên. */
   TOPIC_NAME_TAKEN: 'TOPIC_NAME_TAKEN',
@@ -34,3 +42,12 @@ export const ERROR_CODES = {
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+
+/**
+ * Mã hiển thị cho lỗi FE tự gán (không có phản hồi của BE). Cùng dạng MCN-GG-NN với BE (enum ErrorCode):
+ * lỗi không rõ dùng lại mã COMMON_INTERNAL_ERROR của BE, mất kết nối dùng MCN-00-99 (BE không cấp số này).
+ */
+export const FE_ERROR_DISPLAY_CODES: Partial<Record<ErrorCode, string>> = {
+  COMMON_NETWORK_ERROR: 'MCN-00-99',
+  COMMON_INTERNAL_ERROR: 'MCN-00-07',
+};

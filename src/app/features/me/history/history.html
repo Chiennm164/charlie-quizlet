@@ -1,0 +1,78 @@
+<app-page-header
+  [title]="'me.historyTitle' | translate"
+  [description]="'me.historyDescription' | translate"
+/>
+
+<div class="grid grid-cols-2 gap-x-3 sm:gap-x-4 sm:grid-cols-[14rem_14rem] mb-2">
+  <app-select
+    [label]="'me.modeLabel' | translate"
+    [options]="modeOptions()"
+    [formControl]="modeControl"
+  />
+  <app-select
+    [label]="'quiz.topicLabel' | translate"
+    [options]="topicOptions()"
+    [formControl]="topicControl"
+  />
+</div>
+
+@let page = result();
+<section [attr.aria-busy]="loading()">
+  @if (!page) {
+    <app-loading />
+  } @else if (page.content.length === 0) {
+    <div class="card-surface py-10 px-4 flex flex-col items-center text-center gap-3">
+      <app-mascot class="w-24 h-24" />
+      <p class="typo-card-title">{{ 'me.historyEmpty' | translate }}</p>
+      @if (params().mode || params().topicId) {
+        <p class="typo-muted">{{ 'quiz.noMatchHint' | translate }}</p>
+      } @else {
+        <a class="btn btn--primary btn--md mt-2" [routerLink]="browseUrl">
+          {{ 'quiz.backToBrowse' | translate }}
+        </a>
+      }
+    </div>
+  } @else {
+    <p class="typo-caption mb-2">
+      {{ 'me.historyCount' | translate: { n: page.totalElements } }}
+    </p>
+    <ul class="flex flex-col gap-2 transition-opacity" [class.opacity-60]="loading()">
+      @for (a of page.content; track a.id) {
+        <li class="anim-slide-up-in" [style.--i]="$index">
+          <a
+            class="card-surface p-4 flex flex-wrap items-center gap-x-4 gap-y-2 transition-all hover:border-primary"
+            [routerLink]="attemptUrl(a.id)"
+          >
+            @let pct = score(a);
+            <span class="score-badge" [class]="'is-' + level(pct)">
+              <span class="text-body">{{ a.correctCount | score: a.questionCount }}</span>
+              <span class="text-caption font-semibold"
+                >{{ a.correctCount }}/{{ a.questionCount }}</span
+              >
+            </span>
+            <span class="flex flex-col min-w-0 flex-1">
+              <span class="typo-card-title break-words">{{ a.quizTitle }}</span>
+              <span class="typo-caption">
+                {{ a.topicName }} · {{ 'attempt.mode.' + a.mode | translate }}
+              </span>
+            </span>
+            <span class="flex flex-col items-end typo-caption shrink-0">
+              <span>{{ formatDateTime(a.submittedAt!) }}</span>
+              <span class="inline-flex items-center gap-1">
+                <app-icon name="clock" [size]="12" />{{ duration(a) }}
+              </span>
+            </span>
+            <app-icon name="chevron-right" class="text-text-muted shrink-0" />
+          </a>
+        </li>
+      }
+    </ul>
+
+    <app-pagination
+      class="block mt-6"
+      [page]="page.page"
+      [totalPages]="page.totalPages"
+      (pageChange)="goToPage($event)"
+    />
+  }
+</section>

@@ -215,6 +215,7 @@ Mọi API lỗi đều trả RFC 9457 problem detail kèm 3 trường ([problem-
   "title": "Conflict",
   "detail": "Email này đã được đăng ký",
   "errorCode": "AUTH_EMAIL_ALREADY_REGISTERED",
+  "errorDisplayCode": "MCN-01-04",
   "errorMessage": "Email này đã được đăng ký",
   "errorDescription": "Hãy đăng nhập, hoặc dùng \"Quên mật khẩu\" nếu bạn không nhớ mật khẩu.",
   "errors": { "email": "..." }
@@ -223,6 +224,7 @@ Mọi API lỗi đều trả RFC 9457 problem detail kèm 3 trường ([problem-
 
 - `errorMessage` / `errorDescription` BE đã dịch theo `Accept-Language`, lấy từ **bảng `error_codes` trong DB** (sửa câu chữ không cần build lại BE).
 - `errors` chỉ có khi `errorCode = COMMON_VALIDATION_FAILED`.
+- Rẽ nhánh theo `errorCode`; dialog lỗi chỉ hiện `errorDisplayCode` (dạng **MCN-GG-NN**, vd `MCN-02-01`) cho người dùng — không lộ tên kỹ thuật. Lỗi FE tự gán mã lấy mã hiển thị từ `FE_ERROR_DISPLAY_CODES` ([error-codes.ts](src/app/core/config/error-codes.ts)): mất kết nối `MCN-00-99`.
 - Lỗi không có mã từ BE, FE tự gán mã chung: mất kết nối → `COMMON_NETWORK_ERROR`, còn lại (proxy trả HTML, lỗi JS...) → `COMMON_INTERNAL_ERROR`. Hàm chuẩn hoá: `toApiError(err)` trong [common.utils.ts](src/app/shared/utils/common.utils.ts).
 
 ### 4.2 Mặc định: dialog lỗi chung
@@ -263,7 +265,7 @@ Luôn rẽ nhánh theo **mã lỗi**, không theo HTTP status (401 có thể là
 
 ### 4.4 Thêm mã lỗi mới
 
-1. **BE** — migration mới thêm dòng vào `error_codes` (`code`, `http_status`, `message_vi/en`, `description_vi/en`, `note`) + thêm hằng số vào enum `ErrorCode`; ném bằng `throw new BusinessException(ErrorCode.X)`.
+1. **BE** — migration mới thêm dòng vào `error_codes` (`code`, `http_status`, `message_vi/en`, `description_vi/en`, `note`) + thêm hằng số vào enum `ErrorCode` kèm mã hiển thị kế tiếp trong nhóm (vd `MCN-03-07`); ném bằng `throw new BusinessException(ErrorCode.X)`.
 2. **FE** — chỉ khi cần rẽ nhánh: thêm vào `ERROR_CODES` ([error-codes.ts](src/app/core/config/error-codes.ts)). Không cần câu dịch ở FE — dialog dùng câu BE trả về.
 
 ### 4.5 Gọi dialog lỗi thủ công

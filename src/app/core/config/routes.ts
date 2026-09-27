@@ -13,6 +13,8 @@ export const ROUTE_SEGMENTS = {
   adminQuizzes: 'admin/quizzes',
   adminQuizNew: 'admin/quizzes/new',
   adminTopics: 'admin/topics',
+  attempts: 'attempts',
+  history: 'history',
 } as const;
 
 type RouteKey = keyof typeof ROUTE_SEGMENTS;
@@ -24,7 +26,10 @@ export const ROUTES = Object.fromEntries(
 
 /** Đường dẫn có tham số (route khai báo trong app.routes.ts: `quizzes/:id`, `admin/quizzes/:id/edit`). */
 export const quizUrl = (id: number) => `/${ROUTE_SEGMENTS.quizzes}/${id}`;
+/** Trang làm bài; đã nộp thì cùng trang này hiện kết quả. */
+export const attemptUrl = (id: number) => `/${ROUTE_SEGMENTS.attempts}/${id}`;
 export const adminQuizEditUrl = (id: number) => `/${ROUTE_SEGMENTS.adminQuizzes}/${id}/edit`;
+export const adminQuizStatsUrl = (id: number) => `/${ROUTE_SEGMENTS.adminQuizzes}/${id}/stats`;
 
 /** Trang mặc định sau khi đăng nhập / đăng ký thành công. */
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.home;

@@ -5,22 +5,73 @@
   (closed)="closed.emit()"
 >
   <div class="flex flex-col gap-3">
-    <div class="rounded-md bg-bg-muted p-3 flex flex-col gap-2 typo-body-sm">
-      <p>{{ 'adminQuiz.import.howTo' | translate }}</p>
-      <p class="font-semibold">{{ 'adminQuiz.import.columns' | translate }}</p>
-      <div>
-        <app-button variant="secondary" size="sm" (clicked)="copySample()">
-          {{ 'adminQuiz.import.copySample' | translate }}
-        </app-button>
-      </div>
-    </div>
+    <app-tabs [tabs]="tabs()" [activeId]="mode()" (activeIdChange)="selectMode($event)" />
 
-    <app-textarea
-      [label]="'adminQuiz.import.textLabel' | translate"
-      [placeholder]="'adminQuiz.import.placeholder' | translate"
-      [rows]="6"
-      [formControl]="text"
-    />
+    <p class="typo-body-sm font-semibold">{{ 'adminQuiz.import.columns' | translate }}</p>
+
+    @switch (mode()) {
+      @case ('file') {
+        <div class="flex flex-col gap-2" animate.enter="anim-fade-in">
+          <label
+            class="flex flex-col items-center gap-1 rounded-md border-2 border-dashed bg-bg-muted px-4 py-6 text-center transition-colors hover:border-primary has-[input:focus-visible]:border-primary"
+            [class.border-primary]="dragging()"
+            [class.border-border]="!dragging()"
+            [attr.aria-busy]="reading()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="dragging.set(false)"
+            (drop)="onDrop($event)"
+          >
+            <input
+              type="file"
+              class="sr-only"
+              accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              (change)="onFileInput($event)"
+            />
+            <app-icon name="upload" [size]="28" class="text-primary" />
+            <span class="typo-body font-semibold break-all">
+              {{ fileName() ?? ('adminQuiz.import.fileDrop' | translate) }}
+            </span>
+            <span class="typo-caption">
+              {{
+                reading()
+                  ? ('common.loading' | translate)
+                  : ('adminQuiz.import.fileHint' | translate: { n: maxFileSizeMb })
+              }}
+            </span>
+          </label>
+          <app-text-error
+            [message]="
+              fileError() ? (`adminQuiz.import.fileErrors.${fileError()}` | translate) : null
+            "
+          />
+          <div>
+            <a class="btn btn--secondary btn--sm" [href]="templateUrl" download>
+              <app-icon name="download" />
+              {{ 'adminQuiz.import.downloadTemplate' | translate }}
+            </a>
+          </div>
+        </div>
+      }
+      @case ('paste') {
+        <div class="flex flex-col gap-3" animate.enter="anim-fade-in">
+          <div class="rounded-md bg-bg-muted p-3 flex flex-col gap-2 typo-body-sm">
+            <p>{{ 'adminQuiz.import.howTo' | translate }}</p>
+            <div>
+              <app-button variant="secondary" size="sm" (clicked)="copySample()">
+                {{ 'adminQuiz.import.copySample' | translate }}
+              </app-button>
+            </div>
+          </div>
+
+          <app-textarea
+            [label]="'adminQuiz.import.textLabel' | translate"
+            [placeholder]="'adminQuiz.import.placeholder' | translate"
+            [rows]="6"
+            [formControl]="text"
+          />
+        </div>
+      }
+    }
 
     @if (rows().length) {
       <div class="flex flex-col gap-2" animate.enter="anim-fade-in">

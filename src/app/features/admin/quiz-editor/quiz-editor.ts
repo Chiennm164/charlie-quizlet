@@ -15,7 +15,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { catchError, finalize, map, of, startWith } from 'rxjs';
 import { ConfirmDialogService } from '../../../core/confirm/confirm-dialog.service';
-import { APP_SETTINGS, ROUTES, adminQuizEditUrl, quizUrl } from '../../../core/config';
+import {
+  APP_SETTINGS,
+  ROUTES,
+  adminQuizEditUrl,
+  quizUrl,
+  adminQuizStatsUrl,
+} from '../../../core/config';
 import { HasUnsavedChanges } from '../../../core/guards/unsaved-changes.guard';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslateService } from '../../../core/i18n/translate.service';
@@ -35,6 +41,7 @@ import { controlErrorMessage, notBlankValidator } from '../../../shared/utils/va
 import { QuizzesService } from '../../quizzes/quizzes.service';
 import { AdminQuizzesService } from '../admin-quizzes.service';
 import { QuestionEditorComponent } from './question-editor/question-editor';
+import { exportQuestionsXlsx } from './question-export';
 import { QuestionImportDialogComponent } from './question-import-dialog/question-import-dialog';
 import { ImportedQuestion } from './question-import';
 import {
@@ -91,6 +98,7 @@ export class QuizEditorComponent implements HasUnsavedChanges {
   readonly editingId = Number(this.route.paramMap.get('id')) || null;
   /** Trang học sinh của đề đang sửa (nút "Xem như học sinh" khi đề đã xuất bản). */
   readonly viewUrl = this.editingId ? quizUrl(this.editingId) : null;
+  readonly statsUrl = this.editingId ? adminQuizStatsUrl(this.editingId) : null;
   readonly listUrl = ROUTES.adminQuizzes;
   readonly topicsUrl = ROUTES.adminTopics;
   readonly maxQuestions = v.quizMaxQuestions;
@@ -103,6 +111,7 @@ export class QuizEditorComponent implements HasUnsavedChanges {
   /** Bấm xuất bản khi chưa có câu nào. */
   emptyError = signal(false);
   importOpen = signal(false);
+  exporting = signal(false);
 
   private questionRows = viewChildren('questionRow', { read: ElementRef<HTMLElement> });
 
@@ -120,7 +129,28 @@ export class QuizEditorComponent implements HasUnsavedChanges {
       Validators.min(1),
       Validators.max(v.quizTimeLimitMaxMinutes),
     ]),
+    /** Thi thử rút ngẫu nhiên chừng này câu mỗi lượt từ ngân hàng câu hỏi; trống = làm tất cả. */
+    examQuestionCount: new FormControl<number | null>(null, [
+      Validators.min(1),
+      Validators.max(v.quizMaxQuestions),
+    ]),
     questions: new FormArray<QuestionForm>([]),
+  });
+
+  readonly defaultExamQuestionCount = APP_SETTINGS.quizzes.defaultExamQuestionCount;
+  private examQuestionCount = toSignal(
+    this.form.controls.examQuestionCount.valueChanges.pipe(
+      startWith(null),
+      map(() => this.form.controls.examQuestionCount.value),
+    ),
+    { initialValue: null },
+  );
+  /** Gợi ý dưới ô "số câu mỗi lượt": ngân hàng có bao nhiêu câu, mỗi lượt thi thử rút bao nhiêu (tự đặt hay mặc định). */
+  examHint = computed(() => {
+    const own = this.examQuestionCount();
+    const count = own ?? this.defaultExamQuestionCount;
+    const total = this.questionCount();
+    return { count, total, isDefault: own === null, draws: count < total };
   });
 
   get questions() {
@@ -292,6 +322,7 @@ export class QuizEditorComponent implements HasUnsavedChanges {
       title: quiz.title,
       description: quiz.description ?? '',
       timeLimitMinutes: quiz.timeLimitMinutes,
+      examQuestionCount: quiz.examQuestionCount,
     });
     this.questions.clear();
     for (const question of quiz.questions ?? []) this.questions.push(createQuestion(question));
@@ -300,13 +331,29 @@ export class QuizEditorComponent implements HasUnsavedChanges {
     this.form.markAsUntouched();
   }
 
+  /** Tải các câu đang soạn (kể cả chưa lưu) thành file .xlsx đúng mẫu nhập — sửa trong Excel rồi nhập lại được. */
+  async exportExcel(): Promise<void> {
+    if (this.exporting()) return;
+    this.exporting.set(true);
+    try {
+      await exportQuestionsXlsx(
+        this.form.controls.title.value.trim() || this.translate.t('adminQuiz.exportFallbackName'),
+        this.questions.controls.map(toQuestionRequest),
+      );
+    } finally {
+      this.exporting.set(false);
+    }
+  }
+
   private toRequest(status: QuizStatus): QuizRequest {
-    const { topicId, title, description, timeLimitMinutes } = this.form.getRawValue();
+    const { topicId, title, description, timeLimitMinutes, examQuestionCount } =
+      this.form.getRawValue();
     return {
       topicId: Number(topicId),
       title: title.trim(),
       description: description.trim() || null,
       timeLimitMinutes: timeLimitMinutes || null,
+      examQuestionCount: examQuestionCount || null,
       status,
       questions: this.questions.controls.map(toQuestionRequest),
     };

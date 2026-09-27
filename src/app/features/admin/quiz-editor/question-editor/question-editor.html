@@ -42,7 +42,7 @@
             (change)="selectCorrect(i)"
             [attr.aria-label]="'adminQuiz.markCorrect' | translate: { letter: letter(i) }"
           />
-          <span class="quiz-option__letter">{{ letter(i) }}</span>
+          <span class="option-letter">{{ letter(i) }}</span>
         </label>
         <app-input-text
           class="flex-1"

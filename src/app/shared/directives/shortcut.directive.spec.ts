@@ -9,11 +9,13 @@ import { ShortcutDirective } from './shortcut.directive';
     <button appShortcut=" " (shortcut)="count.set(count() + 1)" [disabled]="disabled()">
       Flip
     </button>
+    <button appShortcut="m" (shortcut)="letter.set(letter() + 1)">Mark</button>
     <input />
   `,
 })
 class HostComponent {
   count = signal(0);
+  letter = signal(0);
   disabled = signal(false);
 }
 
@@ -47,6 +49,13 @@ describe('ShortcutDirective', () => {
     fixture.detectChanges();
     press(' ');
     expect(host.count()).toBe(0);
+  });
+
+  it('phím chữ không phân biệt hoa thường (Shift / Caps Lock)', () => {
+    const { host, press } = setup();
+    press('m');
+    press('M');
+    expect(host.letter()).toBe(2);
   });
 
   it('gắn aria-keyshortcuts đọc được', () => {

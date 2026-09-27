@@ -1,32 +1,29 @@
-import { Injectable, Injector, afterNextRender, inject } from '@angular/core';
+import { ApplicationRef, Injectable, inject } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
-import { Router, Scroll } from '@angular/router';
+import { NavigationStart, Router, Scroll } from '@angular/router';
 
 /**
- * Back / Forward về trang danh sách: router khôi phục vị trí cuộn ngay khi chuyển trang, lúc dữ liệu (tải qua API)
- * chưa có nên trang còn ngắn -> cuộn không tới. Service giữ lại vị trí đó; trang gọi `restore()` sau khi đã hiện
- * dữ liệu để cuộn lại đúng chỗ.
- *
- *   effect(() => { if (this.result()) this.scrollRestore.restore(); });
+ * Back / Forward về trang tải dữ liệu qua API: router khôi phục vị trí cuộn ngay khi chuyển trang, lúc dữ liệu chưa
+ * có nên trang còn ngắn -> cuộn không tới. Service chờ app ổn định (mọi request HTTP của trang mới đã xong và đã
+ * render — HttpClient tự báo request đang chạy cho `whenStable`) rồi cuộn lại đúng chỗ. Trang không phải tự gọi gì.
+ * Người dùng đã chuyển tiếp sang trang khác trước khi dữ liệu về thì bỏ qua.
  */
 @Injectable({ providedIn: 'root' })
 export class ScrollRestoreService {
   private scroller = inject(ViewportScroller);
-  private injector = inject(Injector);
-  /** Vị trí cần khôi phục của lần Back / Forward gần nhất (mở trang mới thì null). */
-  private pending: [number, number] | null = null;
+  private appRef = inject(ApplicationRef);
+  /** Id của lần điều hướng mới nhất. */
+  private latestNavigation = 0;
 
   constructor() {
     inject(Router).events.subscribe((event) => {
-      if (event instanceof Scroll) this.pending = event.position;
+      if (event instanceof NavigationStart) this.latestNavigation = event.id;
+      if (!(event instanceof Scroll) || !event.position) return;
+      const position = event.position;
+      const navigation = event.routerEvent.id;
+      this.appRef.whenStable().then(() => {
+        if (navigation === this.latestNavigation) this.scroller.scrollToPosition(position);
+      });
     });
-  }
-
-  /** Cuộn tới vị trí đang chờ (nếu có) sau lần render kế tiếp, rồi bỏ đi — chỉ khôi phục 1 lần. */
-  restore(): void {
-    const position = this.pending;
-    if (!position) return;
-    this.pending = null;
-    afterNextRender(() => this.scroller.scrollToPosition(position), { injector: this.injector });
   }
 }

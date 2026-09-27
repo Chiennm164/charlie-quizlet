@@ -8,6 +8,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - **Standalone components**, không dùng `NgModule`.
 - Control flow mới `@if / @for / @switch`, không dùng `*ngIf / *ngFor`.
 - **State hiển thị lên UI phải là `signal()`** (app zoneless). Giá trị suy ra → `computed()`; side-effect theo signal → `effect()`.
+- State phức tạp của **1 trang** → service `@Injectable()` provide trong `providers` của component (vd. `AttemptStore`). State **dùng chung nhiều trang** → service `providedIn: 'root'` (vd. `QuizMarksStore`), phải tự xoá khi đổi tài khoản. Chưa dùng NgRx.
 - Inject bằng `inject()`; input/output bằng `input()` / `output()`.
 - Mỗi component 1 việc; tách component con khi template > ~150 dòng.
 - Nút submit của form **không** `disabled` khi form chưa hợp lệ — cho bấm, rồi `markAllAsTouched()` để hiện hết lỗi.
@@ -28,6 +29,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - Chỉ khi cần xử lý riêng 1 mã lỗi mới tự xử lý **ngay trong callback `error`**: `handleErrorCode(err, ERROR_CODES.X, () => ...)` (mã khác vẫn hiện dialog) hoặc `markErrorHandled(err)` (tắt dialog cho mọi mã).
 - **Rẽ nhánh theo `errorCode`, không theo HTTP status.** Mã FE cần dùng khai báo trong `core/config/error-codes.ts`, khớp enum `ErrorCode` ở BE.
 - Nội dung thông báo lỗi API lấy từ BE (bảng `error_codes`, đã dịch) — FE không tự đặt câu cho lỗi API.
+- Người dùng chỉ thấy **mã hiển thị** `MCN-GG-NN` (`errorDisplayCode` do BE trả), không thấy tên kỹ thuật như `QUIZ_NOT_FOUND`. Lỗi FE tự gán mã (mất kết nối...) khai báo mã hiển thị trong `FE_ERROR_DISPLAY_CODES` (`core/config/error-codes.ts`).
 - Chọn kênh thông báo đúng: **toast** cho thành công / thông tin nhẹ; **dialog lỗi chung** cho lỗi API; **lỗi dưới ô nhập** cho lỗi gắn với 1 field; **`ConfirmDialogService.confirm()`** cho xác nhận (hỏi Có / Không); `app-dialog` cho hộp thoại có nội dung riêng. Không dùng toast cho lỗi API, không hiện cùng 1 lỗi ở 2 nơi, không dùng `alert()` / `confirm()`.
 - Không đặt thêm `<app-error-dialog>` / `<app-confirm-dialog>` / `<app-toast-container>` — đã có 1 lần trong `app.html`.
 
@@ -38,7 +40,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - Trang chỉ dành cho 1 số role: thêm `canActivate: [roleGuard('ADMIN')]` vào route (không đủ quyền → trang 403). Ẩn/hiện nút, thẻ theo role thì dùng `auth.hasRole(...)`. Guard FE chỉ để giao diện đúng — BE vẫn phải tự kiểm tra quyền.
 - Làm mới phiên (refresh token) do `AuthService` + `authInterceptor` lo: component / service **không** tự bắt 401, tự gọi `/auth/refresh` hay tự đọc refresh token.
 - Trang có form nhập dài (soạn đề, làm bài...): route thêm `canDeactivate: [unsavedChangesGuard]`, component implement `HasUnsavedChanges` và chặn `beforeunload` khi còn thay đổi chưa lưu.
-- Điều hướng: trang mới thêm vào thanh menu (`main-layout.html`, `routerLinkActive`) nếu là trang cấp 1; trang con có `<app-breadcrumb>` để quay lại cấp trên. Trang danh sách tải dữ liệu qua API gọi `ScrollRestoreService.restore()` khi dữ liệu đã hiện (Back về đúng chỗ). Không tự `window.scrollTo` khi đổi trang — router đã cuộn lên đầu.
+- Điều hướng: trang mới thêm vào thanh menu (`main-layout.html`, `routerLinkActive`) nếu là trang cấp 1; trang con có `<app-breadcrumb>` để quay lại cấp trên. Back / Forward tự về đúng chỗ đang xem: `ScrollRestoreService` chờ các request HTTP của trang xong rồi mới cuộn — trang không phải gọi gì (dữ liệu tải ngoài `HttpClient` thì không được chờ). Không tự `window.scrollTo` khi đổi trang — router đã cuộn lên đầu.
 - API BE mới không cần đăng nhập: thêm vào `PUBLIC_API_ENDPOINTS` (`core/config/api-endpoints.ts`) để interceptor không gắn token, không làm mới phiên khi gặp 401.
 
 ## 5. Cấu trúc, cấu hình & đặt tên
@@ -50,7 +52,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
   - mã lỗi → `ERROR_CODES`; HTTP status → `HTTP_STATUS`; key storage → `STORAGE_KEYS`
   - cấu hình theo môi trường (API base URL) → `src/environments/`
 - Validator / thông báo lỗi form dùng chung ở `shared/utils/validation.utils.ts` (`AppValidators`, `controlErrorMessage`). Validator mới viết vào file này.
-- Hàm thuần dùng lại được ở `shared/utils/common.utils.ts` (`toApiError`, `hasErrorCode`, `isHttpStatus`, `formatDate`, `getInitials`). Không viết lại logic giống nhau trong từng component.
+- Hàm thuần dùng lại được ở `shared/utils/common.utils.ts` — lỗi API (`toApiError`, `hasErrorCode`, `isHttpStatus`), định dạng (`formatDate`, `formatDateTime`, `formatDuration`, `formatRelativeTime`, `percent`), file (`toCsv`, `downloadFile`, `toFileName`), `OPTION_LETTERS`, `getInitials`. Ngày giờ luôn format theo `APP_SETTINGS.i18n.formatLocale[locale]`, không gõ cứng `'vi-VN'`. Không viết lại logic giống nhau trong từng component.
 - Layout (khung có header/footer) ở `core/layout/`.
 - Tên file `kebab-case`, **tên ngắn không hậu tố** theo chuẩn Angular hiện tại: `login.ts` / `login.html`, `auth.service.ts`, `auth.guards.ts`, `error.interceptor.ts`, `*.utils.ts`, `*.spec.ts`.
 - Biến/hàm `camelCase`; class/interface/type `PascalCase`; hằng số toàn cục `UPPER_SNAKE_CASE`.
@@ -63,6 +65,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
   - Transition không ghi `duration-*` / `ease-*` — thời lượng mặc định đã lấy từ token (`--default-transition-duration`).
 - Mobile-first, breakpoint mặc định của Tailwind (`sm: md: lg:`); không để trang có thanh cuộn ngang ở màn 390px.
 - Component dùng 1 lần: utility class thẳng trong template. Component dùng lặp lại: class BEM (`.block__element--modifier`, trạng thái `is-*`) trong `src/styles/*.css`, bên trong `@apply`.
+- File BEM được import vào `@layer components` (`src/styles.css`, file mới cũng vậy) -> utility trong template luôn đè được class BEM khi cần chỉnh riêng 1 chỗ (`<input class="input pl-10">`), không cần thêm modifier / thẻ bọc chỉ để thắng CSS. Style `:host` của component nếu muốn nơi dùng đè bằng utility thì bọc trong `@layer components {}`.
 - File trong `src/styles/` là **CSS thuần** (không phải SCSS): nesting chỉ dùng `&:hover`, `&.is-x`; không nối chuỗi kiểu Sass `&--modifier`.
 - Class muốn vừa dùng trong template vừa `@apply` được thì khai báo bằng `@utility` (như `typo-*`).
 - Không tự thêm `cursor-pointer` cho `<button>` — quy tắc con trỏ chung đã có trong `styles.css`. Phần tử không bấm được đánh dấu `disabled` hoặc `aria-disabled="true"`; vùng đang xử lý `aria-busy="true"`.
@@ -92,7 +95,8 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 ## 8. Icon & UI kit
 
 - Icon khai báo tập trung trong `shared/ui/icon/icon-registry.ts`, dùng `<app-icon name="..." />`; SVG phải dùng `currentColor`, đổi màu bằng class, đổi cỡ bằng `[size]` hoặc `font-size`. Không dùng `<img src="*.svg">` cho icon.
-- Dùng component có sẵn trong `shared/ui/` trước khi tự viết (button, input-*, select, dropdown, checkbox, radio-group, tabs, table, date/time picker, dialog, toast...).
+- Dùng component có sẵn trong `shared/ui/` trước khi tự viết (button, input-*, select, segmented, dropdown, checkbox, radio-group, tabs, table, pagination, breadcrumb, date/time picker, countdown, dialog, toast...). Nút bấm dùng `<app-button>` (có sẵn `loading` / `disabled`); chỉ dùng `<button class="btn ...">` khi cần directive trên chính thẻ `<button>` (vd. `appShortcut`).
+- Class BEM dùng chung có sẵn — dùng lại, không tự ghép utility cho cùng mục đích: `.quiz-chip`, `.option-letter` (chữ A–F), `.progress` / `.progress__bar`, `.score-badge` (+ `is-great / is-good / is-keepTrying` theo `scoreLevel`), `.segmented`, `.kbd`.
 - **Radio group / Tabs**: điều hướng phím mũi tên đã có sẵn, tự bỏ qua mục `disabled`. Tabs chỉ render header; nội dung do nơi dùng `@switch (activeId())`.
 - **Table**: `[selectable]` để chọn dòng; ghim tối đa **1 cột mỗi bên** (`pinned: 'left' | 'right'`); cột action dùng `<ng-template #rowActions let-row>`.
 - **Date / time**: bọc input native của trình duyệt, không tự vẽ lịch. Date range value dạng `{ from, to }`, tự validate `to >= from`.
@@ -101,7 +105,7 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 
 ## 8b. Phím tắt
 
-- Phím tắt gắn bằng directive `appShortcut` lên đúng nút có cùng chức năng (`<button appShortcut=" " (shortcut)="flip()" (click)="flip()">`) — không tự nghe `document:keydown` trong component. Directive đã bỏ qua khi đang gõ trong ô nhập / giữ Ctrl-Alt-Meta / nút disabled, và gắn `aria-keyshortcuts`.
+- Phím tắt gắn bằng directive `appShortcut` lên đúng nút có cùng chức năng (`<button appShortcut=" " (shortcut)="flip()" (click)="flip()">`) — không tự nghe `document:keydown` trong component. Directive đã bỏ qua khi đang gõ trong ô nhập / giữ Ctrl-Alt-Meta / nút disabled, gắn `aria-keyshortcuts`, và so phím chữ không phân biệt hoa thường (truyền 1 chữ: `appShortcut="m"`).
 - Hiện gợi ý phím cho người dùng (`<kbd class="kbd">`).
 
 ## 9. Test
@@ -116,3 +120,4 @@ Hướng dẫn kèm code mẫu: [CQ_DEV_GUIDE.md](CQ_DEV_GUIDE.md). Luồng nghi
 - YAGNI — không thêm abstraction khi chưa cần. Không để code chết / `console.log` debug khi commit.
   Ngoại lệ đã thống nhất: route `ui-showcase` để comment trong `app.routes.ts`, bỏ comment khi cần xem UI kit.
 - Ưu tiên dễ đọc hơn ngắn gọn.
+- File tĩnh XML / SVG trong `public/` (favicon...): comment không được chứa `--` — file hỏng, trình duyệt bỏ qua (favicon hiện icon quả địa cầu mặc định). `favicon.spec.ts` kiểm tra favicon.

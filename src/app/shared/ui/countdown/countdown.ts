@@ -1,4 +1,5 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { formatDuration } from '../../utils/common.utils';
 
 /**
  * Đếm ngược tới 1 mốc thời gian (`targetDate`) hoặc đếm ngược N giây (`seconds`).
@@ -46,16 +47,11 @@ export class CountdownComponent {
 
   remainingSeconds = computed(() => Math.max(0, Math.ceil(this.remainingMs() / 1000)));
 
-  isUrgent = computed(() => this.remainingSeconds() > 0 && this.remainingSeconds() <= this.urgentThreshold());
+  isUrgent = computed(
+    () => this.remainingSeconds() > 0 && this.remainingSeconds() <= this.urgentThreshold(),
+  );
 
-  display = computed(() => {
-    const total = this.remainingSeconds();
-    const h = Math.floor(total / 3600);
-    const m = Math.floor((total % 3600) / 60);
-    const s = total % 60;
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
-  });
+  display = computed(() => formatDuration(this.remainingSeconds() * 1000));
 
   constructor() {
     effect((onCleanup) => {

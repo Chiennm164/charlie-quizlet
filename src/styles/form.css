@@ -154,3 +154,22 @@ textarea.input {
     @apply underline;
   }
 }
+
+/* ---- Nút chọn 1 trong vài lựa chọn nằm liền nhau (vd. cách xem trang Bộ đề): .segmented, .segmented__item
+   (+ .is-active). Mỗi item là <button aria-pressed>. ---- */
+.segmented {
+  @apply inline-flex rounded-full border-2 border-border bg-surface p-0.5;
+}
+
+.segmented__item {
+  @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-body-sm font-semibold text-text-muted
+    transition-colors;
+
+  &:hover {
+    @apply text-text;
+  }
+
+  &.is-active {
+    @apply bg-primary text-text-inverse;
+  }
+}

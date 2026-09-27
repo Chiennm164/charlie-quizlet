@@ -13,7 +13,9 @@ import { TranslateService } from '../../../core/i18n/translate.service';
       <div class="list">
         @for (item of items(); track trackByFn(item)) {
           <div class="list__item">
-            <ng-container *ngTemplateOutlet="itemTemplate() ?? null; context: { $implicit: item }" />
+            <ng-container
+              *ngTemplateOutlet="itemTemplate() ?? null; context: { $implicit: item }"
+            />
           </div>
         }
       </div>

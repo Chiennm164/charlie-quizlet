@@ -11,8 +11,11 @@ import { ICON_REGISTRY, IconName } from './icon-registry';
   standalone: true,
   template: `<span class="cq-icon" [innerHTML]="svg()"></span>`,
   styles: `
-    :host {
-      display: inline-flex;
+    /* Trong layer như class BEM -> nơi dùng ẩn / hiện icon bằng utility (hidden sm:inline-flex) được. */
+    @layer components {
+      :host {
+        display: inline-flex;
+      }
     }
     .cq-icon {
       display: inline-flex;
@@ -36,5 +39,7 @@ export class IconComponent {
     return this.size();
   }
 
-  svg = computed<SafeHtml>(() => this.sanitizer.bypassSecurityTrustHtml(ICON_REGISTRY[this.name()]));
+  svg = computed<SafeHtml>(() =>
+    this.sanitizer.bypassSecurityTrustHtml(ICON_REGISTRY[this.name()]),
+  );
 }

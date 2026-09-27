@@ -152,7 +152,6 @@
       "ADMIN": "Admin"
     },
     "pageTitle": "Home",
-    "browseAll": "Find quizzes",
     "seeAll": "See all ({n})",
     "emptyTitle": "No quizzes yet",
     "emptyHint": "Quizzes will show up here once an administrator publishes them.",
@@ -197,9 +196,12 @@
     "footerTagline": "Online study & testing platform"
   },
   "account": {
-    "title": "Account",
+    "title": "Account & settings",
     "infoTab": "Details",
     "passwordTab": "Change password",
+    "settingsTab": "Settings",
+    "language": "Language",
+    "languageHint": "Applied right away and remembered on this browser.",
     "role": "Role",
     "memberSince": "Member since",
     "profileSaved": "Profile saved",
@@ -224,24 +226,136 @@
       "TITLE": "Title A → Z"
     },
     "resultCount": "{n} quizzes",
-    "empty": "No quizzes yet",
     "noMatch": "No quizzes match \"{q}\"",
     "noMatchHint": "Try another keyword or topic.",
     "questionCount": "{n} questions",
     "minutes": "{n} min",
     "noTimeLimit": "No time limit",
-    "questions": "Questions",
-    "timeLimit": "Time",
-    "publishedAt": "Published",
     "status": {
       "DRAFT": "Draft",
       "PUBLISHED": "Published"
     },
-    "start": "Start quiz",
-    "startComingSoon": "Taking quizzes is coming soon",
     "notFoundTitle": "Quiz not found",
     "notFoundDescription": "The quiz may have been deleted or is not published yet.",
-    "backToBrowse": "See other quizzes"
+    "backToBrowse": "See other quizzes",
+    "questionsUnit": "questions",
+    "publishedOn": "Published {date}",
+    "viewLabel": "View",
+    "view": {
+      "group": "By topic",
+      "list": "List"
+    },
+    "groupCount": "{n} quizzes in {topics} topics",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "mark": {
+      "inProgress": "In progress",
+      "best": "Best {n} pts",
+      "points": "{n} pts"
+    },
+    "markLabel": "Quizzes",
+    "markFilter": {
+      "ALL": "All quizzes",
+      "NOT_TAKEN": "Not taken",
+      "FAVORITE": "Favorites"
+    },
+    "emptyMark": {
+      "ALL": "No quizzes yet",
+      "NOT_TAKEN": "You have taken every quiz 🎉",
+      "FAVORITE": "No favorites yet — tap ☆ on a quiz card to add one"
+    }
+  },
+  "attempt": {
+    "pageTitle": "Quiz attempt",
+    "notFoundTitle": "Attempt not found",
+    "notFoundDescription": "The attempt may have been discarded when you started a new one.",
+    "mode": {
+      "PRACTICE": "Practice",
+      "EXAM": "Mock exam"
+    },
+    "modeHint": {
+      "PRACTICE": "See right / wrong and the explanation after each answer. No timer.",
+      "EXAM": "Shuffled questions and answers, results after you submit.",
+      "EXAM_TIMED": "{n} minutes, shuffled questions and answers, submitted automatically when time is up."
+    },
+    "unfinishedTitle": "You have an unfinished attempt",
+    "resume": "Continue",
+    "restartTitle": "Start a new attempt?",
+    "restartMessage": "You have an unfinished attempt. Starting a new one discards it and its answers.",
+    "restartConfirm": "Discard and start over",
+    "historyTitle": "Your attempts",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "timeLeft": "Time left",
+    "questionOf": "Question {n}/{total}",
+    "options": "Answers",
+    "flag": "Flag",
+    "unflag": "Unflag",
+    "prev": "Previous",
+    "next": "Next",
+    "keyboardHint": "Keys A–F pick an answer · ← → change question",
+    "correct": "Correct!",
+    "wrong": "Not quite",
+    "explanation": "Explanation",
+    "navTitle": "Questions",
+    "answeredCount": "{n}/{total} answered",
+    "correctSoFar": "{n}/{total} answered correctly",
+    "flaggedCount": "{n} flagged for review",
+    "submit": "Submit",
+    "finish": "Finish",
+    "keepGoing": "Keep going",
+    "submitTitle": "Submit your answers?",
+    "finishTitle": "Finish practice?",
+    "submitAnswered": "You answered {n}/{total} questions.",
+    "submitUnanswered": "{n} unanswered questions will count as wrong.",
+    "submitFlagged": "{n} questions are flagged for review.",
+    "timeUp": "Time is up! Your answers were submitted",
+    "verdict": {
+      "great": "Excellent!",
+      "good": "Well done!",
+      "keepTrying": "Keep going, try again!"
+    },
+    "duration": "Time taken",
+    "submittedAt": "Submitted",
+    "retryWrong": "Retry {n} wrong",
+    "retryAll": "Retry the whole quiz",
+    "backToQuiz": "Back to quiz",
+    "reviewTitle": "Review",
+    "reviewEmpty": "No questions here",
+    "filter": {
+      "all": "All ({n})",
+      "wrong": "Wrong / skipped ({n})",
+      "correct": "Correct ({n})"
+    },
+    "status": {
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "skipped": "Skipped"
+    },
+    "yourAnswer": "Your answer",
+    "chooseMode": "Choose how to take it",
+    "startMode": "Start",
+    "best": "Best",
+    "historyEmpty": "You have not taken this quiz yet. Pick a mode to start!",
+    "previewHint": "Admin attempts are previews and are not counted in quiz statistics.",
+    "pointsOf": "/ {scale} points",
+    "examDraw": "Each attempt draws {n} of {total} questions at random",
+    "correctLabel": "Correct"
+  },
+  "me": {
+    "unfinishedTitle": "Continue where you left off",
+    "recentTitle": "Recently taken",
+    "seeHistory": "See history",
+    "favoritesTitle": "Favorites",
+    "seeAllFavorites": "See all",
+    "historyTitle": "Attempt history",
+    "historyDescription": "Your submitted attempts, newest first",
+    "historyEmpty": "No attempts yet",
+    "historyCount": "{n} attempts",
+    "modeLabel": "Mode",
+    "allModes": "All modes",
+    "retake": "Retake",
+    "reviewAttempt": "Review attempt of {title}"
   },
   "adminTopic": {
     "title": "Topics",
@@ -315,6 +429,17 @@
     "import": {
       "open": "Import from Excel",
       "title": "Import questions from Excel",
+      "tabFile": "Upload Excel file",
+      "tabPaste": "Paste from spreadsheet",
+      "fileDrop": "Drop an .xlsx file here or click to choose",
+      "fileHint": "Reads the first sheet · max {n} MB · one question per row",
+      "downloadTemplate": "Download template",
+      "fileErrors": {
+        "notXlsx": "Only .xlsx files (Excel 2007 or later) are supported",
+        "fileTooLarge": "The file is too large",
+        "unreadable": "Could not read the file — it may be corrupted, password-protected or an old .xls renamed. Open it in Excel and save as .xlsx",
+        "emptyFile": "The first sheet has no data"
+      },
       "howTo": "Copy question rows in Excel / Google Sheets and paste them below. Each row is one question.",
       "columns": "Column order: Question | Correct answer (A–F) | Explanation (may be empty) | Answer A | Answer B | … (2–6 answers)",
       "copySample": "Copy sample rows",
@@ -342,15 +467,64 @@
       "submit": "Add {n} questions",
       "done": "Added {n} questions"
     },
-    "viewAsStudent": "View as student"
+    "viewAsStudent": "View as student",
+    "duplicate": "Duplicate",
+    "copyTitle": "Copy – {title}",
+    "duplicated": "Draft copy created",
+    "exportExcel": "Export Excel",
+    "exportFallbackName": "quiz",
+    "examQuestionCount": "Questions per mock exam",
+    "examQuestionCountHint": "Each mock exam draws {n} of {total} questions at random (practice uses all {total})",
+    "examQuestionCountAllHint": "Mock exams use all {total} questions.",
+    "examQuestionCountDefault": "Default ({n})",
+    "examQuestionCountDefaultHint": "Empty: each mock exam draws {n} of {total} questions at random (default). Practice uses all {total}."
+  },
+  "quizStats": {
+    "title": "Statistics",
+    "open": "Statistics",
+    "description": "Submitted attempts only.",
+    "emptyTitle": "No submissions yet",
+    "emptyHint": "Numbers appear once students take and submit this quiz.",
+    "attempts": "Submissions",
+    "byMode": "Practice {practice} · Mock exam {exam}",
+    "takers": "Students",
+    "average": "Average score",
+    "hardest": "Hardest question",
+    "correctRate": "{n}% answered correctly",
+    "correctOf": "{c}/{n} correct",
+    "correct": "correct",
+    "noAnswers": "No attempts yet",
+    "questionsTitle": "Questions",
+    "orderLabel": "Order questions",
+    "order": {
+      "hardest": "Most missed",
+      "position": "Quiz order"
+    },
+    "answeredSummary": "{n} attempts · {c} correct · {s} skipped",
+    "correctAnswer": "Correct answer",
+    "picks": "Picked {n} times",
+    "downloadCsv": "Download CSV",
+    "csv": {
+      "question": "Question",
+      "content": "Content",
+      "answered": "Attempts",
+      "correct": "Correct",
+      "skipped": "Skipped",
+      "correctRate": "Correct rate (%)",
+      "correctAnswer": "Correct answer",
+      "picks": "Picked {letter}",
+      "fileSuffix": "stats"
+    }
   },
   "nav": {
     "label": "Main navigation",
     "home": "Home",
+    "search": "Search quizzes...",
     "quizzes": "Quizzes",
     "admin": "Admin",
     "manageQuizzes": "Manage quizzes",
-    "topics": "Topics"
+    "topics": "Topics",
+    "history": "History"
   },
   "notFound": {
     "pageTitle": "Page not found",

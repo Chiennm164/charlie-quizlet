@@ -1,6 +1,7 @@
 /* =========================================================
    Trình soạn bộ đề (Admin): .quiz-question (1 câu hỏi), .quiz-question__toolbar, .quiz-question__handle (kéo thả),
-   .quiz-option (1 đáp án, .is-correct khi là đáp án đúng), .quiz-option__correct (radio + chữ cái), .quiz-option__letter.
+   .quiz-option (1 đáp án, .is-correct khi là đáp án đúng), .quiz-option__correct (radio + chữ cái .option-letter).
+   .quiz-editor__actions: thanh Lưu nháp / Xuất bản dính đáy màn hình; .quiz-editor__buttons: nhóm nút bên phải.
    Kéo thả bằng @angular/cdk/drag-drop: .cdk-drag-* do CDK tự gắn lên <app-question-editor cdkDrag>.
    ========================================================= */
 
@@ -29,15 +30,6 @@
   @apply flex items-center gap-2 mt-3 cursor-pointer shrink-0;
 }
 
-.quiz-option__letter {
-  @apply w-6 h-6 rounded-full bg-bg-muted border border-border flex items-center justify-center text-caption
-    font-bold text-text-muted;
-
-  .quiz-option.is-correct & {
-    @apply bg-success border-success text-text-inverse;
-  }
-}
-
 /* Bản sao đi theo con trỏ khi kéo (CDK gắn vào body) + chỗ trống ở vị trí sẽ thả. */
 app-question-editor.cdk-drag-preview .quiz-question {
   @apply shadow-lg;
@@ -54,4 +46,22 @@ app-question-editor.cdk-drag-animating {
 
 app-question-editor {
   @apply block;
+}
+
+.quiz-editor__actions {
+  @apply sticky bottom-3 z-30 flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2
+    shadow-lg sm:px-4;
+}
+
+.quiz-editor__buttons {
+  @apply flex flex-1 gap-2 sm:flex-none sm:ml-auto;
+}
+
+/* Màn nhỏ: 2 nút chia đều bề ngang, chữ 1 dòng. */
+.quiz-editor__buttons app-button {
+  @apply flex-1 sm:flex-none;
+}
+
+.quiz-editor__buttons .btn {
+  @apply whitespace-nowrap px-3 sm:px-5;
 }

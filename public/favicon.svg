@@ -1,5 +1,6 @@
 <!-- Favicon: mặt hổ chibi (bản tĩnh của src/app/shared/ui/mascot, biểu cảm "happy").
-     File tĩnh không đọc được CSS variable -> màu ghi thẳng, lấy từ token --cq-mascot-* trong src/styles/variables.css.
+     File tĩnh không đọc được CSS variable nên màu ghi thẳng, lấy từ nhóm token cq-mascot trong src/styles/variables.css.
+     Lưu ý: comment XML không được chứa 2 dấu gạch nối liền nhau, nếu có thì cả file hỏng và trình duyệt hiện icon mặc định.
      Đổi màu linh vật thì sửa cả ở đây, rồi tạo lại favicon.ico / apple-touch-icon.png từ file này. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 5 116 116">
   <g stroke="#3d2c52" stroke-width="4" stroke-linejoin="round">

@@ -1,17 +1,18 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { APP_SETTINGS, ROUTES } from '../../core/config';
-import { ScrollRestoreService } from '../../core/navigation/scroll-restore.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslateService } from '../../core/i18n/translate.service';
 import { TopicQuizzes } from '../../core/models';
 import { IconComponent } from '../../shared/ui/icon/icon';
 import { LoadingComponent } from '../../shared/ui/loading/loading';
 import { MascotComponent } from '../../shared/ui/mascot/mascot';
-import { QuizCardComponent } from '../quizzes/quiz-card/quiz-card';
+import { MyActivityComponent } from '../me/my-activity/my-activity';
+import { QuizMarksStore } from '../me/quiz-marks.store';
+import { QuizGroupComponent } from '../quizzes/quiz-group/quiz-group';
 import { QuizzesService } from '../quizzes/quizzes.service';
 
 /** Home: lời chào + bộ đề đã xuất bản (= đã duyệt) nhóm theo chủ đề. */
@@ -23,7 +24,8 @@ import { QuizzesService } from '../quizzes/quizzes.service';
     IconComponent,
     LoadingComponent,
     MascotComponent,
-    QuizCardComponent,
+    MyActivityComponent,
+    QuizGroupComponent,
     TranslatePipe,
   ],
   templateUrl: './home.html',
@@ -32,24 +34,20 @@ export class HomeComponent {
   auth = inject(AuthService);
   private translate = inject(TranslateService);
 
-  readonly browseUrl = ROUTES.quizzes;
   readonly newQuizUrl = ROUTES.adminQuizNew;
   readonly adminTopicsUrl = ROUTES.adminTopics;
 
   /** null = đang tải. Lỗi đã hiện ở dialog chung -> coi như chưa có đề. */
   topics = toSignal<TopicQuizzes[] | null>(
     inject(QuizzesService)
-      .listByTopic(APP_SETTINGS.quizzes.homePerTopic)
+      .listByTopic(APP_SETTINGS.quizzes.perTopic)
       .pipe(catchError(() => of([]))),
     { initialValue: null },
   );
 
   constructor() {
-    // Back về trang này: cuộn lại chỗ đang xem khi danh sách đã hiện.
-    const scrollRestore = inject(ScrollRestoreService);
-    effect(() => {
-      if (this.topics()) scrollRestore.restore();
-    });
+    // Dấu trên thẻ đề (điểm cao nhất, đang làm dở, yêu thích) mới nhất mỗi lần mở trang.
+    inject(QuizMarksStore).refresh();
   }
 
   greeting = computed(() => {

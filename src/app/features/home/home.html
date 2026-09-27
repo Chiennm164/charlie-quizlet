@@ -3,19 +3,15 @@
     <h1 class="typo-page-title">{{ greeting() }}</h1>
     <p class="typo-muted mt-1">{{ 'home.subtitle' | translate }}</p>
   </div>
-  <div class="flex flex-wrap gap-2 self-start sm:self-auto">
-    <a class="btn btn--secondary btn--md" [routerLink]="browseUrl">
-      <app-icon name="search" />
-      {{ 'home.browseAll' | translate }}
+  @if (auth.hasRole('ADMIN')) {
+    <a class="btn btn--primary btn--md self-start sm:self-auto" [routerLink]="newQuizUrl">
+      <app-icon name="plus" />
+      {{ 'adminQuiz.create' | translate }}
     </a>
-    @if (auth.hasRole('ADMIN')) {
-      <a class="btn btn--primary btn--md" [routerLink]="newQuizUrl">
-        <app-icon name="plus" />
-        {{ 'adminQuiz.create' | translate }}
-      </a>
-    }
-  </div>
+  }
 </section>
+
+<app-my-activity />
 
 @let groups = topics();
 @if (groups === null) {
@@ -42,25 +38,7 @@
 } @else {
   <div class="flex flex-col gap-8">
     @for (group of groups; track group.topic.id) {
-      <section class="anim-slide-up-in" [style.--i]="$index">
-        <div class="flex items-baseline justify-between gap-3 mb-3">
-          <h2 class="typo-section-title">{{ group.topic.name }}</h2>
-          @if (group.totalQuizzes > group.quizzes.length) {
-            <a
-              class="link typo-body-sm shrink-0"
-              [routerLink]="browseUrl"
-              [queryParams]="{ topicId: group.topic.id }"
-            >
-              {{ 'home.seeAll' | translate: { n: group.totalQuizzes } }}
-            </a>
-          }
-        </div>
-        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          @for (quiz of group.quizzes; track quiz.id) {
-            <li><app-quiz-card class="h-full" [quiz]="quiz" /></li>
-          }
-        </ul>
-      </section>
+      <app-quiz-group class="anim-slide-up-in" [style.--i]="$index" [group]="group" />
     }
   </div>
 }

@@ -1,8 +1,10 @@
 import { APP_SETTINGS } from '../../../core/config';
-import { parseTsv } from '../../../shared/utils/tsv.utils';
+import { TsvRow, parseTsv } from '../../../shared/utils/tsv.utils';
+import { OPTION_LETTERS } from '../../../shared/utils/common.utils';
 
 /*
- * Nhập câu hỏi dán từ Excel / Google Sheets. Cột cố định đứng trước, đáp án (số lượng thay đổi 2–6) đứng cuối:
+ * Nhập câu hỏi dán từ Excel / Google Sheets hoặc từ file .xlsx. Cột cố định đứng trước, đáp án (số lượng thay đổi
+ * 2–6) đứng cuối:
  *
  *   Câu hỏi | Đáp án đúng (A–F hoặc 1–6) | Giải thích (có thể trống) | Đáp án A | Đáp án B | ... (tối đa F)
  */
@@ -18,7 +20,7 @@ export type ImportError =
   | 'invalidCorrect';
 
 export interface ImportedQuestion {
-  /** Số dòng trong văn bản dán vào (bắt đầu từ 1). */
+  /** Số dòng trong văn bản dán vào / trong sheet Excel (bắt đầu từ 1). */
   line: number;
   content: string;
   explanation: string;
@@ -29,11 +31,18 @@ export interface ImportedQuestion {
 }
 
 const v = APP_SETTINGS.validation;
-const LETTERS = 'ABCDEF';
+
+/** Dòng tiêu đề cột (file mẫu, dòng mẫu để dán, file xuất đề) — đủ 6 cột đáp án A–F. */
+export const IMPORT_HEADER = [
+  'Câu hỏi',
+  'Đáp án đúng',
+  'Giải thích',
+  ...[...OPTION_LETTERS].map((letter) => `Đáp án ${letter}`),
+];
 
 /** Dòng mẫu (có dòng tiêu đề) — dán vào Excel là tự tách ra đúng các cột. */
 export const IMPORT_SAMPLE = [
-  ['Câu hỏi', 'Đáp án đúng', 'Giải thích', 'Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
+  IMPORT_HEADER.slice(0, 7),
   [
     'Thủ đô của Việt Nam là?',
     'B',
@@ -48,8 +57,17 @@ export const IMPORT_SAMPLE = [
   .map((row) => row.join('\t'))
   .join('\n');
 
+/** Đường dẫn file mẫu .xlsx (trong `public/`) — cùng cột và dòng ví dụ với `IMPORT_SAMPLE`. */
+export const IMPORT_TEMPLATE_URL = 'templates/mau-nhap-cau-hoi.xlsx';
+
+/** Văn bản dán từ bảng tính. */
 export function parseQuestions(text: string): ImportedQuestion[] {
-  return parseTsv(text)
+  return parseQuestionRows(parseTsv(text));
+}
+
+/** Các dòng đã tách cột (từ văn bản dán hoặc từ file Excel). */
+export function parseQuestionRows(rows: TsvRow[]): ImportedQuestion[] {
+  return rows
     .filter((row, i) => !(i === 0 && isHeader(row.fields)))
     .map(({ fields, line }) => {
       const [content = '', correct = '', explanation = '', ...rawOptions] = fields.map((f) =>
@@ -92,7 +110,7 @@ function rowError(
 
 /** "B" / "b" / "2" -> 1. Ngoài số đáp án đang có -> null. */
 function toIndex(value: string, optionCount: number): number | null {
-  const letter = LETTERS.indexOf(value.toUpperCase());
+  const letter = OPTION_LETTERS.indexOf(value.toUpperCase());
   const index = letter >= 0 && value.length === 1 ? letter : Number(value) - 1;
   return Number.isInteger(index) && index >= 0 && index < optionCount ? index : null;
 }

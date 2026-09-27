@@ -20,6 +20,8 @@ export const APP_SETTINGS = {
     htmlLang: { vn: 'vi', en: 'en' } satisfies Record<Locale, string>,
     /** Locale dùng để format ngày/số (Intl / toLocaleDateString). */
     formatLocale: { vn: 'vi-VN', en: 'en-US' } satisfies Record<Locale, string>,
+    /** Tên ngôn ngữ ở ô chọn ngôn ngữ — viết bằng chính ngôn ngữ đó, không dịch. */
+    localeNames: { vn: 'Tiếng Việt', en: 'English' } satisfies Record<Locale, string>,
   },
 
   auth: {
@@ -47,12 +49,30 @@ export const APP_SETTINGS = {
   },
 
   quizzes: {
-    /** Số bộ đề mỗi chủ đề trên Home (BE cho tối đa 20). */
-    homePerTopic: 8,
+    /** Số bộ đề mỗi chủ đề khi xem theo nhóm — Home, trang Bộ đề (BE cho tối đa 20). */
+    perTopic: 8,
     /** Số bộ đề mỗi trang ở trang danh sách (BE cho tối đa 50). */
     pageSize: 12,
+    /**
+     * Số câu mỗi lượt thi thử khi bộ đề không tự đặt — chỉ để hiện gợi ý trong trình soạn đề; BE mới là nơi quyết
+     * định (khớp app.attempt.default-exam-question-count ở charlie-quizlet-be).
+     */
+    defaultExamQuestionCount: 30,
     /** Chờ người dùng ngừng gõ bao lâu (ms) mới tìm kiếm. */
     searchDebounceMs: 300,
+  },
+
+  attempt: {
+    /** Thang điểm của 1 lượt làm: đúng hết = scoreScale điểm, mỗi câu = scoreScale / số câu của lượt. */
+    scoreScale: 100,
+    /** Xếp loại kết quả theo tỉ lệ đúng (%): từ mốc này trở lên là "xuất sắc" / "khá"; dưới mốc "khá" là "cần cố gắng". */
+    greatFromPercent: 80,
+    goodFromPercent: 50,
+  },
+
+  questionImport: {
+    /** Dung lượng tối đa của file Excel nhập câu hỏi (MB). */
+    maxFileSizeMb: 2,
   },
 
   ui: {
@@ -61,6 +81,8 @@ export const APP_SETTINGS = {
   },
 
   home: {
+    /** Số mục mỗi khối "của tôi" trên Home (đang làm dở, làm gần đây, yêu thích). */
+    recentCount: 4,
     /** Mốc giờ đổi lời chào: < afternoonFromHour là "buổi sáng", < eveningFromHour là "buổi chiều", còn lại "buổi tối". */
     afternoonFromHour: 12,
     eveningFromHour: 18,

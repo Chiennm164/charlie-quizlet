@@ -9,6 +9,7 @@ import {
   QuizStatus,
   QuizSummary,
   QuizListParams,
+  QuizStats,
 } from '../../core/models';
 
 export interface AdminQuizListParams extends QuizListParams {
@@ -42,5 +43,32 @@ export class AdminQuizzesService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(API_ENDPOINTS.quizzes.detail(id));
+  }
+
+  /** Bản nháp mới chép toàn bộ câu hỏi của `quiz` (cần `quiz.questions` — Admin nhận kèm khi get). */
+  duplicate(quiz: Quiz, title: string): Observable<Quiz> {
+    return this.create({
+      topicId: quiz.topic.id,
+      title,
+      description: quiz.description,
+      timeLimitMinutes: quiz.timeLimitMinutes,
+      examQuestionCount: quiz.examQuestionCount,
+      status: 'DRAFT',
+      questions: (quiz.questions ?? []).map((question) => ({
+        id: null,
+        content: question.content,
+        explanation: question.explanation,
+        options: question.options.map((option) => ({
+          id: null,
+          content: option.content,
+          correct: option.correct,
+        })),
+      })),
+    });
+  }
+
+  /** Lượt làm, điểm trung bình, từng câu / đáp án (chỉ lượt đã nộp). */
+  stats(id: number): Observable<QuizStats> {
+    return this.http.get<QuizStats>(API_ENDPOINTS.admin.quizStats(id));
   }
 }

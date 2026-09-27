@@ -1,0 +1,72 @@
+/* =========================================================
+   Làm bài & kết quả (features/attempts).
+   .attempt-option: 1 đáp án (nút) — .is-selected (đang chọn), .is-correct (đáp án đúng, khi đã được xem),
+     .is-wrong (chọn sai); chữ A–F dùng .option-letter (data-display.css), tự đổi màu theo trạng thái của đáp án.
+   .attempt-nav: bảng số câu; .attempt-nav__item — .is-current, .is-answered, .is-flagged, .is-correct, .is-wrong.
+   .attempt-toolbar: thanh trên cùng khi làm bài (dính đầu màn hình).
+   ========================================================= */
+
+.attempt-toolbar {
+  @apply sticky top-2 z-30 mb-4 flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2
+    shadow-md sm:px-4;
+}
+
+.attempt-option {
+  @apply flex w-full items-start gap-3 rounded-md border-2 border-border bg-surface px-3 py-2.5 text-left
+    typo-body transition-colors;
+
+  &:hover:not(:disabled) {
+    @apply border-secondary bg-bg-muted;
+  }
+
+  &.is-selected {
+    @apply border-primary bg-primary-soft;
+  }
+
+  &.is-correct {
+    @apply border-success bg-success/10;
+  }
+
+  &.is-wrong {
+    @apply border-danger bg-danger/10;
+  }
+
+  &:disabled {
+    @apply cursor-default;
+  }
+}
+
+.attempt-nav {
+  @apply grid grid-cols-8 gap-1.5 sm:grid-cols-10 lg:grid-cols-5;
+}
+
+.attempt-nav__item {
+  @apply relative flex h-9 items-center justify-center rounded-md border-2 border-border bg-surface text-body-sm
+    font-semibold text-text-muted transition-colors;
+
+  &:hover {
+    @apply border-secondary;
+  }
+
+  &.is-answered {
+    @apply border-primary/40 bg-primary-soft text-primary;
+  }
+
+  &.is-correct {
+    @apply border-success/50 bg-success/10 text-success;
+  }
+
+  &.is-wrong {
+    @apply border-danger/50 bg-danger/10 text-danger;
+  }
+
+  &.is-current {
+    @apply ring-2 ring-primary ring-offset-1;
+  }
+
+  /* Chấm cam ở góc: câu đánh dấu xem lại. */
+  &.is-flagged::after {
+    content: '';
+    @apply absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-warning;
+  }
+}

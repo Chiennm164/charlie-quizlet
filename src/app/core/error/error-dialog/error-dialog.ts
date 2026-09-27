@@ -19,33 +19,42 @@ import { ErrorDialogService } from '../error-dialog.service';
       (closed)="errorDialog.close()"
     >
       @if (error) {
-        <div class="flex gap-3" role="alert">
-          <app-icon name="alert-circle" class="text-danger text-2xl shrink-0" />
-          <div class="min-w-0 flex flex-col gap-2">
-            <p class="typo-card-title">{{ error.title }}</p>
-            @if (error.description) {
-              <p class="typo-muted">{{ error.description }}</p>
-            }
-            @if (error.fieldErrors.length) {
-              <ul class="list-disc pl-5 typo-muted">
-                @for (item of error.fieldErrors; track item.field) {
-                  <li>
-                    <span class="font-medium text-text">{{ item.field }}</span
-                    >: {{ item.message }}
-                  </li>
-                }
-              </ul>
-            }
-            @if (error.errorCode) {
-              <p class="typo-error-code">
-                {{ 'common.errorCode' | translate }}: {{ error.errorCode }}
-              </p>
-            }
-          </div>
+        <div class="flex flex-col items-center gap-2 text-center" role="alert">
+          <span
+            class="mb-1 flex h-12 w-12 items-center justify-center rounded-full bg-danger/10 text-danger"
+            aria-hidden="true"
+          >
+            <app-icon name="alert-circle" [size]="28" />
+          </span>
+          <p class="typo-card-title">{{ error.title }}</p>
+          @if (error.description) {
+            <p class="typo-muted">{{ error.description }}</p>
+          }
+          @if (error.fieldErrors.length) {
+            <ul class="w-full list-disc pl-5 text-left typo-muted">
+              @for (item of error.fieldErrors; track item.field) {
+                <li>
+                  <span class="font-medium text-text">{{ item.field }}</span
+                  >: {{ item.message }}
+                </li>
+              }
+            </ul>
+          }
+          @if (error.displayCode) {
+            <p class="mt-1 rounded-full bg-bg-muted px-3 py-0.5 typo-error-code">
+              {{ 'common.errorCode' | translate }}: {{ error.displayCode }}
+            </p>
+          }
         </div>
       }
-      <div dialog-footer>
-        <app-button (clicked)="errorDialog.close()">{{ 'common.close' | translate }}</app-button>
+      <div dialog-footer class="flex w-full justify-center">
+        <app-button
+          class="w-full sm:w-auto sm:min-w-32"
+          [block]="true"
+          (clicked)="errorDialog.close()"
+        >
+          {{ 'common.close' | translate }}
+        </app-button>
       </div>
     </app-dialog>
   `,

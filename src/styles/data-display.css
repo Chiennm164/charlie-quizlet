@@ -115,9 +115,9 @@
   @apply typo-body-sm text-text-muted;
 }
 
-/* ---- Nhãn nhỏ trên thẻ bộ đề: .quiz-chip (+ --primary) ---- */
+/* ---- Nhãn nhỏ trên thẻ bộ đề: .quiz-chip (+ --primary). Cỡ chữ theo chỗ dùng (vd. thêm text-caption). ---- */
 .quiz-chip {
-  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-muted border border-border;
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-muted border border-border text-text-muted;
 }
 
 .quiz-chip--primary {
@@ -139,7 +139,7 @@
   @apply inline-flex items-center gap-1.5 px-2 sm:px-3 py-2 text-body-sm font-semibold text-text-muted border-b-2
     border-transparent transition-colors whitespace-nowrap;
 
-  /* Màn nhỏ: bỏ icon cho đủ chỗ cả 4 mục trên 1 hàng (ẩn ở đây vì :host của app-icon tự đặt display). */
+  /* Màn nhỏ: bỏ icon cho đủ chỗ các mục trên 1 hàng (ẩn ở đây vì :host của app-icon tự đặt display). */
   & app-icon {
     @apply hidden sm:inline-flex;
   }
@@ -188,4 +188,59 @@
 
 .breadcrumb__current {
   @apply text-text font-semibold truncate max-w-[60vw] sm:max-w-md;
+}
+
+/* Phím tắt hiển thị cho người dùng: <kbd class="kbd">M</kbd>. */
+.kbd {
+  @apply rounded border border-border border-b-2 bg-bg-muted px-1.5 font-mono text-caption leading-5 text-text-muted;
+}
+
+/* ---- Chữ cái đáp án A–F (trình soạn đề, làm bài, kết quả, thống kê): .option-letter, trạng thái .is-correct /
+   .is-wrong trên chính nó hoặc theo khối đáp án bao ngoài (.quiz-option / .attempt-option). ---- */
+.option-letter {
+  @apply flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border bg-bg-muted
+    text-caption font-bold text-text-muted;
+}
+
+.attempt-option.is-selected .option-letter {
+  @apply border-primary bg-primary text-text-inverse;
+}
+
+.option-letter.is-correct,
+.quiz-option.is-correct .option-letter,
+.attempt-option.is-correct .option-letter {
+  @apply border-success bg-success text-text-inverse;
+}
+
+.option-letter.is-wrong,
+.attempt-option.is-wrong .option-letter {
+  @apply border-danger bg-danger text-text-inverse;
+}
+
+/* ---- Thanh tỉ lệ (tiến độ làm bài, tỉ lệ đúng, số lượt chọn): .progress > .progress__bar
+   ([style.width.%]); đổi màu thanh bằng utility bg-* trên .progress__bar. ---- */
+.progress {
+  @apply h-2 overflow-hidden rounded-full bg-bg-muted;
+}
+
+.progress__bar {
+  @apply block h-full rounded-full bg-primary transition-all;
+}
+
+/* ---- Huy hiệu điểm (Home, Lịch sử): .score-badge (+ .is-great / .is-good / .is-keepTrying theo scoreLevel).
+   Luôn kèm số % — màu chỉ để đọc lướt, không phải nguồn thông tin duy nhất. ---- */
+.score-badge {
+  @apply flex h-12 w-14 shrink-0 flex-col items-center justify-center rounded-md font-bold leading-tight;
+
+  &.is-great {
+    @apply bg-success/10 text-success;
+  }
+
+  &.is-good {
+    @apply bg-warning/10 text-warning;
+  }
+
+  &.is-keepTrying {
+    @apply bg-danger/10 text-danger;
+  }
 }

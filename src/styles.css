@@ -1,14 +1,17 @@
 @import 'tailwindcss';
 @import './styles/variables.css';
 @import './styles/typography.css';
-@import './styles/button.css';
-@import './styles/dialog.css';
-@import './styles/form.css';
-@import './styles/dropdown.css';
-@import './styles/toast.css';
-@import './styles/data-display.css';
-@import './styles/tabs.css';
-@import './styles/quiz-editor.css';
+/* Class BEM của UI kit nằm trong layer components -> utility Tailwind (layer utilities) luôn đè được khi cần
+   chỉnh riêng 1 chỗ (vd. <input class="input pl-10">, <a class="btn hidden sm:inline-flex">). */
+@import './styles/button.css' layer(components);
+@import './styles/dialog.css' layer(components);
+@import './styles/form.css' layer(components);
+@import './styles/dropdown.css' layer(components);
+@import './styles/toast.css' layer(components);
+@import './styles/data-display.css' layer(components);
+@import './styles/tabs.css' layer(components);
+@import './styles/quiz-editor.css' layer(components);
+@import './styles/attempt.css' layer(components);
 @import './styles/animations.css';
 
 /* ---- Con trỏ & focus dùng chung cho mọi phần tử tương tác ----
@@ -42,16 +45,16 @@
   }
 }
 
-/* Nền trang: chấm bi phủ trên các mảng màu pastel loang ở 4 góc (layout gắn class này ở khung ngoài cùng).
+/* Nền trang: chấm bi phủ trên các mảng màu pastel tông cam loang ở 4 góc (layout gắn class này ở khung ngoài cùng).
    background-attachment: fixed để mảng màu đứng yên theo màn hình, trang dài không bị kéo giãn. */
 @utility app-backdrop {
   background-color: var(--cq-bg);
   background-image:
     radial-gradient(var(--cq-dot) 2px, transparent 2px),
-    radial-gradient(ellipse 55% 50% at 0% 0%, var(--cq-backdrop-pink), transparent 70%),
-    radial-gradient(ellipse 50% 55% at 100% 8%, var(--cq-backdrop-sky), transparent 70%),
-    radial-gradient(ellipse 55% 50% at 100% 100%, var(--cq-backdrop-lavender), transparent 70%),
-    radial-gradient(ellipse 50% 50% at 0% 100%, var(--cq-backdrop-peach), transparent 70%);
+    radial-gradient(ellipse 55% 50% at 0% 0%, var(--cq-backdrop-orange), transparent 70%),
+    radial-gradient(ellipse 50% 55% at 100% 8%, var(--cq-backdrop-butter), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 100% 100%, var(--cq-backdrop-coral), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, var(--cq-backdrop-apricot), transparent 70%);
   background-size:
     24px 24px,
     100% 100%,

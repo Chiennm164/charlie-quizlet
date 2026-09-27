@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { ERROR_CODES } from '../config';
+import { ERROR_CODES, ErrorCode, FE_ERROR_DISPLAY_CODES } from '../config';
 import { TranslateService } from '../i18n/translate.service';
 import { toApiError } from '../../shared/utils/common.utils';
 
@@ -7,7 +7,8 @@ import { toApiError } from '../../shared/utils/common.utils';
 export interface ErrorDialogData {
   title: string;
   description: string | null;
-  errorCode: string | null;
+  /** Mã lỗi hiện cho người dùng (MCN-GG-NN). */
+  displayCode: string | null;
   /** Lỗi theo từng field (COMMON_VALIDATION_FAILED). */
   fieldErrors: { field: string; message: string }[];
 }
@@ -46,7 +47,10 @@ export class ErrorDialogService {
       description: apiError.errorMessage
         ? (apiError.errorDescription ?? null)
         : this.translate.t(fallback.description),
-      errorCode: apiError.errorCode ?? null,
+      displayCode:
+        apiError.errorDisplayCode ??
+        FE_ERROR_DISPLAY_CODES[apiError.errorCode as ErrorCode] ??
+        null,
       fieldErrors: Object.entries(apiError.errors ?? {}).map(([field, message]) => ({
         field,
         message,

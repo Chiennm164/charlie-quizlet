@@ -8,7 +8,7 @@ const ARIA_KEY_NAMES: Record<string, string> = { ' ': 'Space' };
  *   <button appShortcut=" " (shortcut)="flip()" (click)="flip()">Lật</button>
  *   <button [appShortcut]="['ArrowRight', 'l']" (shortcut)="next()">...</button>
  *
- * Giá trị là `KeyboardEvent.key` (" " = Space). Bỏ qua khi: đang gõ trong ô nhập, có giữ Ctrl / Alt / Meta
+ * Giá trị là `KeyboardEvent.key` (" " = Space); phím chữ không phân biệt hoa thường. Bỏ qua khi: đang gõ trong ô nhập, có giữ Ctrl / Alt / Meta
  * (không cướp phím tắt của trình duyệt), phần tử đang disabled. Tự thêm `aria-keyshortcuts` cho trình đọc màn hình.
  */
 @Directive({
@@ -29,6 +29,8 @@ export class ShortcutDirective {
     const keys = this.appShortcut();
     return Array.isArray(keys) ? keys : [keys];
   });
+  /** Phím chữ không phân biệt hoa thường: "m" nhận cả Shift+M / Caps Lock. */
+  private normalizedKeys = computed(() => this.keys().map(normalize));
 
   ariaKeys = computed(() =>
     this.keys()
@@ -38,7 +40,8 @@ export class ShortcutDirective {
 
   onKeydown(event: KeyboardEvent): void {
     if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey) return;
-    if (!this.keys().includes(event.key) || isTyping(event.target) || this.isDisabled()) return;
+    if (!this.normalizedKeys().includes(normalize(event.key))) return;
+    if (isTyping(event.target) || this.isDisabled()) return;
     // Chặn hành vi mặc định (Space cuộn trang / bấm lại nút đang focus, mũi tên cuộn trang).
     event.preventDefault();
     this.shortcut.emit(event);
@@ -50,6 +53,11 @@ export class ShortcutDirective {
       (el as HTMLButtonElement).disabled === true || el.getAttribute('aria-disabled') === 'true'
     );
   }
+}
+
+/** 1 ký tự -> chữ thường; tên phím dài ("ArrowLeft", "Enter") giữ nguyên. */
+function normalize(key: string): string {
+  return key.length === 1 ? key.toLowerCase() : key;
 }
 
 function isTyping(target: EventTarget | null): boolean {
